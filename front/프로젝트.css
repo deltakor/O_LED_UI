@@ -1,0 +1,289 @@
+
+@font-face {
+  font-family: "KyoboHandwriting2020A";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/KyoboHandwriting2020A.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+ * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+  font-family: "KyoboHandwriting2020A";
+}
+
+
+
+
+/* section 분할 */
+section {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+section > div {
+  height: 100%;
+}
+
+section > div:nth-of-type(1){
+  width: 400px;
+
+}
+section > div:nth-of-type(2){
+  flex: 1;
+}
+section > div:nth-of-type(3){
+  width: 400px;
+  overflow: scroll;
+
+}
+
+
+/* 카테고리 */
+
+.category-title {
+  font-size: 3.5rem;
+}
+
+.category-list {
+  display: flex;
+  justify-content: center;
+}
+
+.category-item {
+  width: 25%;
+  height: 5rem;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1.6rem;
+}
+
+.category-item:hover {
+  color: #e69a06;
+  cursor: pointer;
+}
+
+/* 인포윈도우 css */
+
+.infowindow {
+  width: 25rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.infowindow-img {
+  width: 100%;
+}
+
+.infowindow-stationName {
+  font-size: 1.5rem;
+}
+
+.infowindow-addr {
+  font-size: 1rem;
+}
+
+.infowindow-dateTme {
+  font-size: 1rem;
+}
+
+.infowindow-o3Value {
+  font-size: 1rem;
+}
+.infowindow-pm10Value {
+  font-size: 1rem;
+}
+
+.infowindow-pm25Value {
+  font-size: 1rem;
+}
+
+
+
+/* 탭메뉴 */
+
+ul.tabs{
+  background-color: #dcdcdc;
+  color: rgb(232, 234, 237);
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+ 
+}
+
+ul.tabs li{
+display: flex;
+  /* justify-content: space-between;
+  width: 380px;
+  heigth: 30px; */
+  width: calc(100% /3);
+  padding: 10px;
+  font-size: 15px;
+  transition: 0.5s;
+  border-radius: 10px 10px 0px 0px;
+  cursor: pointer;
+}
+
+ul.tabs li.current{
+background: #e0e0e0;
+color: #222;
+}
+
+.tab-content{
+display: none;
+
+}
+
+.tab-content.current{
+display: inherit;
+}
+
+
+
+
+
+/* tab1 표만들기 */
+
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  margin-top: 0;
+  font-family: 'Lato', sans-serif;
+  color: #333;
+  font-weight: 400;
+  font-size: 16px;
+  
+}
+
+table {
+  width: 100%;
+  height: calc(100%)
+  
+}
+
+caption {
+  font-size: 18px;
+  font-weight: 400;
+  padding: 12px 0;
+}
+
+
+tr { background: #f1f1f1; }
+
+tr:nth-child(2n) { }
+
+th, td {
+  text-align: left;
+  padding: 30px;
+  font-size: 1.4rem;
+  font-family: "KyoboHandwriting2020A";
+}
+
+tfoot tr { background: none; }
+
+tfoot td {
+  padding: 12px 2px;
+  font-style: italic;
+  color: #8a97a0;
+}
+
+.category {
+  background-color: #dcdcdc;
+  width: 160px;
+}
+
+
+/* 분전함 css */
+
+
+form fieldset {
+  margin: 10px 0px;
+}
+
+form legend {
+  font-size: 18px;
+  color: #0066ff;
+  font-weight: 600;
+}
+
+form label.reg {
+  font-size: 14px;
+  width: 120px;
+  float: left;
+}
+
+form label em {
+  font-size: 15px;
+  color: red;
+  font-weight: 800;
+}
+
+form ul li {
+  list-style: none;
+}
+
+form fieldset.sendform {
+  text-align: center;
+}
+
+
+
+div.ictInfo {
+  width: 100%;
+  height: 100%;
+  
+  border: 1px solid #000;
+}
+div.left {
+  width: 50%;
+  height: 100%;
+  float: left;
+  box-sizing: border-box;
+  
+  background: rgb(218, 217, 236);
+}
+div.right {
+  width: 50%;
+  height: 100%;
+  float: right;
+  box-sizing: border-box;
+}
+
+div.right_top{
+  width: 100%;
+  height: 50%;
+  float: top;
+  box-sizing: border-box;
+  background: rgb(201, 240, 213);
+}
+
+
+div.right_bottom{
+  width: 100%;
+  height: 50%;
+  float: bottom;
+  box-sizing: border-box;
+  background: rgb(253, 213, 218);
+}
+
+
+select{
+  width: 100%;
+  height: 100%
+}

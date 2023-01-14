@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel = "stylesheet" href="프로젝트.css">
+    <script src="./jquery-3.6.3.min.js"></script>
+</head>
+<body>
+    <div>
+        <section>
+            <div class="ictInfo">
+                <div class="left">
+                    <select multiple id = "select1">
+                        <option>분전함명령로그1(수정필요)</option>
+                        <option>분전함명령로그2</option>
+                        <option>분전함명령로그3</option>
+                        <option>분전함명령로그4</option>
+                      </select>
+                </div>
+                <div class="right"> 
+                    <div class ="right_top"> 
+                        <select multiple id = "select2">
+                          </select>
+                    </div>
+                    <div class = "right_bottom">
+                        <select multiple id = "select3">
+                          </select>
+                    </div>
+                </div>
+            </div>
+            <div>  
+                <div class="tmapView" id = "tmap"></div>
+            </div>
+            
+            <div class="markerInfo" id = "markerInfo">
+                <ul class="tabs">
+                    <li class="tab-link current" data-tab="tab-1" id = "testtest">정보</li>
+                    <li class="tab-link" data-tab="tab-2">메뉴_둘</li>
+                    <li class="tab-link" data-tab="tab-3">메뉴_셋</li>
+                    <li class="tab-link" data-tab="tab-4">메뉴_넷</li>
+                </ul>
+                
+                
+                
+                <div id ="tab-1" class = "tab-content"></div>
+                
+                <div id="tab-2" class="tab-content"> 
+                              
+                </div>
+          
+                <div id="tab-3" class="tab-content">
+  
+                </div>
+                <div id="tab-4" class="tab-content">
+   
+                </div>
+            </div>
+        </section>
+                
+    </div>
+
+    <script
+    type="text/javascript"
+    src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xx6be41fcc0896415190c56ef7eab981a0"
+  ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+  <script src ="프로젝트.js"></script>
+</body>
+</html>
