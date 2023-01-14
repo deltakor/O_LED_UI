@@ -35,8 +35,9 @@ async function signIn(event) {
 
   // 4. 요청이 성공적이지 않다면, alert message
   const isValidSignIn = signInReturn.data.code == 200;
+
   if (!isValidSignIn) {
-    return alert("로그인 실패.");
+    return alert("가입 정보가 일치하지 않습니다.");
   }
 
   // 5. 요청이 성공하면, jwt를 localstorage에 저장하고 main page 이동
