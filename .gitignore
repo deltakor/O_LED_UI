@@ -1,1 +1,4 @@
 back/config/secret.js
+back/node_modules/*
+back/package-lock.json
+back/log/*
