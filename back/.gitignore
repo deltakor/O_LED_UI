@@ -4,4 +4,3 @@ package-lock.json
 log/*
 .DS_Store
 SSREADME.md
-config/secret.js

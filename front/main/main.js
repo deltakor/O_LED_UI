@@ -165,7 +165,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
             <tr>
                 <td class = "category">주소 </td>
-               <td>${data.addr}</td>
+               <td>${data.address}</td>
             </tr>
 
             <tr>
@@ -412,7 +412,7 @@ async function getStations(){
     var marker = new Tmapv2.Marker({
       map: map, // 마커를 표시할 지도
       position: coords, // 마커를 표시할 위치
-      icon: "./icon/측정소.png"
+      icon: "../icon/측정소.png"
     });
 
     stationArray.push(marker);
@@ -515,7 +515,7 @@ let openWin;
     var _left = Math.ceil(( window.screen.width - _width )/2);
     var _top = Math.ceil(( window.screen.height - _height )/2); 
  
-      openWin = window.open('08_2_popup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+      openWin = window.open('../popup/08_2_popup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
       console.log(new_lat)
      
       setTimeout(function()  {
@@ -554,7 +554,7 @@ const dataSet = await axios({
 });
 
 
-lcd = dataSet.data.result;
+ lcd = dataSet.data.result;
 
  let selectTop = document.querySelector("#select3");
 
@@ -577,7 +577,7 @@ for (var i = 0; i < lcd.length; i++) {
     map: map, // 마커를 표시할 지도
     position: coords, // 마커를 표시할 위치
     draggable: true,
-    icon: "./icon/분전함.png"
+    icon: "../icon/분전함.png"
   });
 
 
