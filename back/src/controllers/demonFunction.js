@@ -11,6 +11,7 @@
 const indexDao = require("../dao/indexDao");
 const { pool } = require("../../config/database");
 const { logger } = require("../../config/winston");
+const secret = require("../../config/secret");
 
 
 exports.getLastDustData = async function (){
@@ -25,7 +26,7 @@ exports.getLastDustData = async function (){
           var request = require('request');
   
           var url = 'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty';
-          var queryParams = '?' + encodeURIComponent('serviceKey') + '=yy48ZhZI0vb1gOljRi03%2BaL38Qu8P6nnA%2FhrUbXdAKLrt9u9pa2Lk4yfkE9PGQC%2Bj12DTPVh13EItiaamkdJ1w%3D%3D'; /* Service Key*/
+          var queryParams = '?' + encodeURIComponent('serviceKey') + secret.publicDataKey; /* Service Key*/
           queryParams += '&' + encodeURIComponent('returnType') + '=' + encodeURIComponent('json'); /* */
           queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* */
           queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* */
@@ -172,7 +173,7 @@ exports.getLastDustData = async function (){
             var request = require('request');
   
             var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst';
-            var queryParams = '?' + encodeURIComponent('serviceKey') + '=yy48ZhZI0vb1gOljRi03%2BaL38Qu8P6nnA%2FhrUbXdAKLrt9u9pa2Lk4yfkE9PGQC%2Bj12DTPVh13EItiaamkdJ1w%3D%3D'; /* Service Key*/
+            var queryParams = '?' + encodeURIComponent('serviceKey') + secret.publicDataKey; /* Service Key*/
             queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* */
             queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('1000'); /* */
             queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /* */

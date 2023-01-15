@@ -676,7 +676,7 @@ async function getStationData(){
         var request = require('request');
 
         var url = 'http://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getMsrstnList';
-        var queryParams = '?' + encodeURIComponent('serviceKey') + '=yy48ZhZI0vb1gOljRi03%2BaL38Qu8P6nnA%2FhrUbXdAKLrt9u9pa2Lk4yfkE9PGQC%2Bj12DTPVh13EItiaamkdJ1w%3D%3D'; /* Service Key*/
+        var queryParams = '?' + encodeURIComponent('serviceKey') + secret.publicDataKey; /* Service Key*/
         queryParams += '&' + encodeURIComponent('returnType') + '=' + encodeURIComponent('json'); /* */
         queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* */
         queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* */
@@ -733,5 +733,5 @@ getStationData(); //서버 가동 시 측정소 정보 업데이트 수행
 // demonFunction.getLastDustData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)
 // demonFunction.getWeatherData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)
 
-setInterval(demonFunction.getLastDustData, 60*60*1000); //서버 가동 후 1시간뒤부터 1시간마다 실행
-setInterval(demonFunction.getWeatherData, 60*60*1000); //서버 가동 후 1시간뒤부터 1시간마다 실행
+setInterval(demonFunction.getLastDustData, secret.intervalTime); //서버 가동 후 1시간뒤부터 1시간마다 실행
+setInterval(demonFunction.getWeatherData, secret.intervalTime); //서버 가동 후 1시간뒤부터 1시간마다 실행

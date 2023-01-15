@@ -12,7 +12,6 @@ npm start 또는 nodemon index.js
 
 <할일>
 
--db 수정다하면 sql문 올리기
 
 왼탭 측정값전송 삭제 수정 연결(초기화)
 
@@ -24,7 +23,23 @@ Customid 문자열로 받고 숫자4자리만입력받도록 테스트 (클라�
 
 문서만들기 (함수사룡법 json형식 )
 
+분전함 상태 컬럼?
+분전함 명령로그 테이블?
 
+
+
+<설정파일 경로 : back/config/secret.js>
+
+module.exports = {
+    jwtsecret: "jwt_secret_key_9312",
+    host: "127.0.0.1",
+    user: "mysql아이디",
+    port: "mysql포트번호",
+    password: "mysql비밀번호",
+    database: "db이름",
+    intervalTime: 공공db에서 데이터가져올 함수를 주기적으로 실행할 시간
+    publicDataKey: '공공데이터 KEY' // 맨 앞에 '='가 없으면 붙혀주세요
+};
 
 
 
