@@ -15,7 +15,7 @@
         var administrative_dong = document.getElementById("new_dong").value;
         var lat= document.getElementById("new_lat").value;
         var lon = document.getElementById("new_lon").value;
-        var installation_datetime = document.getElementById("new_installDate").value;
+        var installAt = document.getElementById("new_installDate").value;
         var memo = document.getElementById("memo").value;
     
         
@@ -34,7 +34,7 @@
         "administrative_dong" : administrative_dong,
         "lat" : lat,
         "lon" : lon,
-        "installation_datetime" : installation_datetime,
+        "installAt" : installAt,
         "memo" : memo
         };  
     
