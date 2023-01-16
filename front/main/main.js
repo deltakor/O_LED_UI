@@ -197,14 +197,25 @@ $(document).ready(function(){
           
         }
 
-
     });
+
+
+    $("#select2").bind('contextmenu rightclick', function(){
+      console.log("select2 click");
+      $("#select2").trigger("change");
+    })
 
 });
 
 })();
 
-//분전함/////////////////////////////////////////
+
+
+//브라우저 우클릭 비활성화
+window.oncontextmenu = function () {
+  return false;
+};
+
 
 
 
