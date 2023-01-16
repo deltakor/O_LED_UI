@@ -17,7 +17,9 @@
         var lon = document.getElementById("new_lon").value;
         var installAt = document.getElementById("new_installDate").value;
         var memo = document.getElementById("memo").value;
-    
+        
+        var selected_station = $("#selectLED_list option:selected").val();
+     
         
     
     
@@ -35,7 +37,8 @@
         "lat" : lat,
         "lon" : lon,
         "installAt" : installAt,
-        "memo" : memo
+        "memo" : memo,
+        "station_id" : selected_station
         };  
     
     console.log("");
@@ -123,12 +126,16 @@ $('#selectLED_list').each(function() {
     var val = $(this).val();  //value
     var text = $(this).text();  //text     
     var openselect = $(opener.document).find('#select2 option'); //부모창 select 박스
-    
+ 
    
     
     for(var i = 0; i < openselect.length; i++) {
-      $(selectLED_list).append("<option> " +openselect[i].value +"</option>");
+      $(selectLED_list).append("<option value = " + openselect[i].value +">" +openselect[i].text +"</option>");
+     
     }
+
+    console.log(($("#selectLED_list option:selected")).val())
+    
    });  
 
 

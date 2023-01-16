@@ -141,10 +141,10 @@ $(document).ready(function(){
     
   for (var i = 0; i < stationInfo.length; i++) {
     // 마커를 생성합니다
-    console.log(stationInfo.stName);
-    $(selectTop).append("<option value= " + stationInfo[i].stationName + ">" +stationInfo[i].stationName + " (id=" +stationInfo[i].station_id + ")" +"</option>");
-    
 
+    $(selectTop).append("<option value= " + stationInfo[i].station_id + ">" +stationInfo[i].stationName + " (id=" +stationInfo[i].station_id + ")" +"</option>");
+    
+    console.log(selectTop)
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
     
     let markerContents = getMarkerContent(stationInfo[i])
@@ -175,17 +175,18 @@ $(document).ready(function(){
 	$(function() {
 
     $("#select2").change(function() {
-
-        var v = $("#select2").val();
-        var startIdx = v[0].indexOf('=');
-        var endIdx = v[0].indexOf(')');
-        var str_id = v[0].substring(startIdx + 1, endIdx);
+        
+        var stationName = $("#select2 option:checked").text();
+        var stationID = $("#select2").val();
+        console.log(stationID)
+        console.log(stationName)
 
         for (var i = 0; i < stationInfo.length; i++) {
-
-          if(stationInfo[i].station_id == str_id){
-            
+      
+          if(stationInfo[i].station_id == stationID){
+           
             var ll = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
+            console.log(ll)
             map.setCenter(ll);
             var markerContents = getMarkerContent(stationInfo[i]);
             const tab1 =  document.querySelector("#tab-1");
@@ -243,25 +244,25 @@ function getLedMarkerContent(data) {
 
 
           <tr>
-              <td class = "category">T1H</td>
+              <td class = "category">기온</td>
               <td>${data.T1H}</td>
           </tr>
 
 
           <tr>
-              <td class = "category">PTY</td>
+              <td class = "category">강수형태</td>
               <td>${data.PTY}</td>
           </tr>
 
 
           <tr>
-              <td class = "category">RN1</td>
+              <td class = "category">1시간 강수량</td>
               <td>${data.RN1}</td>
           </tr>
 
 
           <tr>
-              <td class = "category">REH</td>
+              <td class = "category">습도</td>
               <td>${data.REH}</td>
           </tr>
 
@@ -338,6 +339,7 @@ let openWin;
       setTimeout(function()  {
         openWin.document.getElementById('new_lat').value=new_lat
         openWin.document.getElementById('new_lon').value=new_lon
+      
       }, 250);
       
   }
