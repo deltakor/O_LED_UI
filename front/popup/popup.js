@@ -80,3 +80,30 @@
 
 
 // sendValue();
+
+
+
+//입력폼 제어
+
+
+$(document).ready(function(){
+
+  $("input:text[numberOnly]").on("keyup", function() {
+     let content = $(this).val();
+     $(this).val($(this).val().replace(/[^0-9]/g,""));
+
+     if(content.length<4) {
+        //여기다가 0000 붙이샘
+     }
+     if(content.length>4) {
+        $(this).val($(this).val().substring(0, 4));
+        alert('숫자는 4자리수 만큼 가능합니다..');
+     }
+  });
+  
+});
+
+function numberPad(n, width) {
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+}

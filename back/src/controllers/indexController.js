@@ -37,7 +37,7 @@ exports.example = async function (req, res) {
 exports.readStations = async function(req, res) {
 
   const {stationName} = req.query;
-  console.log(stationName);
+ 
 
 
   try {
@@ -814,8 +814,14 @@ exports.deleteBoard = async function (req, res) {
 //분전함 수정
 exports.updateBoard = async function (req, res){
   
+
+
   const { custom_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, memo} = req.body;
   
+  
+
+
+
   //DB입력
   try {
     const connection = await pool.getConnection(async (conn) => conn);
@@ -829,6 +835,8 @@ exports.updateBoard = async function (req, res){
 
         let x;
         let y;
+
+
 
         if(lat && lon){ //위도 경도 값이 있으면
           let xy = dfs_xy_conv('toXY', lat, lon);

@@ -11,20 +11,6 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
   let new_lat,new_lon;
 
-// 인포윈도우 가공하기
-  function getContent(data) {
-  
-    return `
-    <div class="infowindow">
-        <div class="infowindow-body">
-        <h5 class="infowindow-stationName">${data.stName}</h5>
-        <p class="infowindow-addr">주소 : ${data.addr}</p>
-        <p class="infowindow-dmx">x좌표 : ${data.dmx}</p>
-        <p class="infowindow-dmy">y좌표 : ${data.dmy}</p>
-        </div>
-    </div>
-    `;
-  }
 
 
   //tab1에 마커 정보 띄우기
@@ -117,79 +103,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
   }
 
 
-  function getLcdWindow(data) {
-  
-    return `
-    <div class="infowindow">
-        <div class="infowindow-body">
-        <h5 class="infowindow-Name">${data.name}</h5>
-        <p class="infowindow-addr">주소 : ${data.address}</p>
-        <p class="infowindow-dmx">x좌표 : ${data.lat}</p>
-        <p class="infowindow-dmy">y좌표 : ${data.lon}</p>
-        <p class="infowindow-memo"메모 : ${data.memo}</p>
 
-        </div>
-    </div>
-    `;
-  }
-
-
-  //tab1에 마커 정보 띄우기
-
-  function getLcdMarkerContent(data) {
-  
-    return `
-    
-    <table>
-        <tbody>
-            <tr>
-                <td class = "category">분전함 id</td>
-                <td>${data.custom_id}</td>
-            </tr>
-             <tr>
-                <td class = "category">분전소명</td>
-                <td>${data.name}</td>
-            </tr>
-
-            <tr>
-                <td class = "category">설치일자</td>
-                <td>${data.installation_datetime}</td>
-            </tr>
-
-            
-            <tr>
-                <td class = "category">모뎀번호</td>
-                <td>${data.modem_number}</td>
-            </tr>
-
-
-            <tr>
-                <td class = "category">주소 </td>
-               <td>${data.address}</td>
-            </tr>
-
-            <tr>
-                <td class= "category">위도</td>
-                <td>${data.lat}</td>
-            </tr>
-
-              <tr>
-                  <td class = "category">경도</td>
-                  <td>${data.lon}</td>
-            </tr>
-
-            <tr>
-                  <td class = "category">메모</td>
-                  <td>${data.memo}</td>
-            </tr>
-
-    
-            
-        </tbody>
-         
-       </table>
-    `;``
-  }
 
 
 
@@ -313,21 +227,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 
 
-  class LcdInfo {
-    constructor() {
-      this.custom_id = null;
-      this.name = null;
-      this.modem_number = null;
-      this.address= null;
-      this.administrative_dong = null;
-      this.lat = null;
-      this.lon = null;
-      this.installation_datetime = null;
-      this.memo = null;
-      
 
-    }
-  }
 
 
   
@@ -352,7 +252,7 @@ $(document).ready(function(){
 });
 
 
-async function getStations(){
+(async function getStations(){
   stationArray = [];
   stationInfoArray = [];
 	
@@ -406,7 +306,7 @@ async function getStations(){
 
 
     let coords = new Tmapv2.LatLng(stationArr[i].getDmx(), stationArr[i].getDmy());
-    let contents = getContent(stationArr[i])
+    
     let markerContents = getMarkerContent(stationArr[i])
 
     var marker = new Tmapv2.Marker({
@@ -417,33 +317,21 @@ async function getStations(){
 
     stationArray.push(marker);
 
-    // 마커에 표시할 인포윈도우를 생성합니다
-    var infowindow = new Tmapv2.InfoWindow({
-      position : coords,
-      content: getContent(stationArr[i]), // 인포윈도우에 표시할 내용
-      type: 2, //Popup의 type 설정.
-       map: map, //Popup이 표시될 맵 객체
-      visible : false
-      
-    });
 
-    stationInfoArray.push(infowindow);
+
+  
 
 
     // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
     // 이벤트 리스너로는 클로저를 만들어 등록합니다
     // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
        marker.addListener("mouseenter", function(evt) {
-          infowindow.setPosition(coords)
-          infowindow.setContent(contents)
-    infowindow.setVisible(true)
-  });
-
-      marker.addListener("click", function(evt) {
-        const tab1 =  document.querySelector("#tab-1")
+          
+    const tab1 =  document.querySelector("#tab-1")
         tab1.innerHTML = markerContents
         $('ul.tabs li#testtest').trigger("click");
   });
+
     
       marker.addListener("mouseleave", function(evt) {
     infowindow.setVisible(false)
@@ -482,11 +370,70 @@ async function getStations(){
 
 });
 
-};
+})();
 
-getStations()
+//분전함/////////////////////////////////////////
 
-//lcd 마커 생성asd
+
+
+
+//tab1에 마커 정보 띄우기
+
+function getLedMarkerContent(data) {
+
+  return `
+  
+  <table>
+      <tbody>
+          <tr>
+              <td class = "category">분전함 id</td>
+              <td>${data.custom_id}</td>
+          </tr>
+           <tr>
+              <td class = "category">분전소명</td>
+              <td>${data.name}</td>
+          </tr>
+
+          <tr>
+              <td class = "category">설치일자</td>
+              <td>${data.installation_datetime}</td>
+          </tr>
+
+          
+          <tr>
+              <td class = "category">모뎀번호</td>
+              <td>${data.modem_number}</td>
+          </tr>
+
+
+          <tr>
+              <td class = "category">주소 </td>
+             <td>${data.address}</td>
+          </tr>
+
+          <tr>
+              <td class= "category">위도</td>
+              <td>${data.lat}</td>
+          </tr>
+
+            <tr>
+                <td class = "category">경도</td>
+                <td>${data.lon}</td>
+          </tr>
+
+          <tr>
+                <td class = "category">메모</td>
+                <td>${data.memo}</td>
+          </tr>
+
+  
+          
+      </tbody>
+       
+     </table>
+  `;``
+}
+
 
 
 
@@ -527,10 +474,11 @@ let openWin;
 
 
 
-async function setLcdMarker(){
+
+(async function setLedMarker(){
 
 var lonlat;
-  let lcd;
+
 
 
 
@@ -554,24 +502,24 @@ const dataSet = await axios({
 });
 
 
- lcd = dataSet.data.result;
+ ledInfo = dataSet.data.result;
 
  let selectTop = document.querySelector("#select3");
 
 
-for (var i = 0; i < lcd.length; i++) {
+for (var i = 0; i < ledInfo.length; i++) {
   // 마커를 생성합니다
 
 
-  console.log(stationArr.stName);
-  $(selectTop).append("<option>" + lcd[i].name + " (" +lcd[i].custom_id + ")" +"</option>");
-
+  $(selectTop).append("<option>" + ledInfo[i].name + " (" +ledInfo[i].custom_id + ")" +"</option>");
+    led_custom_id = ledInfo[i].custom_id;
 
 
   
-  let coords = new Tmapv2.LatLng(lcd[i].lat, lcd[i].lon);
-  let contents = getLcdWindow(lcd[i])
-  let markerContents = getLcdMarkerContent(lcd[i])
+  let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+
+  let LedmarkerContents = getLedMarkerContent(ledInfo[i])
+  
 
   var marker = new Tmapv2.Marker({
     map: map, // 마커를 표시할 지도
@@ -582,47 +530,60 @@ for (var i = 0; i < lcd.length; i++) {
 
 
 
-  // 마커에 표시할 인포윈도우를 생성합니다
-  var infowindow = new Tmapv2.InfoWindow({
-    position : coords,
-    content: getLcdWindow(lcd[i]), // 인포윈도우에 표시할 내용
-    type: 2, //Popup의 type 설정.
-     map: map, //Popup이 표시될 맵 객체
-    visible : false
-    
-  });
 
-  stationInfoArray.push(infowindow);
 
 
   // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
   // 이벤트 리스너로는 클로저를 만들어 등록합니다
   // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+
+
+
+
      marker.addListener("mouseenter", function(evt) {
-        infowindow.setPosition(coords)
-        infowindow.setContent(contents)
-  infowindow.setVisible(true)
+
+        const tab1 =  document.querySelector("#tab-1")
+        tab1.innerHTML = LedmarkerContents
+        $('ul.tabs li#testtest').trigger("click");
 });
 
-    marker.addListener("click", function(evt) {
-
-      const tab1 =  document.querySelector("#tab-1")
-      tab1.innerHTML = markerContents
-      $('ul.tabs li#testtest').trigger("click");
-});
+   
   
     marker.addListener("mouseleave", function(evt) {
   infowindow.setVisible(false)
 });
 
+    marker.addListener("dragend", function (evt) {
 
+      let isConfilm = confirm("분전함의 위치를 현재 위치로 이동시키시겠습니까?")
+      
+      lonlat = evt.latLng; 
+      new_lat = lonlat.lat();
+      new_lon = lonlat.lng();
+    
 
+      if(isConfilm) {
 
+        sendLonlatValue(led_custom_id,new_lat,new_lon);
+      } else {
+        location.reload();
+      }
+    });
+
+//마커 드래그시 좌표값 넘겨주기..
+    
 
 }
 
-$(function() {
 
+
+
+
+
+
+
+//이동기능
+$(function() {
   $("#select3").change(function() {
 
       var v = $("#select3").val();
@@ -630,38 +591,181 @@ $(function() {
       var endIdx = v[0].indexOf(')');
       var str_id = v[0].substring(startIdx + 1, endIdx);
 
-      for (var i = 0; i < lcd.length; i++) {
+      for (var i = 0; i < ledInfo.length; i++) {
 
-        if(lcd[i].custom_id == str_id){
+        if(ledInfo[i].custom_id == str_id){
           
-          var ll = new Tmapv2.LatLng(lcd[i].lat, lcd[i].lon);
+          var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
           map.setCenter(ll);
-          var markerContents = getLcdMarkerContent(lcd[i]);
+          var markerContents = getLedMarkerContent(ledInfo[i]);
           const tab1 =  document.querySelector("#tab-1");
           tab1.innerHTML = markerContents;
 
 
           $('ul.tabs li#testtest').trigger("click");
-          
-
           break;
         }
-        
       }
-
-
   });
-
 });
 
 
+$(function() {
+  $("#select3").change(function() {
+
+      var v = $("#select3").val();
+      var startIdx = v[0].indexOf('(');
+      var endIdx = v[0].indexOf(')');
+      var str_id = v[0].substring(startIdx + 1, endIdx);
+
+      for (var i = 0; i < ledInfo.length; i++) {
+
+        if(ledInfo[i].custom_id == str_id){
+          
+          var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+          map.setCenter(ll);
+          var markerContents = getLedMarkerContent(ledInfo[i]);
+          const tab1 =  document.querySelector("#tab-1");
+          tab1.innerHTML = markerContents;
+
+
+          $('ul.tabs li#testtest').trigger("click");
+          break;
+        }
+      }
+  });
+});
+
+
+
+})();
+
+
+
+
+
+
+// 위치값 넘겨주는 함수
+
+
+
+function sendLonlatValue(led_id,lat_data,lon_data) {
+
+
+
+  console.log("hi")
+
+      // [요청 url 선언]
+  var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
+  
+  
+  // [요청 json 데이터 선언]
+  var jsonData = { // Body에 첨부할 json 데이터
+      "custom_id" : led_id,
+      "lat" : lat_data,
+      "lon" : lon_data,
+      };  
+
+
+  console.log(jsonData)
+
+  
+  console.log("");
+  console.log("[requestPostBodyJson] : [request url] : " + reqURL);
+  console.log("[requestPostBodyJson] : [request data] : " + JSON.stringify(jsonData));
+  console.log("[requestPostBodyJson] : [request method] : " + "POST BODY JSON");
+  console.log("");
+  
+  $.ajax({
+      // [요청 시작 부분]
+      url: reqURL, //주소
+      data: JSON.stringify(jsonData), //전송 데이터
+      type: "patch", //전송 타입
+      async: true, //비동기 여부
+      timeout: 5000, //타임 아웃 설정
+      dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)    			
+      contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+                      
+      // [응답 확인 부분 - json 데이터를 받습니다]
+      success: function(response) {
+          alert("분전함의 위치가 이동되었습니다!")
+    
+      },
+                      
+      // [에러 확인 부분]
+      error: function(xhr) {
+          alert("DB에러")			
+      },
+                      
+      // [완료 확인 부분]
+      complete:function(data,textStatus) {
+          console.log("");
+          console.log("[requestPostBodyJson] : [complete] : " + textStatus);
+          console.log("");    				
+      }
+      });		
+  
+
 }
 
-setLcdMarker()
 
 
 
 
 
+
+
+
+function DeleteLed(custom_id) {
+
+     // [요청 url 선언]
+  var reqURL = "http://127.0.0.1:23000//boards/:custom_id"; // 요청 주소
+  
+  
+  // [요청 json 데이터 선언]
+  var jsonData = { // Body에 첨부할 json 데이터
+      "custom_id" : custom_id,
+      };  
+
+
+  console.log(jsonData)
+
+  
+  console.log("");
+  console.log("[requestPostBodyJson] : [request url] : " + reqURL);
+  console.log("[requestPostBodyJson] : [request data] : " + JSON.stringify(jsonData));
+  console.log("[requestPostBodyJson] : [request method] : " + "POST BODY JSON");
+  console.log("");
+  
+  $.ajax({
+      // [요청 시작 부분]
+      url: reqURL, //주소
+      data: JSON.stringify(jsonData), //전송 데이터
+      type: "delete", //전송 타입
+      async: true, //비동기 여부
+      timeout: 5000, //타임 아웃 설정
+      dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)    			
+      contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+                      
+      // [응답 확인 부분 - json 데이터를 받습니다]
+      success: function(response) {
+          alert("분전함이 삭제되었습니다!")
+    
+      },
+                      
+      // [에러 확인 부분]
+      error: function(xhr) {
+          alert("DB에러")			
+      },
+                      
+      // [완료 확인 부분]
+      complete:function(data,textStatus) {
+          console.log("");
+          console.log("[requestPostBodyJson] : [complete] : " + textStatus);
+          console.log("");    				
+      }
+      });		
+  
+}
 
 
