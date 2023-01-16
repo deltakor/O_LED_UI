@@ -1,30 +1,11 @@
 const { pool } = require("../../config/database");
 
-exports.exampleDao = async function (connection) {
-  const Query = `SELECT * FROM measuring_station;`;
-  const Params = [];
-
-  const rows = await connection.query(Query, Params);
-
-  return rows;
-};
-
-exports.selectStations = async function (connection, stationName){
-
+exports.selectStations = async function (connection){
 
   const selectAllStationQuery = `SELECT * FROM measuring_station;`;
-  const selectStationByNameQuery = `SELECT * FROM measuring_station where stationName = ?;`;
-  const Params = [stationName];
+  const Params = [];
 
-  let Query;
-
-  if(!stationName){
-    Query = selectAllStationQuery;
-  }else{
-    Query = selectStationByNameQuery;
-  }
-
-  const rows = await connection.query(Query, Params);
+  const rows = await connection.query(selectAllStationQuery, Params);
 
   return rows;
 
@@ -32,8 +13,11 @@ exports.selectStations = async function (connection, stationName){
 
 
 exports.insertStation = async function (connection, dmX, dmY, addr, stationName){
-  const Query = `INSERT INTO measuring_station(dmX, dmY, addr, stationName) values(?,?,?,?);`;
-  const Params = [dmX, dmY, addr, stationName];
+
+  var now = new Date();
+
+  const Query = `INSERT INTO measuring_station(dmX, dmY, addr, stationName, updateAt) values(?,?,?,?,?);`;
+  const Params = [dmX, dmY, addr, stationName, now];
 
   const rows = await connection.query(Query, Params);
 
@@ -81,7 +65,7 @@ exports.deleteStation = async function (connection, station_id){
 
 exports.getStationId = async function (connection, stationName){
 
-  const Query = `SELECT * FROM blog.measuring_station WHERE stationName = ? limit 1;`;
+  const Query = `SELECT * FROM measuring_station WHERE stationName = ? limit 1;`;
   const Params = [stationName];
 
   const rows = await connection.query(Query, Params);
@@ -91,37 +75,30 @@ exports.getStationId = async function (connection, stationName){
 }
 
 
-exports.resetLastestMeasuringLog = async function (connection){
-
-  const resetQuery = `TRUNCATE measuring_lastest_log;`;
-  const Params = [];
-
-  const rows = await connection.query(resetQuery, Params);
-
-  return rows;
-
-}
 
 
+exports.insertLogData = async function(connection, station_id, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, measureAt, json, stationName){
 
-exports.insertLogData = async function(connection, station_id, dataTime, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, khaiValue, khaiGrade){
 
-  const Query = `INSERT INTO measuring_log(station_id, dataTime, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, khaiValue, khaiGrade) values(?,?,?,?,?,?,?,?,?,?,?);`;
-  const QueryLastest = `INSERT INTO measuring_lastest_log(station_id, dataTime, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, khaiValue, khaiGrade) values(?,?,?,?,?,?,?,?,?,?,?);`;
-  const Params = [station_id, dataTime, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, khaiValue, khaiGrade];
+  var now = new Date();
 
-  let rows = await connection.query(Query, Params); //전체 log db 삽입
-  rows = await connection.query(QueryLastest, Params); //최신 log db 삽입
+  const updateQuery = `UPDATE measuring_station SET status = ?, o3Value = ?, o3Grade = ?, pm10Value = ?, pm10Grade = ?, pm25Value = ?, pm25Grade = ?, updateAt = ?, measureAt = ?, json = ? WHERE station_id = ?`; 
+  const updateParams = [status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, now, measureAt, json, station_id];
 
-  return rows;
+  const insertQuery = `INSERT INTO measuring_log(stationName, measureAt, createAt, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, json) values(?,?,?,?,?,?,?,?,?,?,?);`;
+  const insertParams = [stationName, measureAt, now, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, json];
 
+  let rows1 = await connection.query(updateQuery, updateParams); 
+  let rows2 = await connection.query(insertQuery, insertParams); 
+
+  return rows1;
 }
 
 
 
 exports.getAllMeasuringLog = async function (connection){
 
-  const Query = `SELECT * FROM measuring_log WHERE dataTime BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();`; //최근 90일 데이터만 조회
+  const Query = `SELECT * FROM measuring_log WHERE createAt BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();`; //최근 90일 데이터만 조회
   const Params = [];
 
   const rows = await connection.query(Query, Params);
@@ -131,14 +108,6 @@ exports.getAllMeasuringLog = async function (connection){
 }
 
 
-exports.getLastStationLog = async function (connection) {
-  const Query = `SELECT * FROM measuring_lastest_log;`;
-  const Params = [];
-
-  const rows = await connection.query(Query, Params);
-
-  return rows;
-};
 
 
 exports.selectBoards = async function (connection) {
@@ -153,7 +122,7 @@ exports.selectBoards = async function (connection) {
 
 exports.getAllWeatherLog = async function (connection){ 
 
-  const Query = `SELECT * FROM board_weather_log WHERE datetime BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();`; //최근 90일까지 조회
+  const Query = `SELECT * FROM board_weather_log WHERE createAt BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();`; //최근 90일까지 조회
   const Params = [];
 
   const rows = await connection.query(Query, Params);
@@ -163,42 +132,22 @@ exports.getAllWeatherLog = async function (connection){
 }
 
 
-exports.getLastWeatherLog = async function (connection) {
-  const Query = `SELECT * FROM board_weather_lastest_log;`;
-  const Params = [];
+exports.insertWeatherLogData = async function(connection, board_id, weatherMeasureAt, T1H, PTY, RN1, REH, json, custom_id){
 
-  const rows = await connection.query(Query, Params);
+  var now = new Date();
 
-  return rows;
-};
+  const updateQuery = `UPDATE distribution_board SET weatherMeasureAt = ?, updateAt = ?, T1H = ?, PTY = ?, RN1 = ?, REH = ?, json = ? WHERE board_id = ?`; 
+  const updateParams = [weatherMeasureAt, now, T1H, PTY, RN1, REH, json, board_id];
 
+  const insertQuery = `INSERT INTO board_weather_log(custom_id, weatherMeasureAt, createAt, T1H, PTY, RN1, REH, json) values(?,?,?,?,?,?,?,?);`;
+  const insertParams = [custom_id, weatherMeasureAt, now, T1H, PTY, RN1, REH, json];
 
+  let rows1 = await connection.query(updateQuery, updateParams); 
+  let rows2 = await connection.query(insertQuery, insertParams); 
 
-
-exports.insertWeatherLogData = async function(connection, board_id, datetime, T1H, PTY, RN1, REH){
-
-  const Query = `INSERT INTO board_weather_log(board_id, datetime, T1H, PTY, RN1, REH) values(?,?,?,?,?,?);`;
-  const QueryLastest = `INSERT INTO board_weather_lastest_log(board_id, datetime, T1H, PTY, RN1, REH) values(?,?,?,?,?,?);`;
-  const Params = [board_id, datetime, T1H, PTY, RN1, REH];
-
-  let rows = await connection.query(Query, Params); //log db삽입
-  rows = await connection.query(QueryLastest, Params); //lastest log db 삽입
-
-  return rows;
+  return rows1;
 
 }
-
-
-exports.resetLastestWeatherLog = async function (connection){
-
-  const resetQuery = `TRUNCATE board_weather_lastest_log;`;
-  const Params = [];
-  const rows = await connection.query(resetQuery, Params);
-
-  return rows;
-
-}
-
 
 
 exports.duplicateCustomIdCheck = async function (connection, custom_id){
@@ -218,9 +167,12 @@ exports.duplicateCustomIdCheck = async function (connection, custom_id){
 
 
 
-exports.insertBoard = async function (connection, custom_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, grid_x, grid_y, memo){
-  const Query = `INSERT INTO distribution_board(custom_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, grid_x, grid_y, memo) values(?,?,?,?,?,?,?,?,?,?,?);`;
-  const Params = [custom_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, grid_x, grid_y, memo];
+exports.insertBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, grid_x, grid_y, memo, installAt){
+
+  var now = new Date();
+
+  const Query = `INSERT INTO distribution_board(custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, grid_x, grid_y, memo, updateAt, installAt) values(?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+  const Params = [custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, grid_x, grid_y, memo, now, installAt];
 
   const rows = await connection.query(Query, Params);
 
@@ -256,10 +208,13 @@ exports.deleteBoard = async function (connection, custom_id){
 
 
 
-exports.updateBoard = async function (connection, custom_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, grid_x, grid_y, memo){
-  const Query = `UPDATE distribution_board SET name = ifnull(?, name), modem_number = ifnull(?, modem_number), address = ifnull(?, address), administrative_dong = ifnull(?, administrative_dong), lat = ifnull(?, lat), lon = ifnull(?, lon), installation_datetime = ifnull(?, installation_datetime), grid_x = ifnull(?, grid_x), grid_y = ifnull(?, grid_y), memo = ifnull(?, memo) WHERE custom_id = ?;`;
+exports.updateBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt){
+ 
+  var now = new Date();
 
-  const Params = [name, modem_number, address, administrative_dong, lat, lon, installation_datetime, grid_x, grid_y, memo, custom_id];
+  const Query = `UPDATE distribution_board SET updateAt = ?, station_id = ifnull(?, station_id), name = ifnull(?, name), modem_number = ifnull(?, modem_number), address = ifnull(?, address), administrative_dong = ifnull(?, administrative_dong), lat = ifnull(?, lat), lon = ifnull(?, lon), grid_x = ifnull(?, grid_x), grid_y = ifnull(?, grid_y), memo = ifnull(?, memo), installAt = ifnull(?, installAt) WHERE custom_id = ?;`;
+
+  const Params = [now, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt,  custom_id];
 
   const rows = await connection.query(Query, Params);
 
@@ -269,7 +224,7 @@ exports.updateBoard = async function (connection, custom_id, name, modem_number,
 
 // 로그인 (회원검증)
 exports.isValidUsers = async function (connection, userID, password) {
-  const Query = `SELECT userIdx FROM Users where userID = ? and password = ?;`;
+  const Query = `SELECT userIdx, nickname FROM Users where userID = ? and password = ?;`;
   const Params = [userID, password];
 
   const rows = await connection.query(Query, Params);
@@ -279,11 +234,15 @@ exports.isValidUsers = async function (connection, userID, password) {
 
 
 // 회원가입
-exports.insertUsers = async function (connection, userID, password) {
-  const Query = `insert into Users(userID, password) values (?,?);`;
-  const Params = [userID, password];
+exports.insertUsers = async function (connection, userID, password, nickname) {
+
+  var now = new Date();
+
+  const Query = `insert into Users(userID, password, nickname, grade, createAt) values (?,?,?,?,?);`;
+  const Params = [userID, password, nickname, 10, now];
 
   const rows = await connection.query(Query, Params);
 
   return rows;
 };
+
