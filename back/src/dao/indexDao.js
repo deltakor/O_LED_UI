@@ -209,8 +209,12 @@ exports.deleteBoard = async function (connection, custom_id){
 
 
 exports.updateBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt){
- 
+
   var now = new Date();
+
+
+
+
 
   const Query = `UPDATE distribution_board SET updateAt = ?, station_id = ifnull(?, station_id), name = ifnull(?, name), modem_number = ifnull(?, modem_number), address = ifnull(?, address), administrative_dong = ifnull(?, administrative_dong), lat = ifnull(?, lat), lon = ifnull(?, lon), grid_x = ifnull(?, grid_x), grid_y = ifnull(?, grid_y), memo = ifnull(?, memo), installAt = ifnull(?, installAt) WHERE custom_id = ?;`;
 

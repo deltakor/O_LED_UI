@@ -468,12 +468,14 @@ exports.deleteBoard = async function (req, res) {
   //json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
 exports.updateBoard = async function (req, res){
   
-  const { custom_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, memo} = req.body;
+  const { custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, installation_datetime, memo} = req.body;
   
   //DB입력
   try {
     const connection = await pool.getConnection(async (conn) => conn);
     try {
+      
+
 
       //custom_id (기기고유번호) 중복 검사
       const duplicateCustomIdCheck = await indexDao.duplicateCustomIdCheck(connection, custom_id); 
@@ -491,9 +493,10 @@ exports.updateBoard = async function (req, res){
           y = xy.y;
         }
 
-   
-        const [rows] = await indexDao.updateBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt);
 
+        console.log("test1")
+   
+        const [rows] = await indexDao.updateBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installation_datetime);
           return res.send({
             isSuccess: true,
             code: 200, // 요청 실패시 400번대 코드

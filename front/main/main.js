@@ -23,17 +23,22 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         <tbody>
             <tr>
                 <td class = "category">측정소 id</td>
-                <td>${data.st_id}</td>
+                <td>${data.station_id}</td>
             </tr>
              <tr>
                 <td class = "category">측정소명</td>
-                <td>${data.stName}</td>
+                <td>${data.stationName}</td>
             </tr>
 
             <tr>
                 <td class = "category">측정일시</td>
-                <td>${data.dataTime}</td>
+                <td>${data.measureAt}</td>
             </tr>
+
+          <tr>
+              <td class = "category">측정반영일시</td>
+              <td>${data.updateAt}</td>
+          </tr>
 
             
             <tr>
@@ -45,16 +50,6 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
             <tr>
                 <td class = "category">주소 </td>
                <td>${data.addr}</td>
-            </tr>
-
-            <tr>
-                <td class= "category">x좌표</td>
-                <td>${data.dmx}</td>
-            </tr>
-
-              <tr>
-                  <td class = "category">y좌표</td>
-                  <td>${data.dmy}</td>
             </tr>
 
     
@@ -87,15 +82,17 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
                 <td>${data.pm25Grade}</td>
             </tr>
 
+            
             <tr>
-                <td class= "category">통합대기환경수치</td>
-                <td>${data.khaiValue}</td>
+                <td class= "category">경도</td>
+                <td>${data.dmX}</td>
             </tr>
 
-           <tr>
-                <td class = "category">통합대기환경지수</td>
-                <td>${data.khaiGrade}</td>
+              <tr>
+                  <td class = "category">위도</td>
+                  <td>${data.dmY}</td>
             </tr>
+
         </tbody>
          
        </table>
@@ -103,134 +100,6 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
   }
 
 
-
-
-
-
-
-  var stationArr = [];
-
-  class StationInfo {
-    constructor() {
-      this.st_id = null;
-      this.dmx = null;
-      this.dmy = null;
-      this.addr = null;
-      this.stName = null;
-      this.dataTime = null;
-      this.status = null;
-      this.o3Value = null;
-      this.o3Grade = null;
-      this.pm10Value = null;
-      this.pm10Grade = null;
-      this.pm25Value = null;
-      this.pm25Grade = null;
-      this.khaiValue = null;
-      this.khaiGrade = null;
-    }
-    
-    setStId(value) {
-      this.st_id = value;
-    }
-    setDmx(value) {
-      this.dmx= value;
-    }
-    setDmy(value) {
-      this.dmy = value;
-    }
-    setAddr(value) {
-      this.addr = value;
-    }
-    setStName(value) {
-      this.stName= value;
-    }
-    
-    setDataTime(value) {
-      this.dataTime = value;
-    }
-
-    setStatus(value) {
-      this.status = value;
-    }
-    setO3Value(value) {
-      this.o3Value= value;
-    }
-    setO3Grade(value) {
-      this.o3Grade = value;
-    }
-    setPm10Value(value) {
-      this.pm10Value = value;
-    }
-    setPm10Grade(value) {
-      this.pm10Grade = value;
-    }
-    setPm25Value(value) {
-      this.pm25Value= value;
-    }
-    setPm25Grade(value) {
-      this.pm25Grade = value;
-    }
-    setKhaiValue(value) {
-      this.khaiValue = value;
-    }
-    setKhaiGrade(value) {
-      this.khaiGrade= value;
-    }
-
-    getStId() {
-     return this.st_id;
-    }
-    getDmx() {
-      return this.dmx;
-    }
-    getDmy() {
-      return this.dmy;
-    }
-    getAddr() {
-      return this.addr;
-    }
-    getStName() {
-      return this.stName;
-    }
-    getDataTime() {
-      return this.dataTime;
-    }
-    getDataTime() {
-      return this.status;
-    }
-    getO3Value() {
-      return this.o3Value;
-    }
-    getO3Grade() {
-      return this.o3Grade;
-    }
-    getPm10Value() {
-      return this.pm10Value;
-    }
-    gettPm10Grade() {
-      return this.pm10Grade;
-    }
-    getPm25Value() {
-      return this.pm25Value;
-    }
-    getPm25Grade() {
-      return this.pm25Grade;
-    }
-    getKhaiValue() {
-      return this.khaiValue;
-    }
-    getKhaiGrade() {
-      return this.khaiGrade;
-    }
-
-  }
-
-
-
-
-
-
-  
 
 //이동 기능
 
@@ -263,63 +132,26 @@ $(document).ready(function(){
 		data: {},
 	});
 
-  const dataSet2 = await axios({
-    method: "get",
-    url: 'http://localhost:23000/stationLogs',
-    headers: {},
-    data: {},
-  });
 
-  stationList = dataSet.data.result;
-  stationList2 = dataSet2.data.result;
-  
-  for (var i = 0; i < stationList.length; i++) {
-    const stationDummy = new StationInfo;
-
-
-    
-    stationDummy.setStId(stationList[i].station_id)
-    stationDummy.setDmx(stationList[i].dmX)
-    stationDummy.setDmy(stationList[i].dmY)
-    stationDummy.setAddr(stationList[i].addr)
-    stationDummy.setStName(stationList[i].stationName)
-    stationDummy.setDataTime(stationList2[i].dataTime)
-    stationDummy.setStatus(stationList2[i].status)
-    stationDummy.setO3Value(stationList2[i].o3Value)
-    stationDummy.setO3Grade(stationList2[i].o3Grade)
-    stationDummy.setPm10Value(stationList2[i].pm10Value)
-    stationDummy.setPm10Grade(stationList2[i].pm10Grade)
-    stationDummy.setPm25Value(stationList2[i].pm25Value)
-    stationDummy.setPm25Grade(stationList2[i].pm25Grade)
-    stationDummy.setKhaiValue(stationList2[i].khaiValue)
-    stationDummy.setKhaiGrade(stationList2[i].khaiGrade)
-
-
-    stationArr.push(stationDummy)
-  }
+  stationInfo= dataSet.data.result;
   let selectTop = document.querySelector("#select2");
+
     
-  for (var i = 0; i < stationArr.length; i++) {
+  for (var i = 0; i < stationInfo.length; i++) {
     // 마커를 생성합니다
-    console.log(stationArr.stName);
-    $(selectTop).append("<option> " +stationArr[i].stName + " (id=" +stationArr[i].st_id + ")" +"</option>");
+    console.log(stationInfo.stName);
+    $(selectTop).append("<option> " +stationInfo[i].stationName + " (id=" +stationInfo[i].station_id + ")" +"</option>");
 
 
-    let coords = new Tmapv2.LatLng(stationArr[i].getDmx(), stationArr[i].getDmy());
+    let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
     
-    let markerContents = getMarkerContent(stationArr[i])
+    let markerContents = getMarkerContent(stationInfo[i])
 
     var marker = new Tmapv2.Marker({
       map: map, // 마커를 표시할 지도
       position: coords, // 마커를 표시할 위치
       icon: "../icon/측정소.png"
     });
-
-    stationArray.push(marker);
-
-
-
-  
 
 
     // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
@@ -333,9 +165,6 @@ $(document).ready(function(){
   });
 
     
-      marker.addListener("mouseleave", function(evt) {
-    infowindow.setVisible(false)
-  });
 
    
   }
@@ -350,13 +179,13 @@ $(document).ready(function(){
         var endIdx = v[0].indexOf(')');
         var str_id = v[0].substring(startIdx + 1, endIdx);
 
-        for (var i = 0; i < stationArr.length; i++) {
+        for (var i = 0; i < stationInfo.length; i++) {
 
-          if(stationArr[i].st_id == str_id){
+          if(stationInfo[i].station_id == str_id){
             
-            var ll = new Tmapv2.LatLng(stationArr[i].dmx, stationArr[i].dmy);
+            var ll = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
             map.setCenter(ll);
-            var markerContents = getMarkerContent(stationArr[i]);
+            var markerContents = getMarkerContent(stationInfo[i]);
             const tab1 =  document.querySelector("#tab-1");
             tab1.innerHTML = markerContents
             $('ul.tabs li#testtest').trigger("click");
@@ -396,8 +225,45 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">설치일자</td>
-              <td>${data.installation_datetime}</td>
+              <td>${data.installAt}</td>
           </tr>
+
+          
+          <tr>
+              <td class = "category">날씨측정일자</td>
+              <td>${data.weatherMeasureAt}</td>
+          </tr>
+          
+          <tr>
+              <td class = "category">날씨반영일자</td>
+              <td>${data.updateAt}</td>
+          </tr>
+
+
+          <tr>
+              <td class = "category">T1H</td>
+              <td>${data.T1H}</td>
+          </tr>
+
+
+          <tr>
+              <td class = "category">PTY</td>
+              <td>${data.PTY}</td>
+          </tr>
+
+
+          <tr>
+              <td class = "category">RN1</td>
+              <td>${data.RN1}</td>
+          </tr>
+
+
+          <tr>
+              <td class = "category">REH</td>
+              <td>${data.REH}</td>
+          </tr>
+
+          
 
           
           <tr>
@@ -412,6 +278,12 @@ function getLedMarkerContent(data) {
           </tr>
 
           <tr>
+                <td class = "category">메모</td>
+                <td>${data.memo}</td>
+          </tr>
+
+          
+          <tr>
               <td class= "category">위도</td>
               <td>${data.lat}</td>
           </tr>
@@ -421,10 +293,6 @@ function getLedMarkerContent(data) {
                 <td>${data.lon}</td>
           </tr>
 
-          <tr>
-                <td class = "category">메모</td>
-                <td>${data.memo}</td>
-          </tr>
 
   
           
@@ -530,14 +398,9 @@ for (var i = 0; i < ledInfo.length; i++) {
 
 
 
-
-
-
   // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
   // 이벤트 리스너로는 클로저를 만들어 등록합니다
   // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-
-
 
 
      marker.addListener("mouseenter", function(evt) {
@@ -548,9 +411,8 @@ for (var i = 0; i < ledInfo.length; i++) {
 });
 
    
-  
     marker.addListener("mouseleave", function(evt) {
-  infowindow.setVisible(false)
+
 });
 
     marker.addListener("dragend", function (evt) {
@@ -610,31 +472,6 @@ $(function() {
 });
 
 
-$(function() {
-  $("#select3").change(function() {
-
-      var v = $("#select3").val();
-      var startIdx = v[0].indexOf('(');
-      var endIdx = v[0].indexOf(')');
-      var str_id = v[0].substring(startIdx + 1, endIdx);
-
-      for (var i = 0; i < ledInfo.length; i++) {
-
-        if(ledInfo[i].custom_id == str_id){
-          
-          var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
-          map.setCenter(ll);
-          var markerContents = getLedMarkerContent(ledInfo[i]);
-          const tab1 =  document.querySelector("#tab-1");
-          tab1.innerHTML = markerContents;
-
-
-          $('ul.tabs li#testtest').trigger("click");
-          break;
-        }
-      }
-  });
-});
 
 
 
@@ -645,7 +482,6 @@ $(function() {
 
 
 
-// 위치값 넘겨주는 함수
 
 
 
