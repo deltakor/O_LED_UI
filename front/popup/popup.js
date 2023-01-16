@@ -34,7 +34,7 @@
         "administrative_dong" : administrative_dong,
         "lat" : lat,
         "lon" : lon,
-        "installation_datetime" : installation_datetime,
+        "installAt" : installation_datetime,
         "memo" : memo
         };  
     
