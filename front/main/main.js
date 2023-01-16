@@ -11,6 +11,8 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
   let new_lat,new_lon;
 
+  let min_lat,min_lon;
+
 
 
   //tab1에 마커 정보 띄우기
@@ -122,8 +124,7 @@ $(document).ready(function(){
 
 
 (async function getStations(){
-  stationArray = [];
-  stationInfoArray = [];
+
 	
 	const dataSet = await axios({
 		method: "get",
@@ -134,6 +135,7 @@ $(document).ready(function(){
 
 
   stationInfo= dataSet.data.result;
+  
 
 
   let selectTop = document.querySelector("#select2");
@@ -143,8 +145,7 @@ $(document).ready(function(){
     // 마커를 생성합니다
 
     $(selectTop).append("<option value= " + stationInfo[i].station_id + ">" +stationInfo[i].stationName + " (id=" +stationInfo[i].station_id + ")" +"</option>");
-    
-    console.log(selectTop)
+   
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
     
     let markerContents = getMarkerContent(stationInfo[i])
@@ -166,6 +167,10 @@ $(document).ready(function(){
         $('ul.tabs li#testtest').trigger("click");
   });
 
+      marker.addListener("click", function(evt) {
+          console.log(stationInfo[i].station_id)
+      });
+
     
 
    
@@ -186,7 +191,7 @@ $(document).ready(function(){
           if(stationInfo[i].station_id == stationID){
            
             var ll = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
-            console.log(ll)
+          
             map.setCenter(ll);
             var markerContents = getMarkerContent(stationInfo[i]);
             const tab1 =  document.querySelector("#tab-1");
@@ -202,14 +207,14 @@ $(document).ready(function(){
 
 });
 
+
+  await setLedMarker();
+
 })();
 
 //분전함/////////////////////////////////////////
 
 
-
-
-//tab1에 마커 정보 띄우기
 
 function getLedMarkerContent(data) {
 
@@ -315,6 +320,7 @@ function confirmPorm() {
          
       }else{   //취소
           
+         location.reload();
           return false;
      
       }
@@ -335,10 +341,14 @@ let openWin;
  
       openWin = window.open('../popup/08_2_popup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
       console.log(new_lat)
+
      
       setTimeout(function()  {
         openWin.document.getElementById('new_lat').value=new_lat
         openWin.document.getElementById('new_lon').value=new_lon
+     
+        // console.log(openWin.document.getElementById('default'))
+        // openWin.document.getElementById('default').value=nearStation_id
       
       }, 250);
       
@@ -347,17 +357,39 @@ let openWin;
 
 
 
-(async function setLedMarker(){
+async function setLedMarker(){
 
 var lonlat;
+let min_distance = Infinity;
+var minIdx;
 
 
-
+let temp = null; 
 
     map.addListener("contextmenu", function(evt) {
       lonlat = evt.latLng; 
       new_lat = lonlat.lat();
       new_lon = lonlat.lng();  
+      console.log(new_lat,new_lon)
+
+      for(var i = 0; i < stationInfo.length; i++) {
+          temp = getDistance(new_lat,new_lon,stationInfo[i].dmX,stationInfo[i].dmY);
+
+
+          if(min_distance > temp) {
+            min_distance = temp;
+            minIdx = i
+            
+            console.log("11234")
+            
+          }
+
+          console.log("현재 최소 거리 = " + min_distance )
+
+      }
+
+      console.log(stationInfo[minIdx].station_id)
+     
       confirmPorm();    
       // winMessage(new_lat,new_lon);    
      
@@ -415,9 +447,6 @@ for (var i = 0; i < ledInfo.length; i++) {
 });
 
    
-    marker.addListener("mouseleave", function(evt) {
-
-});
 
     marker.addListener("dragend", function (evt) {
 
@@ -426,7 +455,10 @@ for (var i = 0; i < ledInfo.length; i++) {
       lonlat = evt.latLng; 
       new_lat = lonlat.lat();
       new_lon = lonlat.lng();
-    
+      
+
+
+
 
       if(isConfilm) {
 
@@ -479,8 +511,7 @@ $(function() {
 
 
 
-})();
-
+}
 
 
 
@@ -609,3 +640,26 @@ function DeleteLed(custom_id) {
 }
 
 
+
+
+
+// 최단거리 
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  var distance;
+  var radius = 6371; // 지구 반지름(km)
+  var toRadian = Math.PI / 180;
+
+  var deltaLatitude = Math.abs(lat1 - lat2) * toRadian;
+  var deltaLongitude = Math.abs(lon1 - lon2) * toRadian;
+
+  var sinDeltaLat = Math.sin(deltaLatitude / 2);
+  var sinDeltaLng = Math.sin(deltaLongitude / 2);
+  var squareRoot = Math.sqrt(
+        sinDeltaLat * sinDeltaLat +
+        Math.cos(lat1 * toRadian) * Math.cos(lat2 * toRadian) * sinDeltaLng * sinDeltaLng);
+
+    distance = 2 * radius * Math.asin(squareRoot);
+
+    return distance;
+}
