@@ -1,0 +1,44 @@
+
+ * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 10px;
+    font-family: "KyoboHandwriting2020A";
+  }
+  
+  form fieldset {
+    margin: 10px 0px;
+  }
+  
+  form legend {
+    font-size: 18px;
+    color: #0066ff;
+    font-weight: 600;
+  }
+  
+  form label.reg {
+    font-size: 14px;
+    width: 120px;
+    float: left;
+  }
+  
+  form label em {
+    font-size: 15px;
+    color: red;
+    font-weight: 800;
+  }
+  
+  form ul li {
+    list-style: none;
+    margin-top: 3px;
+  }
+  
+  form fieldset.sendform {
+    text-align: center;
+  }
+  
+  

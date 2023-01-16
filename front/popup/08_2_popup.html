@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel = "stylesheet" href="../main/main.css">
+    <link rel = "stylesheet" href="./popup.css">
     <title>분전함 정보 입력창</title>
 </head>
 <body>
@@ -22,6 +22,19 @@
                 <li> <label class="reg" for="new_name"> 이름 <em> * </em> </label>
                     <input type="text" id="new_name" name="new_name" size="20" required>
                 </li>
+
+                <li> <label class="reg" for="new_name"> 모뎀이름 <em> * </em> </label>
+                    <input type="text" id="new_mdNum" name="new_mdNum" size="20" required>
+                </li>
+
+                <li> <label class="reg" for="new_name"> 주소 <em> * </em> </label>
+                    <input type="text" id="new_addr" name="new_addr" size="20" required>
+                </li>
+
+                <li> <label class="reg" for="new_dong"> 행정구역 <em> * </em> </label>
+                    <input type="text" id="new_dong" name="new_dong" size="20" required>
+                </li>
+                
                 </li>
                 <li> <label class="reg" for="new_lat"> 위도 </label>
                     <input type="text" id="new_lat" name="new_lat" size="20" required>
@@ -32,6 +45,12 @@
               <li> <label class="reg" for="new_installDate"> 설치일자 </label>
                   <input type="date" id="new_installDate" name="new_installDate" size="20" required>
               </li>
+
+              <li> <label class="reg" for="selectLED_list"> 분전함 ID </label>
+                <select id = "selectLED_list" name ="selectLED_list" size=""required>
+                  
+                </select> 
+            </li>
               <!-- <li> <label class="reg" for="select_station"> 설치일자 </label>
                    <select name = "stationList" id = "stationList" required>
                     <option value =  -->

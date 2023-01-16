@@ -134,14 +134,16 @@ $(document).ready(function(){
 
 
   stationInfo= dataSet.data.result;
+
+
   let selectTop = document.querySelector("#select2");
 
     
   for (var i = 0; i < stationInfo.length; i++) {
     // 마커를 생성합니다
     console.log(stationInfo.stName);
-    $(selectTop).append("<option> " +stationInfo[i].stationName + " (id=" +stationInfo[i].station_id + ")" +"</option>");
-
+    $(selectTop).append("<option value= " + stationInfo[i].stationName + ">" +stationInfo[i].stationName + " (id=" +stationInfo[i].station_id + ")" +"</option>");
+    
 
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
     

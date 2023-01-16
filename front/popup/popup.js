@@ -57,7 +57,9 @@
         // [응답 확인 부분 - json 데이터를 받습니다]
         success: function(response) {
             alert("성공적으로 보냈습니다!")
+            setTimeout(function()  {
             opener.location.reload();
+            },250);
             window.close();
         },
                         
@@ -107,3 +109,28 @@ function numberPad(n, width) {
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
 }
+
+
+
+
+
+
+
+
+$('#selectLED_list').each(function() {
+     
+
+    var val = $(this).val();  //value
+    var text = $(this).text();  //text     
+    var openselect = $(opener.document).find('#select2 option'); //부모창 select 박스
+    
+   
+    
+    for(var i = 0; i < openselect.length; i++) {
+      $(selectLED_list).append("<option> " +openselect[i].value +"</option>");
+    }
+   });  
+
+
+
+
