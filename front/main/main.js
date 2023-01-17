@@ -1,23 +1,43 @@
 /* 지도 생성 */
 
-
+const secret = require("../../back/config/secret");
 
 var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
     width : "100%", // 지도의 넓이
     height : "100%", // 지도의 높이
-    zoom : 17
+    zoom : 16
 });
   let new_lat,new_lon;
   let nearStation_id;
  
   let nearStation_name;
 
-  let ledInfo;
+  let stationInfo;
 
 
 
   //tab1에 마커 정보 띄우기
+  function statistics(ledLen,stationLen) {
+    return `
+    <table>
+    <tbody>
+        <tr>
+            <td class = "category">분전함 개수</td>
+            <td>${ledLen}</td>
+        </tr>
+
+        <tr>
+           <td class = "category">측정소 개수</td>
+            <td>${stationLen}</td>
+       </tr>
+    
+
+    </tbody>
+     
+   </table>
+      `
+  }
 
   function getMarkerContent(data) {
   
@@ -131,7 +151,7 @@ $(document).ready(function(){
 	
 	const dataSet = await axios({
 		method: "get",
-		url: 'http://localhost:23000/stations/',
+		url: 'http://'+secret.ip+':23000/stations/',
 		headers: {},
 		data: {},
 	});
@@ -391,7 +411,7 @@ let openWin;
         // openWin.document.getElementById('defaultID').value=nearStation_id
         selected_list = openWin.document.getElementById('defalut')
         selected_list.value = nearStation_id;
-        selected_list.text = nearStation_name + " (" +nearStation_id + ")"
+        selected_list.text = nearStation_name + " (id =" +nearStation_id + ")"
        
       }, 200);
      
@@ -428,7 +448,7 @@ let openWin;
     
         selected_list = openWin.document.getElementById('defalut')
         selected_list.value = station_id;
-        selected_list.text = stationName + " (" +station_id + ")"
+        selected_list.text = stationName + " (id =" +station_id + ")"
        
 
       },200);
@@ -483,13 +503,15 @@ let temp = null;
 
 const dataSet = await axios({
   method: "get",
-  url: 'http://localhost:23000/boards/',
+  url: 'http://'+secret.ip+':23000/boards/',
   headers: {},
   data: {},
 });
 
 
  ledInfo = dataSet.data.result;
+
+
 
  let selectTop = document.querySelector("#select3");
 
@@ -630,7 +652,7 @@ $(function() {
     contextMenu.style.visibility = "visible";
 
     trash.onclick = function (event) {
-      if (confirm("정말 분전함을 삭제하시겠습니까?") == true){    
+      if (confirm("분전함을 삭제하시겠습니까?") == true){    
         contextMenu.style.visibility = "hidden";
           deleteLed(str_id);
 
@@ -643,7 +665,7 @@ $(function() {
     };
 
     edit.onclick = function(event) {
-      if (confirm("정말 분전함을 수정하시겠습니까?") == true){    
+      if (confirm("분전함을 수정하시겠습니까?") == true){    
         contextMenu.style.visibility = "hidden";
         console.log(defaltAddr)
         showEditPopup(str_id,defaltName,defaltModem_number,defaltAddr,
@@ -686,7 +708,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
   console.log("hi")
 
       // [요청 url 선언]
-  var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
+  var reqURL = "http://"+secret.ip+":23000/boards"; // 요청 주소
   
   
   // [요청 json 데이터 선언]
@@ -749,7 +771,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 function deleteLed(custom_id) {
 
      // [요청 url 선언]
-  var reqURL = "http://127.0.0.1:23000/boards/"+custom_id; // 요청 주소
+  var reqURL = "http://"+secret.ip+":23000/boards/"+custom_id; // 요청 주소
   
   
   // [요청 json 데이터 선언]

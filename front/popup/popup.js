@@ -1,9 +1,11 @@
 
+const secret = require("../../back/config/secret");
+
 (function sendValue() {
 
     let btn = document.querySelector("#btn")
     btn.addEventListener("click",function() {
-
+    if(checkform() == true) {
     console.log("hi")
 
         var custom_id = document.getElementById("new_id").value;
@@ -20,11 +22,15 @@
         
         var selected_station = $("#selectLED_list option:selected").val();
      
+        if(custom_id==null) {
+            alert("아이디를 입력해주세요..")
+            return false
+        }
         
     
     
         // [요청 url 선언]
-    var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
+    var reqURL = "http://"+secret.ip+":23000/boards"; // 요청 주소
     
     
     // [요청 json 데이터 선언]
@@ -78,7 +84,9 @@
             console.log("");    				
         }
         });		
+    }
     })
+    
     
 
 })();
@@ -148,3 +156,68 @@ function close_reload(){
     window.close();
 }
    
+
+
+function checkform(){
+
+
+if( $.trim($("#new_id").val()) == '' ){
+
+        alert("아이디를 입력해 주세요.");
+
+        $("#new_id").focus();
+
+        return false;
+
+}
+
+if( $.trim($("#new_name").val()) == '' ){
+
+alert("이름을 입력해 주세요.");
+
+$("#new_name").focus();
+
+return false;
+
+    }
+if( $.trim($("#new_mdNum").val()) == '' ){
+
+        alert("모뎀번호를 입력해 주세요.");
+        
+        $("#new_mdNum").focus();
+        
+        return false;
+        
+ }   
+
+if( $.trim($("#new_addr").val()) == '' ){
+
+          alert("장소를 입력해 주세요.");
+                
+          $("#new_addr").focus();
+                
+         return false;
+                
+ }
+
+ if( $.trim($("#new_dong").val()) == '' ){
+
+    alert("행정구역를 입력해 주세요.");
+          
+    $("#new_dong").focus();
+          
+   return false;
+          
+}
+
+if( $.trim($("#new_installDate").val()) == '' ){
+
+    alert("설치일자를 입력해 주세요.");
+          
+    $("#new_installDate").focus();
+          
+   return false;
+          
+}
+    return true;
+}

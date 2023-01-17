@@ -8,8 +8,8 @@
 5. 요청이 성공하면, jwt를 localstorage에 저장하고 main page 이동
 
 */
-
-let url = "http://127.0.0.1:23000";
+const secret = require("../../back/config/secret");
+let url = "http://"+secret.ip+":23000";
 
 const btnSignUp = document.querySelector("#signup");
 
@@ -56,5 +56,5 @@ async function signup(event) {
   localStorage.setItem("x-access-token", jwt);
   alert(signUpReturn.data.message);
 
-  return location.replace("./signin.html");
+  return location.replace("./index.html");
 }
