@@ -126,22 +126,20 @@ $('#selectLED_list').each(function() {
     var val = $(this).val();  //value
     var text = $(this).text();  //text     
     var openselect = $(opener.document).find('#select2 option'); //부모창 select 박스
-    var defaultVal;
  
-   
     
     for(var i = 0; i < openselect.length; i++) {
-        defaultVal = document.getElementById('default');
-       
-
+      
+      
       $(selectLED_list).append("<option value = " + openselect[i].value +">" +openselect[i].text +"</option>");
      
     }
 
-    console.log(($("#selectLED_list option:selected")).val())
+    
     
    });  
 
-
-
-
+//    if(window.close()) {
+//    window.opener.location.reload();
+//    }
+   

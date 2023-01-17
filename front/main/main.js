@@ -8,10 +8,11 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     zoom : 17
 });
 
-
+  let nearStation_id;
   let new_lat,new_lon;
+  let nearStation_name;
 
-  let min_lat,min_lon;
+
 
 
 
@@ -123,6 +124,7 @@ $(document).ready(function(){
 });
 
 
+
 (async function getStations(){
 
 	
@@ -183,8 +185,7 @@ $(document).ready(function(){
         
         var stationName = $("#select2 option:checked").text();
         var stationID = $("#select2").val();
-        console.log(stationID)
-        console.log(stationName)
+
 
         for (var i = 0; i < stationInfo.length; i++) {
       
@@ -205,11 +206,7 @@ $(document).ready(function(){
     });
 
 
-    $("#select2").bind('contextmenu rightclick', function(){
-      console.log("select2 click");
-      $("#select2").trigger("change");
-    })
-
+   
 });
 
 
@@ -282,7 +279,34 @@ function getLedMarkerContent(data) {
               <td>${data.REH}</td>
           </tr>
 
-          
+          <tr>
+              <td class = "category">오존 농도</td>
+              <td>${data.o3Value}</td>
+          </tr>
+
+          <tr>
+              <td class= "category">오존 등급</td>
+              <td>${data.o3Grade}</td>
+          </tr>
+
+          <tr>
+              <td class = "category">미세먼지 농도</td>
+              <td>${data.pm10Value}</td>
+          </tr>
+
+          <tr>
+              <td class = "category">미세먼지 등급</td>
+              <td>${data.pm10Grade}</td>
+          </tr>
+          <tr>
+              <td class = "category">초미세먼지 농도</td>
+              <td>${data.pm25Value}</td>
+          </tr>
+
+          <tr>
+              <td class= "category">초미세먼지 등급</td>
+              <td>${data.pm25Grade}</td>
+          </tr>
 
           
           <tr>
@@ -301,7 +325,11 @@ function getLedMarkerContent(data) {
                 <td>${data.memo}</td>
           </tr>
 
-          
+          <tr>
+              <td class = "category">근접측정소 이름</td>
+              <td>${data.stationName}</td>
+          </tr>
+              
           <tr>
               <td class= "category">위도</td>
               <td>${data.lat}</td>
@@ -339,7 +367,7 @@ function confirmPorm() {
   }
 
 let openWin;
-  function showPopup() { 
+  async function showPopup() { 
     
     
   
@@ -349,21 +377,32 @@ let openWin;
     // 팝업을 가운데 위치시키기 위해 아래와 같이 값 구하기
     var _left = Math.ceil(( window.screen.width - _width )/2);
     var _top = Math.ceil(( window.screen.height - _height )/2); 
- 
+      
       openWin = window.open('../popup/08_2_popup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
-      console.log(new_lat)
-
+    
+       openWin.onbeforeunload=function (){
+        window.location.reload();
+    }
      
       setTimeout(function()  {
         openWin.document.getElementById('new_lat').value=new_lat
         openWin.document.getElementById('new_lon').value=new_lon
      
-        // console.log(openWin.document.getElementById('default'))
-        // openWin.document.getElementById('default').value=nearStation_id
-      
-      }, 250);
+  
+        // openWin.document.getElementById('defaultID').value=nearStation_id
+        selected_list = openWin.document.getElementById('defalut')
+        selected_list.value = nearStation_id;
+        selected_list.text = nearStation_name + " (" +nearStation_id + ")"
+        location.reload();
+      }, 200);
+     
+ 
       
   }
+
+
+
+
 
 
 
@@ -381,7 +420,7 @@ let temp = null;
       lonlat = evt.latLng; 
       new_lat = lonlat.lat();
       new_lon = lonlat.lng();  
-      console.log(new_lat,new_lon)
+    
 
       for(var i = 0; i < stationInfo.length; i++) {
           temp = getDistance(new_lat,new_lon,stationInfo[i].dmX,stationInfo[i].dmY);
@@ -389,20 +428,18 @@ let temp = null;
 
           if(min_distance > temp) {
             min_distance = temp;
-            minIdx = i
-            
-            console.log("11234")
+        
+            nearStation_id = stationInfo[i].station_id
+            nearStation_name = stationInfo[i].stationName
             
           }
 
-          console.log("현재 최소 거리 = " + min_distance )
-
+        
       }
 
-      console.log(stationInfo[minIdx].station_id)
-     
+  
       confirmPorm();    
-      // winMessage(new_lat,new_lon);    
+     
      
 });
 
@@ -424,7 +461,7 @@ const dataSet = await axios({
 
 for (var i = 0; i < ledInfo.length; i++) {
   // 마커를 생성합니다
-
+  
 
   $(selectTop).append("<option>" + ledInfo[i].name + " (" +ledInfo[i].custom_id + ")" +"</option>");
     led_custom_id = ledInfo[i].custom_id;
@@ -515,6 +552,10 @@ $(function() {
           break;
         }
       }
+      $("#select2 option").bind('contextmenu rightclick', function(){
+          alert("aaaaa")
+      })
+  
   });
 });
 
@@ -674,3 +715,63 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
     return distance;
 }
+
+
+function reloadFunc(){
+  location.reload();
+}
+
+setInterval(reloadFunc, 1000 * 60 * 5)
+
+
+
+//
+$(document).ready(function(){
+  //Show contextmenu:
+  $(document).contextmenu(function(e){
+    //Get window size:
+    var winWidth = $(document).width();
+    var winHeight = $(document).height();
+    //Get pointer position:
+    var posX = e.pageX;
+    var posY = e.pageY;
+    //Get contextmenu size:
+    var menuWidth = $(".contextmenu").width();
+    var menuHeight = $(".contextmenu").height();
+    //Security margin:
+    var secMargin = 10;
+    //Prevent page overflow:
+    if(posX + menuWidth + secMargin >= winWidth
+    && posY + menuHeight + secMargin >= winHeight){
+      //Case 1: right-bottom overflow:
+      posLeft = posX - menuWidth - secMargin + "px";
+      posTop = posY - menuHeight - secMargin + "px";
+    }
+    else if(posX + menuWidth + secMargin >= winWidth){
+      //Case 2: right overflow:
+      posLeft = posX - menuWidth - secMargin + "px";
+      posTop = posY + secMargin + "px";
+    }
+    else if(posY + menuHeight + secMargin >= winHeight){
+      //Case 3: bottom overflow:
+      posLeft = posX + secMargin + "px";
+      posTop = posY - menuHeight - secMargin + "px";
+    }
+    else {
+      //Case 4: default values:
+      posLeft = posX + secMargin + "px";
+      posTop = posY + secMargin + "px";
+    };
+    //Display contextmenu:
+    $(".contextmenu").css({
+      "left": posLeft,
+      "top": posTop
+    }).show();
+    //Prevent browser default contextmenu.
+    return false;
+  });
+  //Hide contextmenu:
+  $(document).click(function(){
+    $(".contextmenu").hide();
+  });
+});
