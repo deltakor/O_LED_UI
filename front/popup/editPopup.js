@@ -4,7 +4,7 @@
     let btn = document.querySelector("#btn")
     btn.addEventListener("click",function() {
 
-    console.log("hi")
+
 
         var custom_id = document.getElementById("new_id").value;
         var name = document.getElementById("new_name").value;
@@ -15,9 +15,7 @@
         var administrative_dong = document.getElementById("new_dong").value;
         var lat= document.getElementById("new_lat").value;
         var lon = document.getElementById("new_lon").value;
-        var installAt = document.getElementById("new_installDate").value;
-        var memo = document.getElementById("memo").value;
-        
+        var memo = document.getElementById("memo").value;    
         var selected_station = $("#selectLED_list option:selected").val();
      
         
@@ -36,7 +34,6 @@
         "administrative_dong" : administrative_dong,
         "lat" : lat,
         "lon" : lon,
-        "installAt" : installAt,
         "memo" : memo,
         "station_id" : selected_station
         };  
@@ -51,7 +48,7 @@
         // [요청 시작 부분]
         url: reqURL, //주소
         data: JSON.stringify(jsonData), //전송 데이터
-        type: "POST", //전송 타입
+        type: "patch", //전송 타입
         async: true, //비동기 여부
         timeout: 5000, //타임 아웃 설정
         dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)    			

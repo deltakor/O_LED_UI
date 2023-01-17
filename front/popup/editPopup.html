@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href="./popup.css">
+    <title>분전함 정보 입력창</title>
+</head>
+<body onunload="close_reload()">
+    
+    <form>
+
+        <fieldset>
+            <legend> 분전함 정보 </legend>
+            <ul>
+                <!-- em : 진하게, 강조 -->
+                <!-- id : lable의 for랑 연결된 부분 / name은 다른 파일로 넘겨줄 파라미터 명 -->
+                <li> <label class="reg" for="new_id"> ID <em> * </em> </label>
+                    <input type="text" id="new_id" name="new_id" size="4" autocomplete="on" required numberOnly >
+                </li>
+                <li> <label class="reg" for="new_name"> 이름 <em> * </em> </label>
+                    <input type="text" id="new_name" name="new_name" size="20" required>
+                </li>
+
+                <li> <label class="reg" for="new_name"> 모뎀이름 <em> * </em> </label>
+                    <input type="text" id="new_mdNum" name="new_mdNum" size="20" required>
+                </li>
+
+                <li> <label class="reg" for="new_name"> 주소 <em> * </em> </label>
+                    <input type="text" id="new_addr" name="new_addr" size="20" required>
+                </li>
+
+                <li> <label class="reg" for="new_dong"> 행정구역 <em> * </em> </label>
+                    <input type="text" id="new_dong" name="new_dong" size="20" required>
+                </li>
+                
+                </li>
+                <li> <label class="reg" for="new_lat"> 위도 </label>
+                    <input type="text" id="new_lat" name="new_lat" size="20" required>
+                </li>
+                <li> <label class="reg" for="new_lon"> 경도 </label>
+                  <input type="text" id="new_lon" name="new_lon" size="20" required>
+              </li>
+
+              <li> <label class="reg" for="selectLED_list"> 측정소 ID </label>
+                <select id = "selectLED_list" name ="selectLED_list" size=""required>
+                 <option id = defalut selected></option>
+                </select> 
+            </li>
+             
+             </li>
+              
+
+            </ul>
+        </fieldset>
+      
+        <fieldset class="easys">
+            <legend> 메모 </legend>
+            <textarea id = memo rows="memo" cols="60" rows="5" name="memo">
+
+                </textarea>
+        </fieldset>
+        <div id = "temp" hidden></div>
+        <fieldset class="sendform">
+            <input type="button" value="수정하기" id = "btn">
+            <input type="reset" value="다시쓰기" id = "reset" >
+
+          
+        </fieldset>
+        
+    </form>
+
+    
+
+
+
+    <script src ="../jquery-3.6.3.min.js"></script>
+    <script src ="editPopup.js"></script>
+</body>
+</html>

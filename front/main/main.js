@@ -1,18 +1,19 @@
 /* 지도 생성 */
 
 
+
 var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
     width : "100%", // 지도의 넓이
     height : "100%", // 지도의 높이
     zoom : 17
 });
-
-  let nearStation_id;
   let new_lat,new_lon;
+  let nearStation_id;
+ 
   let nearStation_name;
 
-
+  let ledInfo;
 
 
 
@@ -378,11 +379,9 @@ let openWin;
     var _left = Math.ceil(( window.screen.width - _width )/2);
     var _top = Math.ceil(( window.screen.height - _height )/2); 
       
-      openWin = window.open('../popup/08_2_popup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+      openWin = window.open('../popup/popup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
     
-       openWin.onbeforeunload=function (){
-        window.location.reload();
-    }
+
      
       setTimeout(function()  {
         openWin.document.getElementById('new_lat').value=new_lat
@@ -393,10 +392,46 @@ let openWin;
         selected_list = openWin.document.getElementById('defalut')
         selected_list.value = nearStation_id;
         selected_list.text = nearStation_name + " (" +nearStation_id + ")"
-        location.reload();
+       
       }, 200);
      
  
+      
+  }
+
+
+  async function showEditPopup(id,name,modem_number,addr,dong,lat,lon,memo,station_id,stationName) { 
+    
+    
+  
+    var _width = '650';
+    var _height = '380';
+ 
+    // 팝업을 가운데 위치시키기 위해 아래와 같이 값 구하기
+    var _left = Math.ceil(( window.screen.width - _width )/2);
+    var _top = Math.ceil(( window.screen.height - _height )/2); 
+      
+
+
+      openWin = window.open('../popup/Editpopup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+
+      setTimeout(function()  {
+        openWin.document.getElementById('new_id').value=id;
+        openWin.document.getElementById('new_name').value=name;
+        openWin.document.getElementById('new_mdNum').value=modem_number;
+        openWin.document.getElementById('new_addr').value=addr;
+        openWin.document.getElementById('new_dong').value=dong;
+        openWin.document.getElementById('new_lat').value=lat;
+        openWin.document.getElementById('new_lon').value=lon;
+        openWin.document.getElementById('memo').value=memo;
+
+    
+        selected_list = openWin.document.getElementById('defalut')
+        selected_list.value = station_id;
+        selected_list.text = stationName + " (" +station_id + ")"
+       
+
+      },200);
       
   }
 
@@ -411,7 +446,7 @@ async function setLedMarker(){
 
 var lonlat;
 let min_distance = Infinity;
-var minIdx;
+
 
 
 let temp = null; 
@@ -497,7 +532,7 @@ for (var i = 0; i < ledInfo.length; i++) {
    
 
     marker.addListener("dragend", function (evt) {
-
+    
       let isConfilm = confirm("분전함의 위치를 현재 위치로 이동시키시겠습니까?")
       
       lonlat = evt.latLng; 
@@ -530,17 +565,30 @@ for (var i = 0; i < ledInfo.length; i++) {
 
 //이동기능
 $(function() {
-  $("#select3").change(function() {
 
+  $("#select3").change(function() {
+     
       var v = $("#select3").val();
+     
       var startIdx = v[0].indexOf('(');
       var endIdx = v[0].indexOf(')');
       var str_id = v[0].substring(startIdx + 1, endIdx);
-
+      let defaltName,defaltModem_number,defaltAddr,
+      defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
       for (var i = 0; i < ledInfo.length; i++) {
 
         if(ledInfo[i].custom_id == str_id){
-          
+          defaltName = ledInfo[i].name;
+          defaltModem_number = ledInfo[i].modem_number;
+          defaltAddr = ledInfo[i].address;
+          defaltDong = ledInfo[i].administrative_dong;
+          defaltLat = ledInfo[i].lat;
+          defaltLon = ledInfo[i].lon;
+          defaltInstallAt = ledInfo[i].installAt;
+          defaltStation_id = ledInfo[i].station_id;
+          defaltStationName = ledInfo[i].stationName;
+          defaltMemo = ledInfo[i].memo;
+
           var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
           map.setCenter(ll);
           var markerContents = getLedMarkerContent(ledInfo[i]);
@@ -552,14 +600,73 @@ $(function() {
           break;
         }
       }
-      $("#select2 option").bind('contextmenu rightclick', function(){
-          alert("aaaaa")
-      })
+      
+
+
+
+  const contextMenu = document.querySelector(".wrapper");
+  const trash = document.querySelector("#trash")
+  const edit = document.querySelector("#edit")
+
+
+      
+
+  $("#select3 option").off().bind('contextmenu rightclick', function(e){
+
   
+    console.log(str_id)
+    let x = e.offsetX, y = e.offsetY,
+  
+    winWidth = window.innerWidth,
+    winHeight = window.innerHeight,
+    cmWidth = contextMenu.offsetWidth,
+    cmHeight = contextMenu.offsetHeight;
+
+    x = x > winWidth - cmWidth ? winWidth - cmWidth - 5 : x;
+    y = y > winHeight - cmHeight ? winHeight - cmHeight -5 : y;
+    
+    contextMenu.style.left = `${x+100}px`;
+    contextMenu.style.top = `${y+30}px`;
+    contextMenu.style.visibility = "visible";
+
+    trash.onclick = function (event) {
+      if (confirm("정말 분전함을 삭제하시겠습니까?") == true){    
+        contextMenu.style.visibility = "hidden";
+          deleteLed(str_id);
+
+    }else{ 
+      contextMenu.style.visibility = "hidden";
+        return false;
+   
+    }
+   
+    };
+
+    edit.onclick = function(event) {
+      if (confirm("정말 분전함을 수정하시겠습니까?") == true){    
+        contextMenu.style.visibility = "hidden";
+        console.log(defaltAddr)
+        showEditPopup(str_id,defaltName,defaltModem_number,defaltAddr,
+          defaltDong,defaltLat,defaltLon,defaltMemo,defaltStation_id,defaltStationName);
+      }
+      else {
+        contextMenu.style.visibility = "hidden";
+        return false;
+      }
+    }
+
+})  
+    $("#select3").bind('click', function(){
+      contextMenu.style.visibility = "hidden";
+    })
+
+  
+
+
+
   });
+
 });
-
-
 
 
 
@@ -612,7 +719,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
       // [응답 확인 부분 - json 데이터를 받습니다]
       success: function(response) {
           alert("분전함의 위치가 이동되었습니다!")
-    
+
       },
                       
       // [에러 확인 부분]
@@ -639,31 +746,25 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 
 
 
-function DeleteLed(custom_id) {
+function deleteLed(custom_id) {
 
      // [요청 url 선언]
-  var reqURL = "http://127.0.0.1:23000//boards/:custom_id"; // 요청 주소
+  var reqURL = "http://127.0.0.1:23000/boards/"+custom_id; // 요청 주소
   
   
   // [요청 json 데이터 선언]
-  var jsonData = { // Body에 첨부할 json 데이터
-      "custom_id" : custom_id,
-      };  
 
 
-  console.log(jsonData)
 
   
   console.log("");
   console.log("[requestPostBodyJson] : [request url] : " + reqURL);
-  console.log("[requestPostBodyJson] : [request data] : " + JSON.stringify(jsonData));
   console.log("[requestPostBodyJson] : [request method] : " + "POST BODY JSON");
   console.log("");
   
   $.ajax({
       // [요청 시작 부분]
       url: reqURL, //주소
-      data: JSON.stringify(jsonData), //전송 데이터
       type: "delete", //전송 타입
       async: true, //비동기 여부
       timeout: 5000, //타임 아웃 설정
@@ -673,6 +774,7 @@ function DeleteLed(custom_id) {
       // [응답 확인 부분 - json 데이터를 받습니다]
       success: function(response) {
           alert("분전함이 삭제되었습니다!")
+          reloadFunc()
     
       },
                       
@@ -718,8 +820,17 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 
 function reloadFunc(){
+
   location.reload();
 }
+
+function reloadFunc2(){
+  setTimeout(() => {
+    location.reload();
+  }, 100);
+  
+}
+
 
 setInterval(reloadFunc, 1000 * 60 * 5)
 
@@ -775,3 +886,5 @@ $(document).ready(function(){
     $(".contextmenu").hide();
   });
 });
+
+

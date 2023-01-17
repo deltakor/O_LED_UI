@@ -7,7 +7,7 @@
     <link rel = "stylesheet" href="./popup.css">
     <title>분전함 정보 입력창</title>
 </head>
-<body>
+<body onunload="close_reload()">
     
     <form>
 
@@ -46,7 +46,7 @@
                   <input type="date" id="new_installDate" name="new_installDate" size="20" required>
               </li>
 
-              <li> <label class="reg" for="selectLED_list"> 분전함 ID </label>
+              <li> <label class="reg" for="selectLED_list"> 측정소 ID </label>
                 <select id = "selectLED_list" name ="selectLED_list" size=""required>
                  <option id = defalut selected></option>
                 </select> 
