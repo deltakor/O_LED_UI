@@ -1,6 +1,9 @@
 /* 지도 생성 */
 
-const secret = require("../../back/config/secret");
+
+
+
+
 
 var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
@@ -39,7 +42,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
       `
   }
 
-  function getMarkerContent(data) {
+  function markerView(data) {
   
     return `
     
@@ -125,6 +128,102 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 
 
+  function stationLogView(data) {
+
+  
+    for(var i = 0; i < data.length; i++) {
+
+          `   
+          <table>
+              <tbody>
+           <tr>
+                <td class = "category">측정소 id</td>
+                <td>${data.station_id}</td>
+            </tr>
+             <tr>
+                <td class = "category">측정소명</td>
+                <td>${data.stationName}</td>
+            </tr>
+
+            <tr>
+                <td class = "category">측정일시</td>
+                <td>${data.measureAt}</td>
+            </tr>
+
+          <tr>
+              <td class = "category">측정반영일시</td>
+              <td>${data.updateAt}</td>
+          </tr>
+
+            
+            <tr>
+                <td class = "category">상태</td>
+                <td>${data.status}</td>
+            </tr>
+
+
+            <tr>
+                <td class = "category">주소 </td>
+               <td>${data.addr}</td>
+            </tr>
+
+    
+            <tr>
+                <td class = "category">오존 농도</td>
+                <td>${data.o3Value}</td>
+            </tr>
+
+            <tr>
+                <td class= "category">오존 등급</td>
+                <td>${date.o3Grade}</td>
+            </tr>
+
+            <tr>
+                <td class = "category">미세먼지 농도</td>
+                <td>${data.pm10Value}</td>
+            </tr>
+
+            <tr>
+                <td class = "category">미세먼지 등급</td>
+                <td>${data.pm10Grade}</td>
+            </tr>
+            <tr>
+                <td class = "category">초미세먼지 농도</td>
+                <td>${data.pm25Value}</td>
+            </tr>
+
+            <tr>
+                <td class= "category">초미세먼지 등급</td>
+                <td>${data.pm25Grade}</td>
+            </tr>
+
+            
+            <tr>
+                <td class= "category">경도</td>
+                <td>${data.dmX}</td>
+            </tr>
+
+              <tr>
+                  <td class = "category">위도</td>
+                  <td>${data.dmY}</td>
+            </tr>
+            </tbody>
+         
+            </table>
+
+          `
+          
+    }
+  }
+
+
+
+
+
+      
+
+
+
 //이동 기능
 
 
@@ -151,16 +250,25 @@ $(document).ready(function(){
 	
 	const dataSet = await axios({
 		method: "get",
-		url: 'http://'+secret.ip+':23000/stations/',
+		url: "http://127.0.0.1:23000/stations",
+		headers: {},
+		data: {},
+	});
+
+  const logDataSet = await axios({
+		method: "get",
+		url: "http://127.0.0.1:23000/stationLogs",
 		headers: {},
 		data: {},
 	});
 
 
+
+
   stationInfo= dataSet.data.result;
-  
+  stationLogInfo = logDataSet.data.result;  
 
-
+  console.log(stationLogInfo[5].measuring_log_id)
   let selectTop = document.querySelector("#select2");
 
     
@@ -171,8 +279,8 @@ $(document).ready(function(){
    
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
     
-    let markerContents = getMarkerContent(stationInfo[i])
-
+    let markerContents = markerView(stationInfo[i]);
+   
     var marker = new Tmapv2.Marker({
       map: map, // 마커를 표시할 지도
       position: coords, // 마커를 표시할 위치
@@ -180,13 +288,14 @@ $(document).ready(function(){
     });
 
 
-    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-    // 이벤트 리스너로는 클로저를 만들어 등록합니다
-    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+
        marker.addListener("mouseenter", function(evt) {
-          
-    const tab1 =  document.querySelector("#tab-1")
+        const tab1 =  document.querySelector("#tab-1")
         tab1.innerHTML = markerContents
+        // const tab2 =  document.querySelector("#tab-2")
+        // tab2.innerHTML = logInfo
+     
+
         $('ul.tabs li#testtest').trigger("click");
   });
 
@@ -204,7 +313,7 @@ $(document).ready(function(){
 
     $("#select2").change(function() {
         
-        var stationName = $("#select2 option:checked").text();
+      
         var stationID = $("#select2").val();
 
 
@@ -215,7 +324,7 @@ $(document).ready(function(){
             var ll = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
           
             map.setCenter(ll);
-            var markerContents = getMarkerContent(stationInfo[i]);
+            var markerContents = markerView(stationInfo[i]);
             const tab1 =  document.querySelector("#tab-1");
             tab1.innerHTML = markerContents
             $('ul.tabs li#testtest').trigger("click");
@@ -380,7 +489,7 @@ function confirmPorm() {
          
       }else{   //취소
           
-         location.reload();
+   
           return false;
      
       }
@@ -503,7 +612,7 @@ let temp = null;
 
 const dataSet = await axios({
   method: "get",
-  url: 'http://'+secret.ip+':23000/boards/',
+  url: "http://127.0.0.1:23000/boards",
   headers: {},
   data: {},
 });
@@ -708,7 +817,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
   console.log("hi")
 
       // [요청 url 선언]
-  var reqURL = "http://"+secret.ip+":23000/boards"; // 요청 주소
+  var reqURL = "http://127.0.0.1:23000"; // 요청 주소
   
   
   // [요청 json 데이터 선언]
@@ -771,7 +880,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 function deleteLed(custom_id) {
 
      // [요청 url 선언]
-  var reqURL = "http://"+secret.ip+":23000/boards/"+custom_id; // 요청 주소
+  var reqURL = "http://127.0.0.1:23000/boards/"+custom_id; // 요청 주소
   
   
   // [요청 json 데이터 선언]

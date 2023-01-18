@@ -228,7 +228,7 @@ exports.updateBoard = async function (connection, custom_id, station_id, name, m
 
 // 로그인 (회원검증)
 exports.isValidUsers = async function (connection, userID, password) {
-  const Query = `SELECT userIdx, nickname FROM Users where userID = ? and password = ?;`;
+  const Query = `SELECT userIdx, nickname FROM users where userID = ? and password = ?;`;
   const Params = [userID, password];
 
   const rows = await connection.query(Query, Params);
@@ -242,7 +242,7 @@ exports.insertUsers = async function (connection, userID, password, nickname) {
 
   var now = new Date();
 
-  const Query = `insert into Users(userID, password, nickname, grade, createAt) values (?,?,?,?,?);`;
+  const Query = `insert into users(userID, password, nickname, grade, createAt) values (?,?,?,?,?);`;
   const Params = [userID, password, nickname, 10, now];
 
   const rows = await connection.query(Query, Params);

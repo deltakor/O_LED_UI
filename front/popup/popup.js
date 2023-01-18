@@ -1,5 +1,4 @@
 
-const secret = require("../../back/config/secret");
 
 (function sendValue() {
 
@@ -30,7 +29,7 @@ const secret = require("../../back/config/secret");
     
     
         // [요청 url 선언]
-    var reqURL = "http://"+secret.ip+":23000/boards"; // 요청 주소
+    var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
     
     
     // [요청 json 데이터 선언]

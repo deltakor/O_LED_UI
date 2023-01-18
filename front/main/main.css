@@ -163,22 +163,14 @@ body {
   
 }
 
-table {
+ table {
   width: 100%;
   height: calc(100%)
   
-}
-
-caption {
-  font-size: 18px;
-  font-weight: 400;
-  padding: 12px 0;
-}
+} 
 
 
-tr { background: #f1f1f1; }
 
-tr:nth-child(2n) { }
 
 th, td {
   text-align: left;
@@ -194,11 +186,35 @@ tfoot td {
   font-style: italic;
   color: #8a97a0;
 }
+ .category {
+    background-color: #dcdcdc;
+    width: 160px;
+  } 
 
-.category {
-  background-color: #dcdcdc;
-  width: 160px;
+table {
+  border: 1px #a39485 solid;
+  font-size: .9em;
+  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+
 }
+
+  
+ td, th {
+  padding: 1em .5em;
+  vertical-align: middle;
+}
+  
+ td {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  background: #fff;
+}
+
+
+
 
 
 /* 분전함 css */
@@ -279,7 +295,6 @@ select{
   width: 100%;
   height: 100%
 }
-
 
 
 
