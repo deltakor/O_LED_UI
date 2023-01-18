@@ -10,6 +10,7 @@
 */
 
 let url = "http://127.0.0.1:23000";
+//let url = "http://61.80.179.120:23000";
 
 const btnSignUp = document.querySelector("#signup");
 

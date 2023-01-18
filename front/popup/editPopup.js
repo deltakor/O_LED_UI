@@ -24,6 +24,7 @@
     
         // [요청 url 선언]
     var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
+    //var reqURL = "http://61.80.179.120:23000/boards";
     
     
     // [요청 json 데이터 선언]
