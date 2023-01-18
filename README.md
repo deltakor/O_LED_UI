@@ -8,40 +8,7 @@ npm i
 cd back
 npm start 또는 nodemon index.js
 
-
-
-<할일>
-
-
-왼탭 측정값전송 삭제 수정 연결(초기화)
-
-Setinterval로 리프레시될함수 넣기 (클라이언트)
-
-Cnf 파일만들어서 인터벌타임, db정보 키정보 저장해서 불러오기
-
-Customid 문자열로 받고 숫자4자리만입력받도록 테스트 (클라이언트)
-
-문서만들기 (함수사룡법 json형식 )
-
-분전함 상태 컬럼?
-분전함 명령로그 테이블?
-
-
-
 <설정파일 경로 : back/config/secret.js>
-
-module.exports = {
-    jwtsecret: "jwt_secret_key_9312",
-    host: "127.0.0.1",
-    user: "mysql아이디",
-    port: "mysql포트번호",
-    password: "mysql비밀번호",
-    database: "db이름",
-    intervalTime: 공공db에서 데이터가져올 함수를 주기적으로 실행할 시간
-    publicDataKey: '공공데이터 KEY' // 맨 앞에 '='가 없으면 붙혀주세요
-};
-
-
 
 
 ===========<리눅스환경에서 해야할 일>====================================
@@ -121,13 +88,30 @@ mysql server port : 23306
 
 username : oenterms
 
-프로젝트파일 우분투에 옮기고
 
-back 폴더로 들어가서
 
+
+
+<리눅스 컴퓨터에 설치하기>
 sudo apt install git
 
-npm i  실행 (또는 npm start)
+git clone https://github.com/deltakor/O_LED_UI.git
+
+front 폴더안에 있는 js파일의 url을 전부 수정하기 (127.0.0.1 -> 61.80.179.120)
+
+front 폴더를 /var/www/html/ 안에 넣기
+
+sudo nano /etc/nginx/sites-enabled/default
+root /var/www/html/front; 로 수정하기
+index index.html index.htm; 으로 수정하기
+service nginx restart
+
+back/config/secret.js 파일 수정하기
+
+cd back
+sudo npm i
+
+sudo npm start
 
 
 
@@ -146,10 +130,6 @@ mysql 접속 : mysql -u oenterms -p
 
 참고사이트 : http://61.80.179.117:8082/
 id : oenter
-
-
-요구사항 : 미세먼지, 초미세먼지, 오존, 날씨(맑음, 흐림), 온도
-
 
 
 <<기상청_단기예보 ((구)_동네예보) 조회서비스 - 초단기실황조회>>

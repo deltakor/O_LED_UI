@@ -251,6 +251,7 @@ $(document).ready(function(){
 	const dataSet = await axios({
 		method: "get",
 		url: "http://127.0.0.1:23000/stations",
+    //url: "http://61.80.179.120:23000/stations",
 		headers: {},
 		data: {},
 	});
@@ -258,6 +259,7 @@ $(document).ready(function(){
   const logDataSet = await axios({
 		method: "get",
 		url: "http://127.0.0.1:23000/stationLogs",
+    //url: "http://61.80.179.120:23000/stationLogs",
 		headers: {},
 		data: {},
 	});
@@ -613,6 +615,7 @@ let temp = null;
 const dataSet = await axios({
   method: "get",
   url: "http://127.0.0.1:23000/boards",
+  //url: "http://61.80.179.120:23000/boards",
   headers: {},
   data: {},
 });
@@ -817,7 +820,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
   console.log("hi")
 
       // [요청 url 선언]
-  var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
+  var reqURL = "http://127.0.0.1:23000"; // 요청 주소
   
   
   // [요청 json 데이터 선언]
@@ -881,6 +884,7 @@ function deleteLed(custom_id) {
 
      // [요청 url 선언]
   var reqURL = "http://127.0.0.1:23000/boards/"+custom_id; // 요청 주소
+  //var reqURL = "http://61.80.179.120:23000/boards/"+custom_id;
   
   
   // [요청 json 데이터 선언]
