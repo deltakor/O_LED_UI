@@ -104,8 +104,8 @@ section > div:nth-of-type(3){
 /* 탭메뉴 */
 
 ul.tabs{
-  background-color: #dcdcdc;
-  color: rgb(232, 234, 237);
+  background-color: #8788bbc4;
+  color: rgb(236, 240, 247);
   font-weight: bold;
   display: flex;
   flex-direction: row;
@@ -128,7 +128,7 @@ display: flex;
 }
 
 ul.tabs li.current{
-background: #e0e0e0;
+background: #9087df;
 color: #222;
 }
 
@@ -191,7 +191,7 @@ tfoot td {
   color: #8a97a0;
 }
  .category {
-    background-color: #dcdcdc;
+    
     width: 160px;
   } 
 
@@ -363,13 +363,43 @@ select{
 /* log css */
 
 
+body {
+  color: rgb(102, 102, 102);
+  font: 14px/24px "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Sans-Serif;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
 th,
 td {
-  padding: 6px 15px 10px;
-
+  padding: 0.5rem;
 }
 th {
-  background: #42444e;
+  background: #a489c4;
   color: #fff;
   text-align: left;
+}
+tr:first-child th:first-child {
+  border-top-left-radius: 6px;
+}
+tr:first-child th:last-child {
+  border-top-right-radius: 6px;
+}
+td {
+  border-right: 1px solid #c6c9cc;
+  border-bottom: 1px solid #c6c9cc;
+}
+td:first-child {
+  border-left: 1px solid #c6c9cc;
+}
+tr:nth-child(even) td {
+  background: #eaeaed;
+}
+tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
 }

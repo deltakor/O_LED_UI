@@ -216,6 +216,35 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     }
   }
 
+  function stationLogView(data) {
+  
+ 
+    var tr = '';
+
+    for(var i =0; i<data.length; i++) {
+    tr += '<tr>';
+    tr += '  <td>' + data[i].measuring_log_id + '</td>';
+    tr += '  <td>' + data[i].stationName + '</td>';
+    tr += '  <td>' + data[i].measureAt + '</td>';
+    tr += '  <td>' + data[i].createAt + '</td>';
+    tr += '  <td>' + data[i].status + '</td>';
+    tr += '  <td>' + data[i].o3Value + '</td>';
+    tr += '  <td>' + data[i].o3Grade + '</td>';
+    tr += '  <td>' + data[i].pm10Value + '</td>';
+    tr += '  <td>' + data[i].pm10Grade + '</td>';
+    tr += '  <td>' + data[i].pm25Value + '</td>';
+    tr += '  <td>' + data[i].pm25Grade + '</td>';
+
+    tr += '</tr>';
+    }
+
+    console.log(data)
+
+    return tr;
+          
+    
+}
+
 
 
 
@@ -257,20 +286,24 @@ $(document).ready(function(){
 	});
 
   const logDataSet = await axios({
-		method: "get",
-		url: "http://127.0.0.1:23000/stationLogs",
+    method: "get",
+    url: "http://127.0.0.1:23000/stationLogs",
     //url: "http://61.80.179.120:23000/stationLogs",
-		headers: {},
-		data: {},
-	});
-
+    headers: {},
+    data: {},
+  });
+  
+  logStationInfo = logDataSet.data.result;
+  
+  const tab3 =  document.querySelector("#tab-3Body");
+  tab3.innerHTML = stationLogView(logStationInfo);
 
 
 
   stationInfo= dataSet.data.result;
-  stationLogInfo = logDataSet.data.result;  
 
-  console.log(stationLogInfo[5].measuring_log_id)
+
+
   let selectTop = document.querySelector("#select2");
 
     
@@ -294,8 +327,7 @@ $(document).ready(function(){
        marker.addListener("mouseenter", function(evt) {
         const tab1 =  document.querySelector("#tab-1")
         tab1.innerHTML = markerContents
-        // const tab2 =  document.querySelector("#tab-2")
-        // tab2.innerHTML = logInfo
+    
      
 
         $('ul.tabs li#testtest').trigger("click");
@@ -570,12 +602,41 @@ let openWin;
 
 
 
+  function LedLogView(data) {
+  
+ 
+    var tr = '';
+
+    for(var i =0; i<data.length; i++) {
+    tr += '<tr>';
+    tr += '  <td>' + data[i].board_weather_log_id + '</td>';
+    tr += '  <td>' + data[i].custom_id + '</td>';
+    tr += '  <td>' + data[i].weatherMeasureAt + '</td>';
+    tr += '  <td>' + data[i].createAt + '</td>';
+    tr += '  <td>' + data[i].T1H + '</td>';
+    tr += '  <td>' + data[i].PTY + '</td>';
+    tr += '  <td>' + data[i].RN1 + '</td>';
+    tr += '  <td>' + data[i].REH + '</td>';
+    tr += '</tr>';
+    }
+
+    console.log(data)
+
+    return tr;
+          
+    
+}
+
+
+
+
+
 
 
 
 async function setLedMarker(){
 
-var lonlat;
+let lonlat;
 let min_distance = Infinity;
 
 
@@ -610,6 +671,13 @@ let temp = null;
 });
 
 
+const logDataSet = await axios({
+  method: "get",
+  url: "http://127.0.0.1:23000/boardWeatherLogs",
+  //url: "http://61.80.179.120:23000/boardWeatherLogs",
+  headers: {},
+  data: {},
+});
 
 
 const dataSet = await axios({
@@ -622,7 +690,11 @@ const dataSet = await axios({
 
 
  ledInfo = dataSet.data.result;
-
+ 
+ logLedInfo = logDataSet.data.result;
+ console.log(logLedInfo[1].board_weather_log_id)
+ const tab2 =  document.querySelector("#tab-2Body");
+ tab2.innerHTML = LedLogView(logLedInfo);
 
 
  let selectTop = document.querySelector("#select3");
@@ -633,20 +705,21 @@ for (var i = 0; i < ledInfo.length; i++) {
   
 
   $(selectTop).append("<option>" + ledInfo[i].name + " (" +ledInfo[i].custom_id + ")" +"</option>");
-    led_custom_id = ledInfo[i].custom_id;
+    
 
 
   
   let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
 
   let LedmarkerContents = getLedMarkerContent(ledInfo[i])
-  
+  let markerID = ledInfo[i].custom_id
 
   var marker = new Tmapv2.Marker({
     map: map, // 마커를 표시할 지도
     position: coords, // 마커를 표시할 위치
     draggable: true,
-    icon: "../icon/분전함.png"
+    icon: "../icon/분전함.png",
+    
   });
 
 
@@ -669,17 +742,32 @@ for (var i = 0; i < ledInfo.length; i++) {
     
       let isConfilm = confirm("분전함의 위치를 현재 위치로 이동시키시겠습니까?")
       
-      lonlat = evt.latLng; 
-      new_lat = lonlat.lat();
-      new_lon = lonlat.lng();
+      let lonlatC = evt.latLng; 
+      new_latC = lonlatC.lat();
+      new_lonC = lonlatC.lng();
       
+      let min_distanceC= Infinity;
 
+      for(var i = 0; i < stationInfo.length; i++) {
+        tempc = getDistance(new_latC,new_lonC,stationInfo[i].dmX,stationInfo[i].dmY);
+
+
+        if(min_distanceC > tempc) {
+          min_distanceC = tempc;
+      
+          nearStation_idC = stationInfo[i].station_id
+      
+          
+        }
+
+      
+    }
 
 
 
       if(isConfilm) {
-
-        sendLonlatValue(led_custom_id,new_lat,new_lon);
+        sendLonlatValue(markerID,new_latC,new_lonC,nearStation_idC);
+        location.reload();
       } else {
         location.reload();
       }
@@ -813,7 +901,7 @@ $(function() {
 
 
 
-function sendLonlatValue(led_id,lat_data,lon_data) {
+function sendLonlatValue(led_id,lat_data,lon_data,changeStation_id) {
 
 
 
@@ -821,13 +909,14 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 
       // [요청 url 선언]
   var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
-  
+  //var reqURL = "http://61.80.179.120:23000/boards";
   
   // [요청 json 데이터 선언]
   var jsonData = { // Body에 첨부할 json 데이터
       "custom_id" : led_id,
       "lat" : lat_data,
       "lon" : lon_data,
+      "station_id" : changeStation_id
       };  
 
 
@@ -967,7 +1056,7 @@ function reloadFunc2(){
 }
 
 
-setInterval(reloadFunc, 1000 * 60 * 5)
+setInterval(reloadFunc, 1000 * 60 * 15)
 
 
 
@@ -1021,5 +1110,7 @@ $(document).ready(function(){
     $(".contextmenu").hide();
   });
 });
+
+
 
 

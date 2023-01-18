@@ -495,7 +495,7 @@ exports.updateBoard = async function (req, res){
         }
 
 
-        console.log("test1")
+      
    
         const [rows] = await indexDao.updateBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt);
           return res.send({
