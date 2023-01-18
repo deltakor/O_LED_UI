@@ -88,18 +88,21 @@ mysql server port : 23306
 
 username : oenterms
 
-
-
++ 프로젝트 폴더에 들어있는 sql 백업본으로 DB 초기화하기
 
 
 <리눅스 컴퓨터에 설치하기>
+
 sudo apt install git
 
 git clone https://github.com/deltakor/O_LED_UI.git
 
 front 폴더안에 있는 js파일의 url을 전부 수정하기 (127.0.0.1 -> 61.80.179.120)
+ex) sudo nano signup.js
 
-front 폴더를 /var/www/html/ 안에 넣기
+프로젝트 폴더로 가서
+mv front /var/www/html/
+(front 폴더 위치 이동)
 
 sudo nano /etc/nginx/sites-enabled/default
 root /var/www/html/front; 로 수정하기
@@ -107,6 +110,7 @@ index index.html index.htm; 으로 수정하기
 service nginx restart
 
 back/config/secret.js 파일 수정하기
+(user : "oenterms" , password : "5920890~3", database : "d447")
 
 cd back
 sudo npm i
@@ -125,9 +129,8 @@ Web PORT =  20080
 원격데스크톱 PORT = 23389
 MySql PORT = 23306
 Nodejs PORT = 23000
-웹주소 :  http://61.80.179.120:20080/
 mysql 접속 : mysql -u oenterms -p
-
+웹주소 :  http://61.80.179.120:20080/
 참고사이트 : http://61.80.179.117:8082/
 id : oenter
 
