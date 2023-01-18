@@ -125,6 +125,8 @@ username : oenterms
 
 back 폴더로 들어가서
 
+sudo apt install git
+
 npm i  실행 (또는 npm start)
 
 
