@@ -821,7 +821,8 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 
       // [요청 url 선언]
   var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
-  
+  //var reqURL = "http://61.80.179.120:23000/boards";
+
   
   // [요청 json 데이터 선언]
   var jsonData = { // Body에 첨부할 json 데이터
