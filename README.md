@@ -1,17 +1,11 @@
-<git clone 시 해야할 일>
-back/config/secret.js에서 db정보 수정
-cd back
-npm i
+
+<할일>
+1. 우클릭 - 연결 화면 만들기
+3. 위치이동시 근접하는 분전함 갱신 구현하기
+4. 위치이동시 다른분전함이 이동하는 버그 수정하기
 
 
-<웹서버실행>
-cd back
-npm start 또는 nodemon index.js
-
-<설정파일 경로 : back/config/secret.js>
-
-
-===========<리눅스환경에서 해야할 일>====================================
+===========<리눅스환경설정>====================================
 
 관리자 권한 획득 : sudo su
 
@@ -88,18 +82,21 @@ mysql server port : 23306
 
 username : oenterms
 
-
-
++ 프로젝트 폴더에 들어있는 sql 백업본으로 DB 초기화하기
 
 
 <리눅스 컴퓨터에 설치하기>
+
 sudo apt install git
 
 git clone https://github.com/deltakor/O_LED_UI.git
 
 front 폴더안에 있는 js파일의 url을 전부 수정하기 (127.0.0.1 -> 61.80.179.120)
+ex) sudo nano signup.js
 
-front 폴더를 /var/www/html/ 안에 넣기
+프로젝트 폴더로 가서
+mv front /var/www/html/
+(front 폴더 위치 이동)
 
 sudo nano /etc/nginx/sites-enabled/default
 root /var/www/html/front; 로 수정하기
@@ -107,12 +104,26 @@ index index.html index.htm; 으로 수정하기
 service nginx restart
 
 back/config/secret.js 파일 수정하기
+(user : "oenterms" , password : "5920890~3", database : "d447")
 
 cd back
 sudo npm i
 
-sudo npm start
 
+<무중단 배포 설치>
+sudo npm i pm2 -g
+
+<무중단 배포 실행>
+back 폴더내에서
+sudo pm2 start index.js
+
+<서버 재시작>
+sudo pm2 list
+sudo pm2 restart id번호
+
+<서버 종료>
+sudo pm2 list
+sudo pm2 stop id번호
 
 
 ========================================================================
@@ -125,9 +136,8 @@ Web PORT =  20080
 원격데스크톱 PORT = 23389
 MySql PORT = 23306
 Nodejs PORT = 23000
-웹주소 :  http://61.80.179.120:20080/
 mysql 접속 : mysql -u oenterms -p
-
+웹주소 :  http://61.80.179.120:20080/
 참고사이트 : http://61.80.179.117:8082/
 id : oenter
 

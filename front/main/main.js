@@ -576,7 +576,7 @@ let openWin;
       
 
 
-      openWin = window.open('../popup/Editpopup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+      openWin = window.open('../popup/editPopup.html', 'a', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
 
       setTimeout(function()  {
         openWin.document.getElementById('new_id').value=id;
