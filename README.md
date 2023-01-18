@@ -1,17 +1,11 @@
-<git clone 시 해야할 일>
-back/config/secret.js에서 db정보 수정
-cd back
-npm i
+
+<할일>
+1. 우클릭 - 연결 화면 만들기
+2. 우클릭 - 수정 오류 해결
+3. 위치이동시 근접하는 분전함 갱신 구현하기
 
 
-<웹서버실행>
-cd back
-npm start 또는 nodemon index.js
-
-<설정파일 경로 : back/config/secret.js>
-
-
-===========<리눅스환경에서 해야할 일>====================================
+===========<리눅스환경설정>====================================
 
 관리자 권한 획득 : sudo su
 
@@ -115,8 +109,21 @@ back/config/secret.js 파일 수정하기
 cd back
 sudo npm i
 
-sudo npm start
 
+<무중단 배포 설치>
+sudo npm i pm2 -g
+
+<무중단 배포 실행>
+back 폴더내에서
+sudo pm2 start index.js
+
+<서버 재시작>
+sudo pm2 list
+sudo pm2 restart id번호
+
+<서버 종료>
+sudo pm2 list
+sudo pm2 stop id번호
 
 
 ========================================================================
