@@ -9,16 +9,10 @@ const ip = "127.0.0.1";
 //--------------------------------------------------------------------
 
 
-var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
-    center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
-    width : "100%", // 지도의 넓이
-    height : "100%", // 지도의 높이
-    zoom : 16
-});
-  let new_lat,new_lon;
-  let nearStation_id;
+let new_lat,new_lon;
+let nearStation_id;
  
-  let nearStation_name;
+let nearStation_name;
 
 let stationInfo;
 
@@ -75,7 +69,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].updateAt + "</th>" +"</tr>");
    
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
-    
+    console.log(coords)
     let markerContents = markerView(stationInfo[i]);
     var title = stationInfo[i].stationName;
     label="<span style='background-color: #46414E;color:white'>"+title+"</span>";
@@ -86,7 +80,6 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
       title: title,
       label: label
     });
-
 
 
        marker.addListener("mouseenter", function(evt) {
@@ -105,7 +98,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     
   }
 
-  console.log(stationList)
+ 
 	$(function() {
 
     $("#station_list_body tr").on('click',function(e) {
