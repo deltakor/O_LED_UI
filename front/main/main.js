@@ -3,10 +3,22 @@
 let label; 
 let openWin;
 
-let new_lat,new_lon;
-let nearStation_id;
+//IP 설정--------------------------------------------------------------
+const ip = "127.0.0.1";
+//const ip = "61.80.179.120";
+//--------------------------------------------------------------------
 
-let nearStation_name;
+
+var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
+    center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
+    width : "100%", // 지도의 넓이
+    height : "100%", // 지도의 높이
+    zoom : 16
+});
+  let new_lat,new_lon;
+  let nearStation_id;
+ 
+  let nearStation_name;
 
 let stationInfo;
 
@@ -31,16 +43,14 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 	
 	const dataSet = await axios({
 		method: "get",
-		url: "http://127.0.0.1:23000/stations",
-    //url: "http://61.80.179.120:23000/stations",
+		url: "http://"+ip+":23000/stations",
 		headers: {},
 		data: {},
 	});
 
   const logDataSet = await axios({
     method: "get",
-    url: "http://127.0.0.1:23000/stationLogs",
-    //url: "http://61.80.179.120:23000/stationLogs",
+    url: "http://"+ip+":23000/stationLogs",
     headers: {},
     data: {},
   });
@@ -172,8 +182,7 @@ let temp = null;
 
 const logDataSet = await axios({
   method: "get",
-  url: "http://127.0.0.1:23000/boardWeatherLogs",
-  //url: "http://61.80.179.120:23000/boardWeatherLogs",
+  url: "http://"+ip+":23000/boardWeatherLogs",
   headers: {},
   data: {},
 });
@@ -181,8 +190,7 @@ const logDataSet = await axios({
 
 const dataSet = await axios({
   method: "get",
-  url: "http://127.0.0.1:23000/boards",
-  //url: "http://61.80.179.120:23000/boards",
+  url: "http://"+ip+":23000/boards",
   headers: {},
   data: {},
 });
@@ -402,8 +410,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 
 
       // [요청 url 선언]
-  var reqURL = "http://127.0.0.1:23000/boards"; // 요청 주소
-  //var reqURL = "http://61.80.179.120:23000/boards";
+  var reqURL = "http://"+ip+":23000/boards"; // 요청 주소
   
   // [요청 json 데이터 선언]
   var jsonData = { // Body에 첨부할 json 데이터
@@ -460,8 +467,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
 function deleteLed(custom_id) {
 
      // [요청 url 선언]
-  var reqURL = "http://127.0.0.1:23000/boards/"+custom_id; // 요청 주소
-  //var reqURL = "http://61.80.179.120:23000/boards/"+custom_id;
+  var reqURL = "http://"+ip+":23000/boards/"+custom_id; // 요청 주소
   
   
   // [요청 json 데이터 선언]

@@ -1,8 +1,6 @@
 
 <할일>
 1. 우클릭 - 연결 화면 만들기
-3. 위치이동시 근접하는 분전함 갱신 구현하기
-4. 위치이동시 다른분전함이 이동하는 버그 수정하기
 
 
 ===========<리눅스환경설정>====================================
@@ -91,8 +89,7 @@ sudo apt install git
 
 git clone https://github.com/deltakor/O_LED_UI.git
 
-front 폴더안에 있는 js파일의 url을 전부 수정하기 (127.0.0.1 -> 61.80.179.120)
-ex) sudo nano signup.js
+front 폴더안에 있는 js파일의 url을 전부 수정하기 (main.js는 ip변수의 값을 바꾸면되고 나머지 js파일은 하나의 url만 수정하면 된다.)
 
 프로젝트 폴더로 가서
 mv front /var/www/html/
