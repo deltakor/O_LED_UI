@@ -154,7 +154,7 @@ display: inherit;
   box-sizing: border-box;
 }
 
-body {
+body.tab-1 {
   margin-top: 0;
   font-family: 'Lato', sans-serif;
   color: #333;
@@ -163,7 +163,7 @@ body {
   
 }
 
- table {
+ table.tab-1 {
   width: 100%;
   height: calc(100%);
   border-spacing: 3px;
@@ -190,7 +190,7 @@ tfoot td {
   font-style: italic;
   color: #8a97a0;
 }
- .category {
+.category {
     
     width: 160px;
   } 
@@ -270,7 +270,7 @@ div.right_top{
   height: 50%;
   float: top;
   box-sizing: border-box;
-  background: rgb(201, 240, 213);
+
 }
 
 
@@ -279,7 +279,7 @@ div.right_bottom{
   height: 50%;
   float: bottom;
   box-sizing: border-box;
-  background: rgb(253, 213, 218);
+  background: rgb(255, 255, 255);
 }
 
 
@@ -363,11 +363,11 @@ select{
 /* log css */
 
 
-body {
+body.tab-3 {
   color: rgb(102, 102, 102);
   font: 14px/24px "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Sans-Serif;
 }
-table {
+table.tab-3 {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
@@ -376,7 +376,7 @@ th,
 td {
   padding: 0.5rem;
 }
-th {
+#tab-3Head{
   background: #a489c4;
   color: #fff;
   text-align: left;
@@ -402,4 +402,52 @@ tr:last-child td:first-child {
 }
 tr:last-child td:last-child {
   border-bottom-right-radius: 6px;
+}
+
+#ledList {
+  background: rgb(184, 176, 176)
+}
+
+
+
+.header__search:focus-within::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  border: 2px solid orange;
+  border-radius: 3px;
+}
+
+
+
+#led_list_head > td,th{
+  border:1px solid gray;
+  text-align: center;
+  font-size: 1.1rem;
+
+}
+
+.changeColor {
+   background-color: #e0cfcf;
+}
+
+
+#station_list_body > td,th{
+  border:1px solid gray;
+  text-align: center;
+  font-size: 1rem;
+
+}
+
+
+#led_row:hover {
+  background-color: #8a97a0;
+}
+
+#station_row:hover {
+  background-color: #8a97a0;
 }

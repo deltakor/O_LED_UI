@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel = "stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <script src="../jquery-3.6.3.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 </head>
 <body >
 
@@ -36,17 +36,52 @@
     <div>
         <section>
             <div class="ictInfo">
-             
+              
                 <div class="right"> 
-                  
-                    <div class ="right_top"> 
-                        <select multiple id = "select3">
-                            
-                          </select>
+                    <div class ="right_top" style=" border: 1px solid black; overflow: auto;"> 
+                      <br></br>
+                        <div class="search-container">
+                          <input type="search" id="search" placeholder="Search..." />
+                          <button class="search-click"><i class="fa fa-search"></i></button>
+                          <br></br>
+                        </div>
+                        
+                        <div id = "led_list">
+                        <table style="border-collapse: collapse;"id ="led_list_table">
+                            <thead id ="led_list_head" style="background-color: aliceblue;">
+                              <tr>
+                                <th>분전함 이름</th>
+                                <th>반영일시</th>
+                              </tr> 
+                              </thead>
+
+                              <tbody id ="led_list_body">                               
+                              </tbody>
+
+                        </table>
+                        </div>
+
+                        <!-- <select multiple id = "select3">
+                          
+                          </select>  -->
                     </div>
-                    <div class = "right_bottom">
-                        <select multiple id = "select2">
-                          </select>
+                    <div class = "right_bottom" style=" border: 1px solid black; overflow: auto;" >
+                      <div id = "station_list">
+                      <table style="border-collapse: collapse;"id ="station_list_table">
+                          <thead id ="station_list_head" style="background-color: aliceblue;">
+                            <tr>
+                              <th>측정소 이름</th>
+                              <th>반영일시</th>
+                            </tr> 
+                            </thead>
+
+                            <tbody id ="station_list_body">                               
+                            </tbody>
+
+                      </table>
+                      </div>
+                        <!-- <select multiple id = "select2">
+                          </select> -->
                     </div>
                 </div>
             </div>
@@ -69,7 +104,7 @@
                 
                 <div id="tab-2" class="tab-content"> 
                   <table>
-                        <thead>
+                        <thead id = "tab-3Head">
                           <tr>
                             <th>board_weather<br>_log_id</th>
                             <th>custom_id</th>
@@ -89,7 +124,7 @@
           
                 <div id="tab-3" class="tab-content">
                   <table>
-                    <thead>
+                    <thead id = "tab-3Head">
                       <tr>
                         <th>measuring<br>_log_id</th>
                         <th>stationName</th>
