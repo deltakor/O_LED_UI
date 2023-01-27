@@ -539,6 +539,7 @@ exports.createJwt = async function (req, res) {
     const connection = await pool.getConnection(async (conn) => conn);
     try {
       // 2. DB 회원 검증
+      const [rows] = await indexDao.isValidUsers(connection, userID, password);
 
       if (rows.length < 1) {
         return res.send({
