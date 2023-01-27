@@ -144,21 +144,31 @@ exports.getLastDustData = async function (){
       try{
         
           console.log("getting WeatherData . . . ");
-  
+
           //board 정보를 가져온다.
           const [boards] = await indexDao.selectBoards(connection);
-  
+          
+
           for(let i = 0; i < boards.length; i++){
             
             let b_id = boards[i].board_id;
             let x = boards[i].grid_x;
             let y = boards[i].grid_y;
+            let status = boards[i].status;
+            let latestCommunicationAt = boards[i].latestCommunicationAt;
+            let panel_interval = boards[i].panel_interval;
   
+
+
+
+            //----------------초단기 실황 데이터 가져오기 시작---------------------------------------------
+
+
             //정시에 관한 날씨정보는 정시의 40분부터 받아올 수 있기 때문에 현재시간 - 42분 처리를 한다.
             var today = new Date();
             today.setMinutes(today.getMinutes() - 42);
           
-  
+
             var year = today.getFullYear();
             var month = ('0' + (today.getMonth() + 1)).slice(-2);
             var day = ('0' + today.getDate()).slice(-2);
@@ -169,9 +179,9 @@ exports.getLastDustData = async function (){
             var minutes = ('0' + today.getMinutes()).slice(-2);
             
             var timeString = hours + minutes;
-  
+
             var request = require('request');
-  
+
             var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst';
             var queryParams = '?' + encodeURIComponent('serviceKey') + secret.publicDataKey; /* Service Key*/
             queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* */
@@ -181,50 +191,167 @@ exports.getLastDustData = async function (){
             queryParams += '&' + encodeURIComponent('base_time') + '=' + encodeURIComponent(timeString); /* */
             queryParams += '&' + encodeURIComponent('nx') + '=' + encodeURIComponent(x); /* */
             queryParams += '&' + encodeURIComponent('ny') + '=' + encodeURIComponent(y); /* */
-  
+
             request({
                 url: url + queryParams,
                 method: 'GET'
             }, async function (error, response, body) {
-  
+
             
             
-            const json = JSON.parse(body);
-            const jsonData = json.response.body.items.item;
-  
-            var T1H; //기온 (도)
-            var PTY; //강수형태 (코드값)
-            var RN1; //1시간 강수량 (mm)
-            var REH; //습도 (%)
+              const json = JSON.parse(body);
+              const jsonData = json.response.body.items.item;
+
+              var T1H; //기온 (도)
+              var PTY; //강수형태 (코드값)
+              var RN1; //1시간 강수량 (mm)
+              var REH; //습도 (%)
+              var nowCastJson = body;
+              var VEC;
+              var WSD;
+              var WND;
+
             
-            for(let j = 0; j < jsonData.length; j++){
               
-              if(jsonData[j].category === 'T1H'){
-                T1H = jsonData[j].obsrValue;
-              }else if(jsonData[j].category === 'PTY'){
-                PTY = jsonData[j].obsrValue;
+              for(let j = 0; j < jsonData.length; j++){
+                
+                if(jsonData[j].category === 'T1H'){
+                  T1H = jsonData[j].obsrValue;
+                }else if(jsonData[j].category === 'PTY'){
+                  PTY = jsonData[j].obsrValue;
+                }
+                else if(jsonData[j].category === 'RN1'){
+                  RN1 = jsonData[j].obsrValue;
+                }
+                else if(jsonData[j].category === 'REH'){
+                  REH = jsonData[j].obsrValue;
+                }
+                else if(jsonData[j].category === 'VEC'){
+                  VEC = jsonData[j].obsrValue;
+                }
+                else if(jsonData[j].category === 'WSD'){
+                  WSD = jsonData[j].obsrValue;
+                }
+
               }
-              else if(jsonData[j].category === 'RN1'){
-                RN1 = jsonData[j].obsrValue;
-              }
-              else if(jsonData[j].category === 'REH'){
-                REH = jsonData[j].obsrValue;
-              }
-  
-            }
-  
-          
-                      const year = today.getFullYear();
-                      const month = ('0' + (today.getMonth() + 1)).slice(-2);
-                      const day = ('0' + today.getDate()).slice(-2);
-                      const dateStr = year + '-' + month + '-' + day;
-                      const hours = ('0' + today.getHours()).slice(-2);
-  
-                      let newDate = dateStr + " " + hours + ":00:00";
-  
-  
-            //db에 log 데이터 삽입. 
-            const [results] = await indexDao.insertWeatherLogData(connection, b_id, newDate, T1H, PTY, RN1, REH, body, boards[i].custom_id);
+
+
+
+            //----------------초단기 실황 데이터 가져오기 끝---------------------------------------------
+
+
+
+
+            //------------------초단기 예보 데이터 가져오기 시작----------------------------------------
+
+
+              /*
+              
+              1시간 이후의 예보값을 가져온다
+              
+              1301로 조회화면 예보값은 1400값부터 가져올 수 있고
+              1359로 조회회도 예보값은 1400값부터 가져올 수 있다
+              그래서 현재시간 - 1시간으로 조회를해서 현재시간(정시)의 예보값을 들고오도록 구현
+
+              */
+              var today = new Date();
+              today.setHours(today.getHours() - 1);
+            
+              var year = today.getFullYear();
+              var month = ('0' + (today.getMonth() + 1)).slice(-2);
+              var day = ('0' + today.getDate()).slice(-2);
+              
+              var dateString = year + month + day;
+              
+              var hours = ('0' + today.getHours()).slice(-2); 
+              var minutes = ('0' + today.getMinutes()).slice(-2);
+              
+              var timeString = hours + minutes;
+
+
+
+
+
+              var request = require('request');
+
+              var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst';
+              var queryParams = '?' + encodeURIComponent('serviceKey') + secret.publicDataKey; /* Service Key*/
+              queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* */
+              queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('1000'); /* */
+              queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /* */
+              queryParams += '&' + encodeURIComponent('base_date') + '=' + encodeURIComponent(dateString); /* */
+              queryParams += '&' + encodeURIComponent('base_time') + '=' + encodeURIComponent(timeString); /* */
+              queryParams += '&' + encodeURIComponent('nx') + '=' + encodeURIComponent(x); /* */
+              queryParams += '&' + encodeURIComponent('ny') + '=' + encodeURIComponent(y); /* */
+
+              request({
+                  url: url + queryParams,
+                  method: 'GET'
+              }, async function (error, response, body) {
+                const json = JSON.parse(body);
+                const jsonData = json.response.body.items.item;
+
+
+                var SKY; //하늘상태 (from 초단기예보)
+                var forecastJson = body;
+
+                var today = new Date();
+                var hours = ('0' + today.getHours()).slice(-2);
+
+
+                for(let k = 0; k < jsonData.length; k++){
+
+
+                  if(jsonData[k].category === 'SKY' && jsonData[k].fcstTime == hours + "00"){
+                    SKY = jsonData[k].fcstValue;
+                  }
+
+
+                }
+
+
+            //------------------초단기 예보 데이터 가져오기 끝----------------------------------------
+
+                var year = today.getFullYear();
+                var month = ('0' + (today.getMonth() + 1)).slice(-2);
+                var day = ('0' + today.getDate()).slice(-2);
+                var dateStr = year + '-' + month + '-' + day;
+                var hours = ('0' + today.getHours()).slice(-2);
+
+                let newDate = dateStr + " " + hours + ":00:00"; //기상청에서 측정한 측정 시간
+
+
+                //WND 컬럼 구하기 (치환표 기준)
+                if(22.5 < VEC && VEC < 67.5){
+                  WND = "북동," + WSD;
+                }
+                else if(67.5 < VEC && VEC < 112.5){
+                  WND = "동," + WSD;
+                }
+                else if(112.5 < VEC && VEC < 157.5){
+                  WND = "남동," + WSD;
+                }
+                else if(157.5 < VEC && VEC < 202.5){
+                  WND = "남," + WSD;
+                }
+                else if(202.5 < VEC && VEC < 247.5){
+                  WND = "남서," + WSD;
+                }
+                else if(247.5 < VEC && VEC < 292.5){
+                  WND = "서," + WSD;
+                }
+                else if(292.5 < VEC && VEC < 337.5){
+                  WND = "북서," + WSD;
+                }
+                else if(337.5 < VEC || VEC < 22.5){
+                  WND = "동," + WSD;
+                }
+
+
+                //db에 log 데이터 삽입. 
+                const [results] = await indexDao.insertWeatherLogData(connection, b_id, newDate, T1H, PTY, RN1, REH, WND, SKY, nowCastJson, forecastJson, boards[i].custom_id, status, latestCommunicationAt, panel_interval);
+      
+              });
 
             });
     
@@ -247,5 +374,50 @@ exports.getLastDustData = async function (){
   
   }
   
-  
-  
+
+
+
+
+//한시간마다 분전함db select해서 latestCommunicationAt이랑 현재시간이랑 18시간 이상 차이나면 통신장애로 바꾸고 아니면 정상으로 변경
+exports.setBoardStatus = async function (){
+
+  try{
+    const connection = await pool.getConnection(async (conn) => conn);
+
+    try{
+      
+      //board 정보를 가져온다.
+      const [boards] = await indexDao.selectBoards(connection);
+
+      for(let i = 0; i < boards.length; i++){
+            
+        let board_id = boards[i].board_id;
+        let latestCommunicationAt = new Date(boards[i].latestCommunicationAt); //가장 최근에 통신한 시간
+        let currentDate = new Date(); //현재시간
+
+        const diffMSec = currentDate.getTime() - latestCommunicationAt.getTime();
+        const diffHour = diffMSec / (60 * 60 * 1000);
+     
+        if(diffHour >= 18){ //통신장애로 판단
+          const [results] = await indexDao.updateBoardStatus(connection, board_id, "통신장애");
+        }
+        else{ //정상으로 판단 (차이가 18시간 미만)
+          const [results] = await indexDao.updateBoardStatus(connection, board_id, "정상");
+        }
+
+      }
+
+    }catch (err) {
+      logger.error(`setBoardStatus error\n: ${JSON.stringify(err)}`);
+      return false;
+    } finally {
+      connection.release();
+    }
+
+
+  }catch(err){
+    logger.error(`setBoardStatus DB Connection error\n: ${JSON.stringify(err)}`);
+    return false;
+  }
+
+}

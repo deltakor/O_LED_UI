@@ -132,15 +132,16 @@ exports.getAllWeatherLog = async function (connection){
 }
 
 
-exports.insertWeatherLogData = async function(connection, board_id, weatherMeasureAt, T1H, PTY, RN1, REH, json, custom_id){
+
+exports.insertWeatherLogData = async function(connection, board_id, weatherMeasureAt, T1H, PTY, RN1, REH, WND, SKY, nowCastJson, forecastJson, custom_id, status, latestCommunicationAt, panel_interval){
 
   var now = new Date();
 
-  const updateQuery = `UPDATE distribution_board SET weatherMeasureAt = ?, updateAt = ?, T1H = ?, PTY = ?, RN1 = ?, REH = ?, json = ? WHERE board_id = ?`; 
-  const updateParams = [weatherMeasureAt, now, T1H, PTY, RN1, REH, json, board_id];
+  const updateQuery = `UPDATE distribution_board SET weatherMeasureAt = ?, updateAt = ?, T1H = ?, PTY = ?, RN1 = ?, REH = ?, WND = ?, SKY = ?, json = ?, forecast_json = ? WHERE board_id = ?`; 
+  const updateParams = [weatherMeasureAt, now, T1H, PTY, RN1, REH, WND, SKY, nowCastJson, forecastJson, board_id];
 
-  const insertQuery = `INSERT INTO board_weather_log(custom_id, weatherMeasureAt, createAt, T1H, PTY, RN1, REH, json) values(?,?,?,?,?,?,?,?);`;
-  const insertParams = [custom_id, weatherMeasureAt, now, T1H, PTY, RN1, REH, json];
+  const insertQuery = `INSERT INTO board_weather_log(custom_id, status, weatherMeasureAt, createAt, latestCommunicationAt, panel_interval, T1H, PTY, RN1, REH, SKY, WND, json, forecast_json) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+  const insertParams = [custom_id, status, weatherMeasureAt, now, latestCommunicationAt, panel_interval, T1H, PTY, RN1, REH, SKY, WND, nowCastJson, forecastJson];
 
   let rows1 = await connection.query(updateQuery, updateParams); 
   let rows2 = await connection.query(insertQuery, insertParams); 
@@ -167,12 +168,12 @@ exports.duplicateCustomIdCheck = async function (connection, custom_id){
 
 
 
-exports.insertBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, grid_x, grid_y, memo, installAt){
+exports.insertBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, grid_x, grid_y, memo, installAt){
 
   var now = new Date();
 
-  const Query = `INSERT INTO distribution_board(custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, grid_x, grid_y, memo, updateAt, installAt) values(?,?,?,?,?,?,?,?,?,?,?,?,?);`;
-  const Params = [custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, grid_x, grid_y, memo, now, installAt];
+  const Query = `INSERT INTO distribution_board(custom_id, station_id, name, modem_number, status, address, administrative_dong, panel_interval ,lat, lon, grid_x, grid_y, memo, updateAt, installAt, latestCommunicationAt) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+  const Params = [custom_id, station_id, name, modem_number, "정상", address, administrative_dong, panel_interval, lat, lon, grid_x, grid_y, memo, now, installAt, now];
 
   const rows = await connection.query(Query, Params);
 
@@ -208,17 +209,13 @@ exports.deleteBoard = async function (connection, custom_id){
 
 
 
-exports.updateBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt){
+exports.updateBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, x, y, memo, installAt){
 
   var now = new Date();
 
+  const Query = `UPDATE distribution_board SET updateAt = ?, station_id = ifnull(?, station_id), name = ifnull(?, name), modem_number = ifnull(?, modem_number), address = ifnull(?, address), administrative_dong = ifnull(?, administrative_dong), panel_interval = ifnull(?, panel_interval), lat = ifnull(?, lat), lon = ifnull(?, lon), grid_x = ifnull(?, grid_x), grid_y = ifnull(?, grid_y), memo = ifnull(?, memo), installAt = ifnull(?, installAt) WHERE custom_id = ?;`;
 
-
-
-
-  const Query = `UPDATE distribution_board SET updateAt = ?, station_id = ifnull(?, station_id), name = ifnull(?, name), modem_number = ifnull(?, modem_number), address = ifnull(?, address), administrative_dong = ifnull(?, administrative_dong), lat = ifnull(?, lat), lon = ifnull(?, lon), grid_x = ifnull(?, grid_x), grid_y = ifnull(?, grid_y), memo = ifnull(?, memo), installAt = ifnull(?, installAt) WHERE custom_id = ?;`;
-
-  const Params = [now, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt,  custom_id];
+  const Params = [now, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, x, y, memo, installAt,  custom_id];
 
   const rows = await connection.query(Query, Params);
 
@@ -250,3 +247,15 @@ exports.insertUsers = async function (connection, userID, password, nickname) {
   return rows;
 };
 
+
+exports.updateBoardStatus = async function(connection, board_id, status){
+
+  const Query = `UPDATE distribution_board SET status = ? WHERE board_id = ?;`;
+
+  const Params = [status, board_id];
+
+  const rows = await connection.query(Query, Params);
+
+  return rows;
+  
+}

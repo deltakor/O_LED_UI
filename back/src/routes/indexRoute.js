@@ -13,7 +13,7 @@ module.exports = function (app) {
   app.get("/stationLogs", index.readStationLogs);
 
   //분전함 등록
-  //json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
+  //json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, memo, installAt
   app.post("/boards", index.createBoard);
 
   //분전함 조회
@@ -29,7 +29,7 @@ module.exports = function (app) {
 
   //분전함 수정 (custom_id에 해당하는 컬럼 수정)
   //json으로 입력받은 인자만 수정함 (모든 인자 다 적을 필요 없음, 변경할 인자만 기입)
-  //json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
+  //json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, memo, installAt
   app.patch("/boards", index.updateBoard);
 
   // 로그인
