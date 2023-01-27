@@ -34,11 +34,80 @@
 
 
     <div>
+          <div class = "main_top">
+            분전함 관리 시스템
+            <button type="button" class="logout" onclick="location.href='../index.html'" >로그아웃</button>  
+          </div>
         <section>
             <div class="ictInfo">
-              
+              <div class = "left">
+                <div class = "led_total">
+                    <div class = "total_title">
+                        분전함 통계
+                        <button type="button" class="led_refresh" onclick="led_refresh()"><img  src="../icon/refresh.png"></button>       
+                    </div>
+                    <div class = "total_Body">
+                      <table class = "total_table">
+                          <tbody id= "total_tbody">   
+                            <tr id = "ledAll">
+                              <th>분전함 전체</th>
+                              <th id = "ledNum"></th>                   
+                            </tr>            
+                            <tr>
+                              <th>점등</th>
+                              <th></th>
+                            </tr>
+                            <tr>
+                              <th>소등</th>
+                              <th></th>
+                            </tr>     
+                            <tr>
+                              <th>통신이상</th>
+                              <th></th>
+                            </tr>     
+                            <tr>
+                              <th>분기이상</th>
+                              <th></th>
+                            </tr>                       
+                          </tbody>
+                   </table>
+                    </div>
+                </div>
+                <div class = "station_total">
+                      <div class = "total_title">
+                          측정소 통계
+                        <button type="button" class="station_refresh" onclick="station_refresh()"><img  src="../icon/refresh.png"></button>
+                    </div>
+                    <div class = "total_Body">
+                      <table class = "total_table">
+                          <tbody id= "total_tbody">         
+                            <tr id = "stationAll">
+                              <th>측정소 전체</th>            
+                              <th id ="stationNum"></th>  
+                            </tr>     
+                            <tr>
+                              <th>점등</th>
+                              <th></th>
+                            </tr>
+                            <tr>
+                              <th>소등</th>
+                              <th></th>
+                            </tr>     
+                            <tr>
+                              <th>통신이상</th>
+                              <th id ="errorStationNum"></th>
+                            </tr>     
+                            <tr>
+                              <th>분기이상</th>
+                              <th></th>
+                            </tr>                       
+                          </tbody>
+                  </table>
+                    </div>
+                </div>
+              </div>
                 <div class="right"> 
-                    <div class ="right_top" style=" border: 1px solid black; overflow: auto;"> 
+                    <div class ="right_top" style=" border: 1px solid black; overflow: auto; cursor:pointer"> 
                       <br></br>
                         <div class="search-container">
                           <input type="search" id="search" placeholder="Search..." />
@@ -50,12 +119,12 @@
                         <table style="border-collapse: collapse;"id ="led_list_table">
                             <thead id ="led_list_head" style="background-color: aliceblue;">
                               <tr>
-                                <th>분전함 이름</th>
+                                <th>분전함 ID</th>
                                 <th>반영일시</th>
                               </tr> 
                               </thead>
 
-                              <tbody id ="led_list_body">                               
+                              <tbody id ="led_list_body" onclick="change()">                               
                               </tbody>
 
                         </table>
@@ -65,7 +134,7 @@
                           
                           </select>  -->
                     </div>
-                    <div class = "right_bottom" style=" border: 1px solid black; overflow: auto;" >
+                    <div class = "right_bottom" style=" border: 1px solid black; overflow: auto; cursor:pointer" >
                       <div id = "station_list">
                       <table style="border-collapse: collapse;"id ="station_list_table">
                           <thead id ="station_list_head" style="background-color: aliceblue;">
@@ -102,7 +171,7 @@
                 
                 <div id ="tab-1" class = "tab-content"></div>
                 
-                <div id="tab-2" class="tab-content"> 
+                <div id="tab-2" class="tab-content" style="overflow: auto;"> 
                   <table>
                         <thead id = "tab-3Head">
                           <tr>
@@ -116,7 +185,7 @@
                             <th>REH</th>
                           </tr>
                         </thead>
-                        <tbody id = "tab-2Body">
+                        <tbody id = "tab-2Body" >
                     
                         </tbody>
                       </table>

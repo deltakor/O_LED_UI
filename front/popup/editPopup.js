@@ -139,9 +139,9 @@ $('#selectLED_list').each(function() {
     
    });  
 
-//    if(window.close()) {
-//    window.opener.location.reload();
-//    }
+   if(window.close()) {
+   window.opener.location.reload();
+   }
 
 function close_reload(){
     opener.parent.location.reload();

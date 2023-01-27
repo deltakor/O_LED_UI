@@ -11,13 +11,20 @@ html {
 }
 
 
-
+div.main_top {
+  height: 4vh;
+  font-size: 30px;
+  font-family :Arial, Helvetica, sans-serif;
+  background-color: rgb(248, 246, 246);
+  border: 1px black;
+  
+}
 
 /* section 분할 */
 section {
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 96vh;
 }
 
 section > div {
@@ -33,8 +40,7 @@ section > div:nth-of-type(2){
 }
 section > div:nth-of-type(3){
   width: 400px;
-  overflow: scroll;
-
+  overflow: auto;
 }
 
 
@@ -104,7 +110,7 @@ section > div:nth-of-type(3){
 /* 탭메뉴 */
 
 ul.tabs{
-  background-color: #8788bbc4;
+  background-color: #2225a7c4;
   color: rgb(236, 240, 247);
   font-weight: bold;
   display: flex;
@@ -123,12 +129,12 @@ display: flex;
   padding: 10px;
   font-size: 15px;
   transition: 0.5s;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 10px 10px;
   cursor: pointer;
 }
 
 ul.tabs li.current{
-background: #9087df;
+background: #ffffff;
 color: #222;
 }
 
@@ -256,8 +262,64 @@ div.left {
   float: left;
   box-sizing: border-box;
   
-  background: rgb(218, 217, 236);
+  background: white;
+  border: 1px solid black;
 }
+
+div.led_total {
+  width:100%;
+  height: 30%;
+}
+
+div.station_total {
+  border: 1px solid black;
+}
+
+div.total_title {
+  height: 30px;
+  background-color: #3a5e8d;
+  font-size: 1.8rem;
+  color: white;
+}
+
+button.led_refresh{
+  position: relative;
+  margin-top: 3px;
+  background-color:#3a5e8d;
+  float: right;
+  border: none;
+  cursor: pointer;
+}
+
+button.logout {
+  font-size: 20px;
+  float: right;
+  margin: 5px;
+  background-color: #455770;
+  color : white;
+}
+
+button.saveLocat {
+  float : left;
+}
+button.station_refresh{
+  position: relative;
+  left: 70px;
+  margin-top: 3px;
+  background-color:#3a5e8d;
+  border: none;
+  cursor: pointer;
+}
+
+
+button.station_refresh:hover{
+  background-color: #8aafdf;
+}
+
+button.led_refresh:hover{
+  background-color: #8aafdf;
+}
+
 div.right {
   width: 50%;
   height: 100%;
@@ -377,7 +439,7 @@ td {
   padding: 0.5rem;
 }
 #tab-3Head{
-  background: #a489c4;
+  background: #5c6ab9;
   color: #fff;
   text-align: left;
 }
@@ -448,6 +510,22 @@ tr:last-child td:last-child {
   background-color: #8a97a0;
 }
 
+
 #station_row:hover {
   background-color: #8a97a0;
+}
+
+
+
+
+#total_tbody > td,th{
+  text-align: left;
+}
+
+#total_tbody > tr:nth-child(even) {
+  background: #eaeaed;
+}
+
+#total_tbody > tr:nth-child(n) th:last-child {
+  width:50px
 }

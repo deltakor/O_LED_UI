@@ -15,6 +15,9 @@ let nearStation_id;
 let nearStation_name;
 
 let stationInfo;
+let stationErrorNum = 0;
+
+let current_location;
 
 //오른쪽 마우스 클릭스 수정 삭제 가능.
 const contextMenu = document.querySelector(".wrapper");
@@ -56,9 +59,9 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 
 
+
   stationInfo= dataSet.data.result;
-
-
+  $(stationNum).text(stationInfo.length)
 
   let stationList = document.querySelector("#station_list_body");
 
@@ -69,7 +72,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].updateAt + "</th>" +"</tr>");
    
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
-    console.log(coords)
+   
     let markerContents = markerView(stationInfo[i]);
     var title = stationInfo[i].stationName;
     label="<span style='background-color: #46414E;color:white'>"+title+"</span>";
@@ -81,6 +84,9 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
       label: label
     });
 
+    if(stationInfo[i].status == "통신장애") {
+        stationErrorNum++;
+    }
 
        marker.addListener("mouseenter", function(evt) {
         const tab1 =  document.querySelector("#tab-1")
@@ -91,13 +97,10 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         $('ul.tabs li#testtest').trigger("click");
   });
 
-      marker.addListener("click", function(evt) {
-          console.log(stationInfo[i].station_id)
-      });
-
     
   }
 
+  $(errorStationNum).text(stationErrorNum)
  
 	$(function() {
 
@@ -191,8 +194,11 @@ const dataSet = await axios({
 
  ledInfo = dataSet.data.result;
  
+ $(ledNum).text(ledInfo.length)
+
+
  logLedInfo = logDataSet.data.result;
- console.log(logLedInfo[1].board_weather_log_id)
+
  const tab2 =  document.querySelector("#tab-2Body");
  tab2.innerHTML = LedLogView(logLedInfo);
 
@@ -214,6 +220,7 @@ for (var i = 0; i < ledInfo.length; i++) {
   let ledmarkerContents = getLedMarkerContent(ledInfo[i])
   let markerID = ledInfo[i].custom_id
   var title = ledInfo[i].name;
+  var isMouseDown = false;
   label="<span style='background-color: #46414E;color:white'>"+title+"</span>";
   var marker = new Tmapv2.Marker({
     map: map, // 마커를 표시할 지도
@@ -239,12 +246,21 @@ for (var i = 0; i < ledInfo.length; i++) {
         $('ul.tabs li#testtest').trigger("click");
 });
 
+    current_position =  marker.getPosition();
    
-
+    marker.addListener("click", function(evt)
+    {
+      isMouseDown = false;
+    });
+    marker.addListener("drag", function(evt)
+    {
+      isMouseDown = true;
+    });
     marker.addListener("dragend", function (evt) {
-    
+      if(isMouseDown == true)
+      {
       let isConfilm = confirm("분전함의 위치를 현재 위치로 이동시키시겠습니까?")
-      
+    
       let lonlatC = evt.latLng; 
       new_latC = lonlatC.lat();
       new_lonC = lonlatC.lng();
@@ -252,9 +268,10 @@ for (var i = 0; i < ledInfo.length; i++) {
 
       if(isConfilm) {
         sendLonlatValue(markerID,new_latC,new_lonC);
-        location.reload();
+        // location.reload();
       } else {
         location.reload();
+      }
       }
     });
 
@@ -264,21 +281,46 @@ for (var i = 0; i < ledInfo.length; i++) {
 }
 
 
+//탭 이동기능
 
 
+$(document).ready(function(){
+ 
+	$('ul.tabs li').click(function(){
+		var tab_id = $(this).attr('data-tab');
 
+		$('ul.tabs li').removeClass('current');
+		$('.tab-content').removeClass('current');
 
+		$(this).addClass('current');
+		$("#"+tab_id).addClass('current');
 
+   
+	})
+
+});
+
+}
 
 //수정시 기본값 나오게 하는 함수
-$(function() {
 
+async function change() {
+
+  const dataSet = await axios({
+    method: "get",
+    url: "http://"+ip+":23000/boards",
+    headers: {},
+    data: {},
+  });
+  
+  
+   ledInfo = dataSet.data.result;
 
   $("#led_list_body tr").on('click',function(e) {
+      console.log("hi")
       e.preventDefault();
       var str_id = $(this).attr('value');
-    console.log(str_id)
-
+  
       let defaltName,defaltModem_number,defaltAddr,
       defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
       for (var i = 0; i < ledInfo.length; i++) {
@@ -315,7 +357,6 @@ $(function() {
   $("#led_list_body tr").on('contextmenu rightclick', function(e){
 
   
-    console.log(str_id)
     let x = e.offsetX, y = e.offsetY,
   
     winWidth = window.innerWidth,
@@ -346,7 +387,7 @@ $(function() {
     edit.onclick = function(event) {
       if (confirm("분전함을 수정하시겠습니까?") == true){    
         contextMenu.style.visibility = "hidden";
-        console.log(defaltAddr)
+    
         showEditPopup(str_id,defaltName,defaltModem_number,defaltAddr,
           defaltDong,defaltLat,defaltLon,defaltMemo,defaltStation_id,defaltStationName);
       }
@@ -367,31 +408,8 @@ $(function() {
 
   });
 
-});
-
-
-
 }
 
-
-//탭 이동기능
-
-
-$(document).ready(function(){
- 
-	$('ul.tabs li').click(function(){
-		var tab_id = $(this).attr('data-tab');
-
-		$('ul.tabs li').removeClass('current');
-		$('.tab-content').removeClass('current');
-
-		$(this).addClass('current');
-		$("#"+tab_id).addClass('current');
-
-   
-	})
-
-});
 
 
 
@@ -413,7 +431,6 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
       };  
 
 
-  console.log(jsonData)
 
   
   console.log("");
@@ -433,8 +450,9 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
       contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
                       
       // [응답 확인 부분 - json 데이터를 받습니다]
-      success: function(response) {
+      success: function(data) {
           alert("분전함의 위치가 이동되었습니다!")
+          console.log(data)
 
       },
                       
@@ -447,7 +465,11 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
       complete:function(data,textStatus) {
           console.log("");
           console.log("[requestPostBodyJson] : [complete] : " + textStatus);
-          console.log("");    				
+          var ll = new Tmapv2.LatLng(let_data, lon_data);
+          map.setCenter(ll);
+          change();
+ 
+              				
       }
       });		
   
@@ -1067,7 +1089,6 @@ function getLedMarkerContent(data) {
     tr += '</tr>';
     }
 
-    console.log(data)
 
     return tr;
           
@@ -1097,7 +1118,6 @@ function LedLogView(data) {
   tr += '</tr>';
   }
 
-  console.log(data)
 
   return tr;
         
@@ -1108,6 +1128,37 @@ function LedLogView(data) {
 
 
 
-      
+async function led_refresh(){
+    const dataSet = await axios({
+      method: "get",
+      url: "http://"+ip+":23000/boards",
+      headers: {},
+      data: {},
+    });
+    ledInfo = dataSet.data.result;
+    $(ledNum).text(ledInfo.length) 
+}
 
 
+async function station_refresh(){
+  let error = 0;
+  const dataSet = await axios({
+		method: "get",
+		url: "http://"+ip+":23000/stations",
+		headers: {},
+		data: {},
+	});
+
+  stationInfo = dataSet.data.result;
+  $(stationNum).text(stationInfo.length)
+ 
+
+  for(var i = 0; i< stationInfo.length; i++) {
+    if(stationInfo[i].status =="통신장애") {
+        error++;
+    }
+  }
+
+  $(errorStationNum).text(error)
+
+}
