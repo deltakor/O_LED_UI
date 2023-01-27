@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel = "stylesheet" href="main.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.min.css" />
     <script src="../jquery-3.6.3.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+   
 </head>
 <body >
 
@@ -36,27 +38,29 @@
       </div>
 
       <div class = "switchPanel">
-          <div class="content">
+          <div class="content" onclick="spin()">
             <ul class="menu">
               <li class="item">
-                <i class="uil uil-link-alt"></i>
-                <div id = "link">패널 1</div>
+                <label class="spinner" for="spinner"> 패널1</label>
+                    <input type="text" id="panel_1" name="new_name" size="20" value="2" required>
               </li>
               <li class="item">
-                <i class="uil uil-link-alt"></i>
-                <div id = "switch">패널 2</div>
+                <label class="spinner" for="spinner"> 패널2 </label>
+                    <input type="text" id="panel_2" name="new_name" size="20"  value="2"required>
               </li>
               <li class="item">
-                <i class="uil uil-edit"></i>
-                <div id = edit>패널 3</div>
+                <label class="spinner" for="spinner"> 패널3 </label>
+                <input type="text" id="panel_3" name="new_name" size="20" value="2" required>
               </li>
               <li class="item">
-                <i class="uil uil-trash-alt"></i>
-                <div id = trash>패널 4
-                  <input type="text"  style="float:right">전송</div>
-                </div>
+                <label class="spinner" for="spinner"> 패널4  </label>
+                <input type="text" id="panel_4" name="new_name" size="20" value="2" required>
               </li>
-            </ul> 
+            </ul>
+            
+              <input type="button" value="등록하기" id = "panelBtn">
+        
+
         </div>
       </div>
 
@@ -297,5 +301,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js"></script>
 </body>
 </html>
