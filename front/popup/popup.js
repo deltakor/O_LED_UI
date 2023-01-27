@@ -8,6 +8,7 @@
     console.log("hi")
 
         var custom_id = document.getElementById("new_id").value;
+        custom_id = custom_id.padStart(4,"0");
         var name = document.getElementById("new_name").value;
         var modem_number= document.getElementById("new_mdNum").value;
     
@@ -106,13 +107,14 @@ $(document).ready(function(){
      $(this).val($(this).val().replace(/[^0-9]/g,""));
 
      if(content.length<4) {
-        //여기다가 0000 붙이샘
+        
      }
      if(content.length>4) {
         $(this).val($(this).val().substring(0, 4));
         alert('숫자는 4자리수 만큼 가능합니다..');
      }
   });
+  
   
 });
 
@@ -133,13 +135,12 @@ $('#selectLED_list').each(function() {
 
     var val = $(this).val();  //value
     var text = $(this).text();  //text     
-    var openselect = $(opener.document).find('#select2 option'); //부모창 select 박스
- 
-    
+    let openselect = window.opener.stationInfo
+    console.log(openselect[2].stationName)
     for(var i = 0; i < openselect.length; i++) {
       
       
-      $(selectLED_list).append("<option value = " + openselect[i].value +">" +openselect[i].text +"</option>");
+        $(selectLED_list).append("<option value = " + openselect[i].station_id +">"+ openselect[i].stationName  + " (id ="+ openselect[i].station_id + ")" + "</option>");
      
     }
 

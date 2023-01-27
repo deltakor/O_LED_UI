@@ -125,23 +125,19 @@ $('#selectLED_list').each(function() {
 
     var val = $(this).val();  //value
     var text = $(this).text();  //text     
-    var openselect = $(opener.document).find('#select2 option'); //부모창 select 박스
- 
+    let openselect = window.opener.stationInfo //부모창 select 박스
+    console.log(openselect)
     
     for(var i = 0; i < openselect.length; i++) {
       
       
-      $(selectLED_list).append("<option value = " + openselect[i].value +">" +openselect[i].text +"</option>");
+      $(selectLED_list).append("<option value = " + openselect[i].station_id +">"+ openselect[i].stationName  + " (id ="+ openselect[i].station_id + ")" + "</option>");
      
     }
 
     
     
    });  
-
-   if(window.close()) {
-   window.opener.location.reload();
-   }
 
 function close_reload(){
     opener.parent.location.reload();

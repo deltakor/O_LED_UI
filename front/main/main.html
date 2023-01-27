@@ -14,43 +14,72 @@
     <div class="wrapper">
         <div class="content">
           <ul class="menu">
- 
             <li class="item">
               <i class="uil uil-link-alt"></i>
-              <span>연결</span>
+              <div id = "link">연결</div>
+            </li>
+            <li class="item">
+              <i class="uil uil-link-alt"></i>
+              <div id = "switchPanel">LED 전환시간</div>
             </li>
             <li class="item">
               <i class="uil uil-edit"></i>
-              <span id = edit>분전함 수정</span>
+              <div id = edit>수정</div>
             </li>
             <li class="item">
               <i class="uil uil-trash-alt"></i>
-              <span id = trash>분전함 삭제</span>
+              <div id = trash>삭제</div>
             </li>
           </ul>
           
         </div>
       </div>
 
+      <div class = "switchPanel">
+          <div class="content">
+            <ul class="menu">
+              <li class="item">
+                <i class="uil uil-link-alt"></i>
+                <div id = "link">패널 1</div>
+              </li>
+              <li class="item">
+                <i class="uil uil-link-alt"></i>
+                <div id = "switch">패널 2</div>
+              </li>
+              <li class="item">
+                <i class="uil uil-edit"></i>
+                <div id = edit>패널 3</div>
+              </li>
+              <li class="item">
+                <i class="uil uil-trash-alt"></i>
+                <div id = trash>패널 4
+                  <input type="text"  style="float:right">전송</div>
+                </div>
+              </li>
+            </ul> 
+        </div>
+      </div>
+
 
     <div>
           <div class = "main_top">
-            분전함 관리 시스템
+            <img src="../icon/main_top.png" style="vertical-align:middle;" >
+            <span style="font-family: 'PuradakGentleGothicR';" >패널 관리 시스템</span>
             <button type="button" class="logout" onclick="location.href='../index.html'" >로그아웃</button>  
           </div>
         <section>
             <div class="ictInfo">
-              <div class = "left">
+              <div class = "ictInfo_left">
                 <div class = "led_total">
                     <div class = "total_title">
-                        분전함 통계
+                      패널 통계
                         <button type="button" class="led_refresh" onclick="led_refresh()"><img  src="../icon/refresh.png"></button>       
                     </div>
                     <div class = "total_Body">
                       <table class = "total_table">
                           <tbody id= "total_tbody">   
                             <tr id = "ledAll">
-                              <th>분전함 전체</th>
+                              <th>패널 전체</th>
                               <th id = "ledNum"></th>                   
                             </tr>            
                             <tr>
@@ -73,7 +102,7 @@
                    </table>
                     </div>
                 </div>
-                <div class = "station_total">
+                <div class = "station_total" onclick="statusClick()">
                       <div class = "total_title">
                           측정소 통계
                         <button type="button" class="station_refresh" onclick="station_refresh()"><img  src="../icon/refresh.png"></button>
@@ -84,29 +113,21 @@
                             <tr id = "stationAll">
                               <th>측정소 전체</th>            
                               <th id ="stationNum"></th>  
-                            </tr>     
-                            <tr>
-                              <th>점등</th>
-                              <th></th>
-                            </tr>
-                            <tr>
-                              <th>소등</th>
-                              <th></th>
-                            </tr>     
-                            <tr>
+                            </tr>    
+                            <tr id = "station_normal">
+                              <th>정상</th>
+                              <th id = "normal"></th>
+                            </tr>       
+                            <tr id = station_error>
                               <th>통신이상</th>
                               <th id ="errorStationNum"></th>
-                            </tr>     
-                            <tr>
-                              <th>분기이상</th>
-                              <th></th>
-                            </tr>                       
+                            </tr>                          
                           </tbody>
                   </table>
                     </div>
                 </div>
               </div>
-                <div class="right"> 
+                <div class="ictInfo_right"> 
                     <div class ="right_top" style=" border: 1px solid black; overflow: auto; cursor:pointer"> 
                       <br></br>
                         <div class="search-container">
@@ -119,8 +140,11 @@
                         <table style="border-collapse: collapse;"id ="led_list_table">
                             <thead id ="led_list_head" style="background-color: aliceblue;">
                               <tr>
-                                <th>분전함 ID</th>
-                                <th>반영일시</th>
+                                <th>패널 ID</th>
+                                <th>패널명</th>
+                                <th>날씨상태</th>
+                                <th>통신상태</th>                 
+                                <th>통신시간</th>
                               </tr> 
                               </thead>
 
@@ -136,21 +160,53 @@
                     </div>
                     <div class = "right_bottom" style=" border: 1px solid black; overflow: auto; cursor:pointer" >
                       <div id = "station_list">
-                      <table style="border-collapse: collapse;"id ="station_list_table">
-                          <thead id ="station_list_head" style="background-color: aliceblue;">
-                            <tr>
-                              <th>측정소 이름</th>
-                              <th>반영일시</th>
-                            </tr> 
-                            </thead>
+                        <table style="border-collapse: collapse;"id ="station_list_table">
+                            <thead id ="station_list_head" style="background-color: aliceblue;">
+                              <tr>
+                                <th>측정소 이름</th>
+                                <th>상태</th>
+                              </tr> 
+                              </thead>
 
-                            <tbody id ="station_list_body">                               
-                            </tbody>
+                              <tbody id ="station_list_body">                               
+                              </tbody>
 
-                      </table>
+                        </table>
                       </div>
-                        <!-- <select multiple id = "select2">
-                          </select> -->
+
+
+                      <div id = "error_station_list" style="display:none">
+                        <table style="border-collapse: collapse;"id ="station_list_table">
+                            <thead id ="station_list_head" style="background-color: aliceblue;">
+                              <tr>
+                                <th>측정소 이름</th>
+                                <th>상태</th>
+                              </tr> 
+                              </thead>
+  
+                              <tbody id ="error_station_list_body">                               
+                              </tbody>
+  
+                        </table>
+                        </div>
+
+                        <div id = "normal_station_list" style="display:none">
+                          <table style="border-collapse: collapse;"id ="station_list_table">
+                              <thead id ="station_list_head" style="background-color: aliceblue;">
+                                <tr>
+                                  <th>측정소 이름</th>
+                                  <th>상태</th>
+                                </tr> 
+                                </thead>
+    
+                                <tbody id ="normal_station_list_body">                               
+                                </tbody>
+    
+                          </table>
+                          </div>
+  
+
+                        
                     </div>
                 </div>
             </div>
@@ -161,7 +217,7 @@
             <div class="markerInfo" id = "markerInfo">
                 <ul class="tabs">
                     <li class="tab-link current" data-tab="tab-1" id = "testtest">기본 정보</li>
-                    <li class="tab-link" data-tab="tab-2">분전함로그 </li>
+                    <li class="tab-link" data-tab="tab-2">패널 로그 </li>
 
                     <li class="tab-link" data-tab="tab-3">측정소로그</li>
                     <li class="tab-link" data-tab="tab-4">통신 로그</li>

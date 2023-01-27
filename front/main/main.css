@@ -1,8 +1,16 @@
 
+@font-face {
+  font-family: 'PuradakGentleGothicR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.1/PuradakGentleGothicR.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
  * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  
 }
 
 html {
@@ -14,17 +22,15 @@ html {
 div.main_top {
   height: 4vh;
   font-size: 30px;
-  font-family :Arial, Helvetica, sans-serif;
-  background-color: rgb(248, 246, 246);
-  border: 1px black;
-  
+  background-color: rgb(241, 240, 240);
+  padding-bottom: 50px;
 }
 
 /* section 분할 */
 section {
   display: flex;
   width: 100%;
-  height: 96vh;
+  height: 95vh;
 }
 
 section > div {
@@ -32,17 +38,21 @@ section > div {
 }
 
 section > div:nth-of-type(1){
-  width: 400px;
+  width: 600px;
 
 }
 section > div:nth-of-type(2){
   flex: 1;
+  border: #000;
 }
 section > div:nth-of-type(3){
   width: 400px;
   overflow: auto;
 }
 
+span.ledLabel {
+  border: #000;
+}
 
 /* 카테고리 */
 
@@ -110,8 +120,8 @@ section > div:nth-of-type(3){
 /* 탭메뉴 */
 
 ul.tabs{
-  background-color: #2225a7c4;
-  color: rgb(236, 240, 247);
+  background-color: #e3e3e9c4;
+  color: black(236, 240, 247);
   font-weight: bold;
   display: flex;
   flex-direction: row;
@@ -134,8 +144,8 @@ display: flex;
 }
 
 ul.tabs li.current{
-background: #ffffff;
-color: #222;
+background: #1404fa;
+color: white;
 }
 
 .tab-content{
@@ -256,14 +266,21 @@ div.ictInfo {
   
   border: 1px solid #000;
 }
-div.left {
-  width: 50%;
+div.ictInfo_left {
+  width: 35%;
   height: 100%;
   float: left;
   box-sizing: border-box;
   
   background: white;
   border: 1px solid black;
+}
+
+div.ictInfo_right {
+  width: 65%;
+  height: 100%;
+  float: right;
+  box-sizing: border-box;
 }
 
 div.led_total {
@@ -277,15 +294,16 @@ div.station_total {
 
 div.total_title {
   height: 30px;
-  background-color: #3a5e8d;
+  background-color: #04326d;
   font-size: 1.8rem;
   color: white;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 button.led_refresh{
   position: relative;
   margin-top: 3px;
-  background-color:#3a5e8d;
+  background-color:#04326d;
   float: right;
   border: none;
   cursor: pointer;
@@ -294,8 +312,8 @@ button.led_refresh{
 button.logout {
   font-size: 20px;
   float: right;
-  margin: 5px;
-  background-color: #455770;
+  margin-top: 10px;
+  background-color:#04326d;
   color : white;
 }
 
@@ -304,9 +322,9 @@ button.saveLocat {
 }
 button.station_refresh{
   position: relative;
-  left: 70px;
+  float: right;
   margin-top: 3px;
-  background-color:#3a5e8d;
+  background-color:#04326d;
   border: none;
   cursor: pointer;
 }
@@ -320,12 +338,7 @@ button.led_refresh:hover{
   background-color: #8aafdf;
 }
 
-div.right {
-  width: 50%;
-  height: 100%;
-  float: right;
-  box-sizing: border-box;
-}
+
 
 div.right_top{
   width: 100%;
@@ -370,6 +383,7 @@ select{
   background: #fff;
   box-shadow: 0 12px 35px rgba(0,0,0,0.1);
 }
+
 .wrapper .menu{
   padding: 10px 12px;
 }
@@ -388,7 +402,7 @@ select{
 .content .item:hover{
   background: #f2f2f2;
 }
-.content .item span{
+.content .item div{
   margin-left: 8px;
   font-size: 15px;
 }
@@ -420,7 +434,14 @@ select{
   pointer-events: auto;
 }
 
-
+.switchPanel {
+  visibility: hidden;
+  position: absolute;
+  width: 500px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+}
 
 /* log css */
 
@@ -501,7 +522,7 @@ tr:last-child td:last-child {
 #station_list_body > td,th{
   border:1px solid gray;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
 
 }
 
@@ -528,4 +549,8 @@ tr:last-child td:last-child {
 
 #total_tbody > tr:nth-child(n) th:last-child {
   width:50px
+}
+
+#total_tbody tr:nth-child(n):hover{
+  background-color: #8a97a0;
 }

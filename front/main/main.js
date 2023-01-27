@@ -14,17 +14,22 @@ let nearStation_id;
  
 let nearStation_name;
 
-let stationInfo;
-let stationErrorNum = 0;
+var stationInfo;
+var ledInfo;
 
 let current_location;
+let stationList = document.querySelector("#station_list_body");
+let errorStationList = document.querySelector("#error_station_list_body");
+let normalStationList = document.querySelector("#normal_station_list_body")
+
 
 //오른쪽 마우스 클릭스 수정 삭제 가능.
 const contextMenu = document.querySelector(".wrapper");
 const trash = document.querySelector("#trash")
 const edit = document.querySelector("#edit")
-
-
+const link = document.querySelector("#link")
+const switchPanel = document.querySelector("#switchPanel")
+const switchPanel_div = document.querySelector(".switchPanel")
 
 var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
@@ -35,7 +40,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 
 
-(async function getStations(){
+(async function setStations(){
 
 	
 	const dataSet = await axios({
@@ -61,16 +66,25 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 
   stationInfo= dataSet.data.result;
+
   $(stationNum).text(stationInfo.length)
 
-  let stationList = document.querySelector("#station_list_body");
+
+  let stationErrorNum = 0;
 
     
   for (var i = 0; i < stationInfo.length; i++) {
     // 마커를 생성합니다
 
-    $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].updateAt + "</th>" +"</tr>");
-   
+    $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+    
+    if(stationInfo[i].status == "통신장애") {
+      $(errorStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+    }
+
+    if(stationInfo[i].status == "정상") {
+      $(normalStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+    }
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
    
     let markerContents = markerView(stationInfo[i]);
@@ -88,19 +102,21 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         stationErrorNum++;
     }
 
-       marker.addListener("mouseenter", function(evt) {
+       marker.addListener("click", function(evt) {
         const tab1 =  document.querySelector("#tab-1")
         tab1.innerHTML = markerContents
     
-     
-
+    
         $('ul.tabs li#testtest').trigger("click");
   });
 
     
   }
+  let normalNum = stationInfo.length - stationErrorNum;
 
   $(errorStationNum).text(stationErrorNum)
+  $(normal).text(normalNum)
+
  
 	$(function() {
 
@@ -131,6 +147,69 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 
 });
+
+
+$(function() {
+
+  $("#error_station_list_body tr").on('click',function(e) {
+      e.preventDefault();
+
+      var stationID = $(this).attr('value');
+    
+
+      for (var i = 0; i < stationInfo.length; i++) {
+    
+        if(stationInfo[i].station_id == stationID){
+         
+          var ll = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
+        
+          map.setCenter(ll);
+          var markerContents = markerView(stationInfo[i]);
+          const tab1 =  document.querySelector("#tab-1");
+          tab1.innerHTML = markerContents
+          $('ul.tabs li#testtest').trigger("click");
+          break;
+        }
+        
+      }
+
+  });
+
+
+});
+
+
+
+$(function() {
+
+  $("#normal_station_list_body tr").on('click',function(e) {
+      e.preventDefault();
+
+      var stationID = $(this).attr('value');
+    
+
+      for (var i = 0; i < stationInfo.length; i++) {
+    
+        if(stationInfo[i].station_id == stationID){
+         
+          var ll = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
+        
+          map.setCenter(ll);
+          var markerContents = markerView(stationInfo[i]);
+          const tab1 =  document.querySelector("#tab-1");
+          tab1.innerHTML = markerContents
+          $('ul.tabs li#testtest').trigger("click");
+          break;
+        }
+        
+      }
+
+  });
+
+
+});
+
+
 
   await setLedMarker();
 
@@ -205,28 +284,30 @@ const dataSet = await axios({
 
  let ledList = document.querySelector("#led_list_body");
 
+ 
 
 for (var i = 0; i < ledInfo.length; i++) {
   // 마커를 생성합니다
   
 
-  $(ledList).append("<tr id = led_row value = "  + ledInfo[i].custom_id+"> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].updateAt + "</th>" +"</tr>");
-
-  
+  $(ledList).append("<tr id = led_row value = "  + ledInfo[i].custom_id+"> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +"</tr>");
 
 
   let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
 
+
+
   let ledmarkerContents = getLedMarkerContent(ledInfo[i])
+  
   let markerID = ledInfo[i].custom_id
   var title = ledInfo[i].name;
   var isMouseDown = false;
-  label="<span style='background-color: #46414E;color:white'>"+title+"</span>";
+  label="<span class = ledLabel; style='background-color: #46414E;color:white'>"+title+"</span>";
   var marker = new Tmapv2.Marker({
     map: map, // 마커를 표시할 지도
     position: coords, // 마커를 표시할 위치
     draggable: true,
-    icon: "../icon/분전함.png",
+    icon: "../icon/panel.png",
     label : label,
     title : title
     
@@ -241,16 +322,16 @@ for (var i = 0; i < ledInfo.length; i++) {
 
      marker.addListener("mouseenter", function(evt) {
 
-        const tab1 =  document.querySelector("#tab-1")
-        tab1.innerHTML = ledmarkerContents
-        $('ul.tabs li#testtest').trigger("click");
-});
+      });
 
     current_position =  marker.getPosition();
    
     marker.addListener("click", function(evt)
     {
       isMouseDown = false;
+      const tab1 =  document.querySelector("#tab-1")
+      tab1.innerHTML = ledmarkerContents
+      $('ul.tabs li#testtest').trigger("click");
     });
     marker.addListener("drag", function(evt)
     {
@@ -259,7 +340,7 @@ for (var i = 0; i < ledInfo.length; i++) {
     marker.addListener("dragend", function (evt) {
       if(isMouseDown == true)
       {
-      let isConfilm = confirm("분전함의 위치를 현재 위치로 이동시키시겠습니까?")
+      let isConfilm = confirm("패널의 위치를 현재 위치로 이동시키시겠습니까?")
     
       let lonlatC = evt.latLng; 
       new_latC = lonlatC.lat();
@@ -280,7 +361,7 @@ for (var i = 0; i < ledInfo.length; i++) {
 
 }
 
-
+console.log(ledInfo[1].name)
 //탭 이동기능
 
 
@@ -315,29 +396,18 @@ async function change() {
   
   
    ledInfo = dataSet.data.result;
+   
 
   $("#led_list_body tr").on('click',function(e) {
-      console.log("hi")
+        
       e.preventDefault();
       var str_id = $(this).attr('value');
   
-      let defaltName,defaltModem_number,defaltAddr,
-      defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
+      
       for (var i = 0; i < ledInfo.length; i++) {
 
         if(ledInfo[i].custom_id == str_id){
-          defaltName = ledInfo[i].name;
-          defaltModem_number = ledInfo[i].modem_number;
-          defaltAddr = ledInfo[i].address;
-          defaltDong = ledInfo[i].administrative_dong;
-          defaltLat = ledInfo[i].lat;
-          defaltLon = ledInfo[i].lon;
-          defaltInstallAt = ledInfo[i].installAt;
-          defaltStation_id = ledInfo[i].station_id;
-          defaltStationName = ledInfo[i].stationName;
-          defaltMemo = ledInfo[i].memo;
-
-          var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+         var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
           map.setCenter(ll);
           var markerContents = getLedMarkerContent(ledInfo[i]);
           const tab1 =  document.querySelector("#tab-1");
@@ -351,28 +421,42 @@ async function change() {
       
 
 
+  });
+
+  
 
       
 
   $("#led_list_body tr").on('contextmenu rightclick', function(e){
-
+    switchPanel_div.style.visibility = "hidden";
   
-    let x = e.offsetX, y = e.offsetY,
+    var str_id = $(this).attr('value');
   
-    winWidth = window.innerWidth,
-    winHeight = window.innerHeight,
-    cmWidth = contextMenu.offsetWidth,
-    cmHeight = contextMenu.offsetHeight;
+    let defaltName,defaltModem_number,defaltAddr,
+    defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
+    for (var i = 0; i < ledInfo.length; i++) {
 
-    x = x > winWidth - cmWidth ? winWidth - cmWidth - 5 : x;
-    y = y > winHeight - cmHeight ? winHeight - cmHeight -5 : y;
-    
-    contextMenu.style.left = `${x+100}px`;
-    contextMenu.style.top = `${y+30}px`;
+      if(ledInfo[i].custom_id == str_id){
+        defaltName = ledInfo[i].name;
+        defaltModem_number = ledInfo[i].modem_number;
+        defaltAddr = ledInfo[i].address;
+        defaltDong = ledInfo[i].administrative_dong;
+        defaltLat = ledInfo[i].lat;
+        defaltLon = ledInfo[i].lon;
+        defaltInstallAt = ledInfo[i].installAt;
+        defaltStation_id = ledInfo[i].station_id;
+        defaltStationName = ledInfo[i].stationName;
+        defaltMemo = ledInfo[i].memo;
+      }
+    }
+
+      
+    contextMenu.style.top = e.pageY + 'px';
+    contextMenu.style.left = e.pageX + 'px';
     contextMenu.style.visibility = "visible";
 
     trash.onclick = function (event) {
-      if (confirm("분전함을 삭제하시겠습니까?") == true){    
+      if (confirm("패널을 삭제하시겠습니까?") == true){    
         contextMenu.style.visibility = "hidden";
           deleteLed(str_id);
 
@@ -385,28 +469,42 @@ async function change() {
     };
 
     edit.onclick = function(event) {
-      if (confirm("분전함을 수정하시겠습니까?") == true){    
+
         contextMenu.style.visibility = "hidden";
     
         showEditPopup(str_id,defaltName,defaltModem_number,defaltAddr,
           defaltDong,defaltLat,defaltLon,defaltMemo,defaltStation_id,defaltStationName);
       }
-      else {
+
+    link.onclick = function(event) {
+      if(confirm("연결 하시겠습니까?")){
+        
+        alert("연결 되었습니다.");
+        }else{
+            alert("취소 되었습니다.");
+        }
+
         contextMenu.style.visibility = "hidden";
-        return false;
-      }
     }
 
-})  
+    switchPanel.onclick = function(event) {
+      contextMenu.style.visibility = "hidden";
+
+        switchPanel_div.style.top = event.pageY + 'px';
+        switchPanel_div.style.left = event.pageX + 5  +'px';
+
+        switchPanel_div.style.visibility = "visible";
+
+    }
+
+
+  })
+
     $("#led_list_body tr").bind('click', function(){
       contextMenu.style.visibility = "hidden";
+      switchPanel_div.style.visibility = "hidden";
+
     })
-
-  
-
-
-
-  });
 
 }
 
@@ -451,7 +549,7 @@ function sendLonlatValue(led_id,lat_data,lon_data) {
                       
       // [응답 확인 부분 - json 데이터를 받습니다]
       success: function(data) {
-          alert("분전함의 위치가 이동되었습니다!")
+          alert("패널의 위치가 이동되었습니다!")
           console.log(data)
 
       },
@@ -506,7 +604,7 @@ function deleteLed(custom_id) {
                       
       // [응답 확인 부분 - json 데이터를 받습니다]
       success: function(response) {
-          alert("분전함이 삭제되었습니다!")
+          alert("패널이 삭제되었습니다!")
           reloadFunc()
     
       },
@@ -569,72 +667,6 @@ setInterval(reloadFunc, 1000 * 60 * 15)
 
 
 
-//
-$(document).ready(function(){
-  //Show contextmenu:
-  $(document).contextmenu(function(e){
-    //Get window size:
-    var winWidth = $(document).width();
-    var winHeight = $(document).height();
-    //Get pointer position:
-    var posX = e.pageX;
-    var posY = e.pageY;
-    //Get contextmenu size:
-    var menuWidth = $(".contextmenu").width();
-    var menuHeight = $(".contextmenu").height();
-    //Security margin:
-    var secMargin = 10;
-    //Prevent page overflow:
-    if(posX + menuWidth + secMargin >= winWidth
-    && posY + menuHeight + secMargin >= winHeight){
-      //Case 1: right-bottom overflow:
-      posLeft = posX - menuWidth - secMargin + "px";
-      posTop = posY - menuHeight - secMargin + "px";
-    }
-    else if(posX + menuWidth + secMargin >= winWidth){
-      //Case 2: right overflow:
-      posLeft = posX - menuWidth - secMargin + "px";
-      posTop = posY + secMargin + "px";
-    }
-    else if(posY + menuHeight + secMargin >= winHeight){
-      //Case 3: bottom overflow:
-      posLeft = posX + secMargin + "px";
-      posTop = posY - menuHeight - secMargin + "px";
-    }
-    else {
-      //Case 4: default values:
-      posLeft = posX + secMargin + "px";
-      posTop = posY + secMargin + "px";
-    };
-    //Display contextmenu:
-    $(".contextmenu").css({
-      "left": posLeft,
-      "top": posTop
-    }).show();
-    //Prevent browser default contextmenu.
-    return false;
-  });
-  //Hide contextmenu:
-  $(document).click(function(){
-    $(".contextmenu").hide();
-  });
-});
-
-
-function changeColor(){
-	$('#led_row').mouseover(function(){
-	   $(this).addClass('changeColor');
-	}).mouseout(function() {
-	   $(this).removeClass('changeColor');
-	});
-}
-
-
-
-
-
-
-
 
 async function showEditPopup(id,name,modem_number,addr,dong,lat,lon,memo,station_id,stationName) { 
     
@@ -673,8 +705,6 @@ async function showEditPopup(id,name,modem_number,addr,dong,lat,lon,memo,station
 
 
 
-
-
 //브라우저 우클릭 비활성화
 window.oncontextmenu = function () {
   return false;
@@ -682,12 +712,9 @@ window.oncontextmenu = function () {
 
 
 
-
-
-
 function confirmPorm() {
  
-      if (confirm("현재 위치에 분전함을 등록하시겠습니까?") == true){    
+      if (confirm("현재 위치에 패널을 등록하시겠습니까?") == true){    
           showPopup()
          
       }else{   //취소
@@ -741,9 +768,6 @@ function confirmPorm() {
 
 
 
-
-
-
 function getLedMarkerContent(data) {
 
   return `
@@ -751,11 +775,11 @@ function getLedMarkerContent(data) {
   <table>
       <tbody>
           <tr>
-              <td class = "category">분전함 id</td>
+              <td class = "category">패널 id</td>
               <td>${data.custom_id}</td>
           </tr>
            <tr>
-              <td class = "category">분전소명</td>
+              <td class = "category">패널명</td>
               <td>${data.name}</td>
           </tr>
 
@@ -870,28 +894,6 @@ function getLedMarkerContent(data) {
 }
 
 
-
-  //tab1에 마커 정보 띄우기
-  function statistics(ledLen,stationLen) {
-    return `
-    <table>
-    <tbody>
-        <tr>
-            <td class = "category">분전함 개수</td>
-            <td>${ledLen}</td>
-        </tr>
-
-        <tr>
-           <td class = "category">측정소 개수</td>
-            <td>${stationLen}</td>
-       </tr>
-    
-
-    </tbody>
-     
-   </table>
-      `
-  }
 
   function markerView(data) {
   
@@ -1158,7 +1160,45 @@ async function station_refresh(){
         error++;
     }
   }
+  normal = stationInfo.length - error
 
   $(errorStationNum).text(error)
+  $(normal).text(normal)
 
 }
+
+
+function statusClick() {
+
+  $("#station_error").on('click',function(e) {
+    e.preventDefault();
+
+    
+    document.getElementById("error_station_list").style.display = "block";
+    $("#station_list").hide();
+    document.getElementById("normal_station_list").style.display = "none";
+
+});
+
+$("#stationAll").on('click',function(e) {
+  e.preventDefault();
+
+  $("#station_list").show();
+  $("#error_station_list").hide();
+  document.getElementById("normal_station_list").style.display = "none";
+
+});
+
+$("#station_normal").on('click',function(e) {
+  e.preventDefault();
+  
+  document.getElementById("normal_station_list").style.display = "block";
+  document.getElementById("error_station_list").style.display = "none";
+  $("#station_list").hide();
+
+});
+
+
+
+}
+
