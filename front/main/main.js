@@ -11,7 +11,7 @@ const ip = "127.0.0.1";
 
 let new_lat,new_lon;
 let nearStation_id;
- 
+let skyInfo;
 let nearStation_name;
 
 var stationInfo;
@@ -21,7 +21,7 @@ let current_location;
 let stationList = document.querySelector("#station_list_body");
 let errorStationList = document.querySelector("#error_station_list_body");
 let normalStationList = document.querySelector("#normal_station_list_body")
-
+let current_str_id;
 
 //오른쪽 마우스 클릭스 수정 삭제 가능.
 const contextMenu = document.querySelector(".wrapper");
@@ -30,6 +30,7 @@ const edit = document.querySelector("#edit")
 const link = document.querySelector("#link")
 const switchPanel = document.querySelector("#switchPanel")
 const switchPanel_div = document.querySelector(".switchPanel")
+const panelBtn = document.querySelector(".panelBtn")
 
 var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     center : new Tmapv2.LatLng(35.2071463000, 129.0762170000),
@@ -290,7 +291,8 @@ for (var i = 0; i < ledInfo.length; i++) {
   // 마커를 생성합니다
   
 
-  $(ledList).append("<tr id = led_row value = "  + ledInfo[i].custom_id+"> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +"</tr>");
+  $(ledList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
 
 
   let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
@@ -401,12 +403,12 @@ async function change() {
   $("#led_list_body tr").on('click',function(e) {
         
       e.preventDefault();
-      var str_id = $(this).attr('value');
+      current_str_id = $(this).attr('value');
   
-      
+   
       for (var i = 0; i < ledInfo.length; i++) {
 
-        if(ledInfo[i].custom_id == str_id){
+        if(ledInfo[i].custom_id == current_str_id){
          var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
           map.setCenter(ll);
           var markerContents = getLedMarkerContent(ledInfo[i]);
@@ -431,7 +433,8 @@ async function change() {
     switchPanel_div.style.visibility = "hidden";
   
     var str_id = $(this).attr('value');
-  
+
+    console.log(str_id)
     let defaltName,defaltModem_number,defaltAddr,
     defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
     for (var i = 0; i < ledInfo.length; i++) {
@@ -494,8 +497,11 @@ async function change() {
         switchPanel_div.style.left = event.pageX + 5  +'px';
 
         switchPanel_div.style.visibility = "visible";
+        
 
     }
+
+
 
 
   })
@@ -765,11 +771,27 @@ function confirmPorm() {
       
   }
 
-
+function changeSky(num) {
+  if(num==1) {
+    return "맑음";
+  }
+  else if(num==2) {
+    return "구름많음";
+  }
+  else if(num==3) {
+    return "흐림";
+  }
+  else if(num==4) {
+    return "비";
+  }
+  else if(num==5) {
+    return "눈";
+  }
+}
 
 
 function getLedMarkerContent(data) {
-
+skyInfo = changeSky(data.SKY);
   return `
   
   <table>
@@ -802,7 +824,7 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">기온</td>
-              <td>${data.T1H}</td>
+              <td>${data.T1H}도</td>
           </tr>
 
 
@@ -816,7 +838,16 @@ function getLedMarkerContent(data) {
               <td class = "category">1시간 강수량</td>
               <td>${data.RN1}</td>
           </tr>
+          
+          <tr>
+               <td class = "category">날씨 상태</td>
+               <td>${skyInfo}</td>
+          </tr>
 
+          <tr>
+            <td class = "category">풍속</td>
+            <td>${data.WND}ms</td>
+          </tr>
 
           <tr>
               <td class = "category">습도</td>
@@ -1202,3 +1233,86 @@ $("#station_normal").on('click',function(e) {
 
 }
 
+
+function spin(){
+  console.log("hi")
+  $('panel_1').spinner({
+      max:10000,
+      min:1000,
+      step:100
+  }) ;
+}
+
+
+(function sendSwitchTime() {
+  let btn = document.querySelector("#panelBtn")
+  btn.addEventListener("click",function() {
+
+ 
+  var reqURL = "http://"+ip+":23000/boards"; // 요청 주소
+  
+  let switchTime_p1 = document.getElementById("panel_1").value;
+  let switchTime_p2 = document.getElementById("panel_2").value;
+  let switchTime_p3 = document.getElementById("panel_3").value;
+  let switchTime_p4 = document.getElementById("panel_4").value;
+
+  let switchTimeStr = switchTime_p1 +"," + switchTime_p2 +"," + switchTime_p3 +"," +switchTime_p4;
+  // [요청 json 데이터 선언]
+  var jsonData = { // Body에 첨부할 json 데이터
+      "panel_interval" : switchTimeStr,
+      "custom_id" : current_str_id
+      };  
+
+
+
+  
+  console.log("");
+  console.log("[requestPostBodyJson] : [request url] : " + reqURL);
+  console.log("[requestPostBodyJson] : [request data] : " + JSON.stringify(jsonData));
+  console.log("[requestPostBodyJson] : [request method] : " + "POST BODY JSON");
+  console.log("");
+  
+  $.ajax({
+      // [요청 시작 부분]
+      url: reqURL, //주소
+      data: JSON.stringify(jsonData), //전송 데이터
+      type: "patch", //전송 타입
+      async: true, //비동기 여부
+      timeout: 5000, //타임 아웃 설정
+      dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)    			
+      contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+                      
+      // [응답 확인 부분 - json 데이터를 받습니다]
+      success: function(data) {
+          alert("패널 스위치 정보가 전송되었습니다!")
+          console.log(data)
+
+      },
+                      
+      // [에러 확인 부분]
+      error: function(xhr) {
+          alert("DB에러")			
+      },
+                      
+      // [완료 확인 부분]
+      complete:function(data,textStatus) {
+        location.reload();
+      }
+      });		
+
+      })
+})();
+
+
+
+
+
+$(document).ready(function(){
+
+  $("input:text[numberOnly]").on("keyup", function() {
+     let content = $(this).val();
+     $(this).val($(this).val().replace(/[^0-9]/g,""));
+
+  });
+  
+});

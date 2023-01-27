@@ -44,6 +44,7 @@ section > div:nth-of-type(1){
 section > div:nth-of-type(2){
   flex: 1;
   border: #000;
+  z-index: 1;
 }
 section > div:nth-of-type(3){
   width: 400px;
@@ -361,8 +362,9 @@ select{
   height: 100%
 }
 
-
-
+#panel_1 {
+  
+}
 /* 우클릭 드롭다운 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
@@ -380,6 +382,7 @@ select{
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+  z-index: 2;
 }
 
 .wrapper .menu{
@@ -387,7 +390,7 @@ select{
 }
 .content .item{
   list-style: none;
-  font-size: 1rem;
+  font-size: 2rem;
   height: 3rem;
   display: flex;
   width: 100%;
@@ -396,6 +399,9 @@ select{
   border-radius: 5px;
   margin-bottom: 2px;
   padding: 0 3px 0 5px;
+  justify-content: space-between;
+  align-items: center;
+
 }
 .content .item:hover{
   background: #f2f2f2;
@@ -435,10 +441,14 @@ select{
 .switchPanel {
   visibility: hidden;
   position: absolute;
-  width: 500px;
+  width: 300px;
   border-radius: 10px;
-  background: #fff;
+  background: rgb(255, 250, 250);
   box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+  z-index: 2;
+  justify-content: space-between;
+  align-items: center;
+
 }
 
 /* log css */
@@ -505,10 +515,10 @@ tr:last-child td:last-child {
 
 
 
-#led_list_head > td,th{
+#led_list_head {
   border:1px solid gray;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
 
 }
 
@@ -520,7 +530,7 @@ tr:last-child td:last-child {
 #station_list_body > td,th{
   border:1px solid gray;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.18rem;
 
 }
 
