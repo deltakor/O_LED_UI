@@ -374,7 +374,7 @@ exports.readBoardWeatherLogs = async function (req, res) {
 //json 인자 : custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
 exports.createBoard = async function (req, res){
   
-  const { custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt} = req.body;
+  const { custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, memo, installAt} = req.body;
   
   //DB입력
   try {
@@ -396,7 +396,7 @@ exports.createBoard = async function (req, res){
       //중복이 아닐 때
       let xy = dfs_xy_conv('toXY', lat, lon);
       
-      const [rows] = await indexDao.insertBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, xy.x, xy.y, memo, installAt);
+      const [rows] = await indexDao.insertBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, xy.x, xy.y, memo, installAt);
       await demonFunction.getWeatherData();
 
       return res.send({
@@ -469,15 +469,13 @@ exports.deleteBoard = async function (req, res) {
   //json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
 exports.updateBoard = async function (req, res){
   
-  const { custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt} = req.body;
+  const { custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, memo, installAt} = req.body;
   
   //DB입력
   try {
     const connection = await pool.getConnection(async (conn) => conn);
     try {
       
-
-
       //custom_id (기기고유번호) 중복 검사
       const duplicateCustomIdCheck = await indexDao.duplicateCustomIdCheck(connection, custom_id); 
 
@@ -486,18 +484,13 @@ exports.updateBoard = async function (req, res){
         let x;
         let y;
 
-
-
         if(lat && lon){ //json에 위도 경도 값이 있으면
           let xy = dfs_xy_conv('toXY', lat, lon);
           x = xy.x;
           y = xy.y;
         }
 
-
-      
-   
-        const [rows] = await indexDao.updateBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, x, y, memo, installAt);
+        const [rows] = await indexDao.updateBoard(connection, custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, x, y, memo, installAt);
           return res.send({
             isSuccess: true,
             code: 200, // 요청 실패시 400번대 코드
@@ -740,8 +733,11 @@ async function getStationData(){
 //<서버 가동 시 수행>
 getStationData(); //서버 가동 시 측정소 정보 업데이트 수행
 
-// demonFunction.getLastDustData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)
-// demonFunction.getWeatherData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)
+demonFunction.getLastDustData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)
+demonFunction.getWeatherData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)
+demonFunction.setBoardStatus(); //서버 가동시 1회 실행
+
 
 setInterval(demonFunction.getLastDustData, secret.intervalTime); //서버 가동 후 1시간뒤부터 1시간마다 실행
 setInterval(demonFunction.getWeatherData, secret.intervalTime); //서버 가동 후 1시간뒤부터 1시간마다 실행
+setInterval(demonFunction.setBoardStatus, secret.intervalTime); //서버 가동 후 1시간뒤부터 1시간마다 실행
