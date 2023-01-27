@@ -292,7 +292,8 @@ exports.getLastDustData = async function (){
                 const jsonData = json.response.body.items.item;
 
 
-                var SKY; //하늘상태 (from 초단기예보)
+                var SKY; // 초단기예보에서 가져온 SKY값(from 초단기예보)
+                var newSKY; // DB에 넣을 SKY값 (
                 var forecastJson = body;
 
                 var today = new Date();
@@ -348,8 +349,35 @@ exports.getLastDustData = async function (){
                 }
 
 
+                
+                //DB에 넣을 SKY값 구하기
+                if(PTY == 0){ // 초단기실황의 PTY가 0일 때
+
+                  if(SKY == 1){ //초단기예보의 SKY가 맑음(1)일 떄
+                    newSKY = 1; //맑음
+                  }
+                  else if(SKY == 3){ //초단기예보의 SKY가 구름많음(3)일 떄
+                    newSKY = 2; //구름많음
+                  }
+                  else if(SKY == 4){ //초단기예보의 SKY가 흐림(4)일 때
+                    newSKY = 3; //흐림
+                  }
+
+                }
+                else{ // 초단기실황의 PTY가 0이 아닐 때
+
+                    if(PTY == 1 || PTY == 5){ //초단기실황의 PTY가 비(1)이거나 빗방울(5)일때
+                      newSKY = 4; //비
+                    }
+                    else if(PTY == 2 || PTY == 3 || PTY == 6 || PTY == 7){ //초단기실황의 PTY가 비/눈(2)이거나 눈(3)이거나 빗방울눈날림(6)이거나 눈날림(7)일때
+                      newSKY = 5; //눈
+                    }
+
+                }
+
+
                 //db에 log 데이터 삽입. 
-                const [results] = await indexDao.insertWeatherLogData(connection, b_id, newDate, T1H, PTY, RN1, REH, WND, SKY, nowCastJson, forecastJson, boards[i].custom_id, status, latestCommunicationAt, panel_interval);
+                const [results] = await indexDao.insertWeatherLogData(connection, b_id, newDate, T1H, PTY, RN1, REH, WND, newSKY, nowCastJson, forecastJson, boards[i].custom_id, status, latestCommunicationAt, panel_interval);
       
               });
 
