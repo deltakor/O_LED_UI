@@ -1302,3 +1302,17 @@ function spin(){
 
       })
 })();
+
+
+
+
+
+$(document).ready(function(){
+
+  $("input:text[numberOnly]").on("keyup", function() {
+     let content = $(this).val();
+     $(this).val($(this).val().replace(/[^0-9]/g,""));
+
+  });
+  
+});
