@@ -83,7 +83,6 @@ const { add } = require("winston");
 exports.readStations = async function(req, res) {
 
   const {stationName} = req.query;
-  console.log(stationName);
 
 
   try {
@@ -222,7 +221,6 @@ exports.updateStation = async function(req, res){
       });
 
 
-      console.log(2);
 
 
     } catch (err) {
@@ -535,11 +533,12 @@ exports.createJwt = async function (req, res) {
     });
   }
 
+ 
+
   try {
     const connection = await pool.getConnection(async (conn) => conn);
     try {
       // 2. DB 회원 검증
-      const [rows] = await indexDao.isValidUsers(connection, userID, password);
 
       if (rows.length < 1) {
         return res.send({
@@ -549,11 +548,11 @@ exports.createJwt = async function (req, res) {
         });
       }
 
-      const { userIdx, nickname } = rows[0];
+      const { userIdx, nickname, grade } = rows[0];
 
       // 3. JWT 발급
       const token = jwt.sign(
-        { userIdx: userIdx, nickname: nickname }, // payload 정의
+        { userIdx: userIdx, nickname: nickname, grade: grade }, // payload 정의
         secret.jwtsecret // 서버 비밀키
       );
 
@@ -655,10 +654,10 @@ exports.createUsers = async function (req, res) {
 
 // 로그인 유지, 토큰 검증
 exports.readJwt = async function (req, res) {
-  const { userIdx, nickname } = req.verifiedToken;
+  const { userIdx, nickname, grade } = req.verifiedToken;
 
   return res.send({
-    result: { userIdx: userIdx, nickname: nickname },
+    result: { userIdx: userIdx, nickname: nickname, grade: grade },
     code: 200, // 요청 실패시 400번대 코드
     message: "유효한 토큰입니다.",
   });

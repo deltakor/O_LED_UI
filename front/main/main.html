@@ -63,9 +63,23 @@
 
     <div>
           <div class = "main_top">
+
+
             <img src="../icon/main_top.png" style="vertical-align:middle;" >
-            <span style="font-family: 'PuradakGentleGothicR';" >패널 관리 시스템</span>
-            <button type="button" class="logout" onclick="location.href='../index.html'" >로그아웃</button>  
+            <span style="font-family: 'PuradakGentleGothicR';" >분전함 패널 관리 시스템</span>
+            
+            <!-- <button type="button" class="logout" onclick="location.href='../index.html'" >로그아웃</button>   -->
+            
+            <span class="signed_hidden">
+              <span class="dropdown">
+                안녕하세요 <span class="nickname"></span>님
+              </span>
+              <span class="dropdown-content">
+                <button id="sign-out">로그아웃</button>
+              </span>
+            </span>
+
+
           </div>
         <section>
             <div class="ictInfo">
@@ -291,6 +305,7 @@
   ></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
   <script src ="main.js"></script>
+  <script src ="header.js"></script>
 
 
   <link rel="stylesheet"

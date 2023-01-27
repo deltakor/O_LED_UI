@@ -225,7 +225,7 @@ exports.updateBoard = async function (connection, custom_id, station_id, name, m
 
 // 로그인 (회원검증)
 exports.isValidUsers = async function (connection, userID, password) {
-  const Query = `SELECT userIdx, nickname FROM users where userID = ? and password = ?;`;
+  const Query = `SELECT userIdx, nickname, grade FROM users where userID = ? and password = ?;`;
   const Params = [userID, password];
 
   const rows = await connection.query(Query, Params);
