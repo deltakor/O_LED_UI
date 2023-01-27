@@ -292,7 +292,7 @@ for (var i = 0; i < ledInfo.length; i++) {
   
 
   $(ledList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
-  "</th> <th>" +ledInfo[i].SKY + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
 
 
   let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
@@ -775,8 +775,17 @@ function changeSky(num) {
   if(num==1) {
     return "맑음";
   }
-  else {
+  else if(num==2) {
+    return "구름많음";
+  }
+  else if(num==3) {
     return "흐림";
+  }
+  else if(num==4) {
+    return "비";
+  }
+  else if(num==5) {
+    return "눈";
   }
 }
 
@@ -815,7 +824,7 @@ skyInfo = changeSky(data.SKY);
 
           <tr>
               <td class = "category">기온</td>
-              <td>${data.T1H}</td>
+              <td>${data.T1H}도</td>
           </tr>
 
 
@@ -833,6 +842,11 @@ skyInfo = changeSky(data.SKY);
           <tr>
                <td class = "category">날씨 상태</td>
                <td>${skyInfo}</td>
+          </tr>
+
+          <tr>
+            <td class = "category">풍속</td>
+            <td>${data.WND}ms</td>
           </tr>
 
           <tr>
