@@ -105,6 +105,8 @@ username : oenterms
 
 <리눅스 컴퓨터에 설치하기>
 
+프로젝트 폴더에 있는 sql문으로 db설정하기 (워크벤치 - Administration - Data Import/Restore)
+
 sudo apt install git
 
 git clone https://github.com/deltakor/O_LED_UI.git
