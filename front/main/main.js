@@ -80,7 +80,6 @@ let label;
 //등록 폼 ,수정 폼
 let openWin;
 
-
 //측정소 마커생성및 클릭시 기본정보 로그정보 View이벤트 적용. 측정소 통계리스트에서 정상,비정상,전체 이동 이벤트 적용
 (async function setStations() {
 
@@ -830,6 +829,14 @@ function changeSkyText(num) {
         return "눈";
     }
 }
+
+//수치텍스트변환
+function changeValueText(num) {
+    if (num == -1) 
+        return "통신이상"
+
+    return num
+}
 //등급텍스트변환
 function changeGradeText(num) {
     if (num == 1) 
@@ -840,6 +847,8 @@ function changeGradeText(num) {
         return "나쁨"
     if (num == 4) 
         return "매우나쁨"
+    if (num == -1) 
+        return "통신이상"
 
 }
 //상태이미지변환
@@ -917,7 +926,7 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">오존 농도</td>
-              <td>${data.o3Value}ppm</td>
+              <td>${changeValueText(data.o3Value)}ppm</td>
           </tr>
 
           <tr>
@@ -929,7 +938,7 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">미세먼지 농도</td>
-              <td>${data.pm10Value}㎍/㎥</td>
+              <td>${changeValueText(data.pm10Value)}㎍/㎥</td>
           </tr>
 
           <tr>
@@ -940,7 +949,7 @@ function getLedMarkerContent(data) {
           </tr>
           <tr>
               <td class = "category">초미세먼지 농도</td>
-              <td>${data.pm25Value}㎍/㎥</td>
+              <td>${changeValueText(data.pm25Value)}㎍/㎥</td>
           </tr>
 
           <tr>
@@ -1051,7 +1060,7 @@ function markerView(data) {
     
             <tr>
                 <td class = "category">오존 농도</td>
-                <td>${data.o3Value}ppm</td>
+                <td>${changeValueText(data.o3Value)}ppm</td>
             </tr>
 
             <tr>
@@ -1063,7 +1072,7 @@ function markerView(data) {
 
             <tr>
                 <td class = "category">미세먼지 농도</td>
-                <td>${data.pm10Value}㎍/㎥</td>
+                <td>${changeValueText(data.pm10Value)}㎍/㎥</td>
             </tr>
 
             <tr>
@@ -1074,7 +1083,7 @@ function markerView(data) {
             </tr>
             <tr>
                 <td class = "category">초미세먼지 농도</td>
-                <td>${data.pm25Value}㎍/㎥</td>
+                <td>${changeValueText(data.pm25Value)}㎍/㎥</td>
             </tr>
 
             <tr>
