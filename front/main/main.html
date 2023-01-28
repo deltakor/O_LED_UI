@@ -103,11 +103,11 @@
                               <th>패널 전체</th>
                               <th id = "ledNum"></th>                   
                             </tr>  
-                            <tr id = "ledNormal">
+                            <tr id = "ledOn">
                               <th>점등</th>
                               <th></th>
                             </tr>   
-                            <tr id = "ledNormal">
+                            <tr id = "ledOFF">
                               <th>소등</th>
                               <th></th>
                             </tr>       
@@ -124,7 +124,7 @@
                    </table>
                     </div>
                 </div>
-                <div class = "station_total" onclick="statusClick()">
+                <div class = "station_total" onclick="stationStatusClick()">
                       <div class = "total_title">
                           측정소 통계
                         <button type="button" class="station_refresh" onclick="station_refresh()"><img  src="../icon/refresh.png"></button>

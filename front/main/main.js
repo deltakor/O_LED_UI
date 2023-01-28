@@ -1252,7 +1252,7 @@ async function station_refresh(){
 }
 
 
-function statusClick() {
+function stationStatusClick() {
 
   $("#station_error").on('click',function(e) {
     e.preventDefault();
@@ -1285,6 +1285,47 @@ $("#station_normal").on('click',function(e) {
 
 
 }
+
+
+
+function ledStatusClick() {
+
+  $("#ledError").on('click',function(e) {
+    e.preventDefault();
+
+    
+    document.getElementById("error_station_list").style.display = "block";
+    $("#station_list").hide();
+    document.getElementById("normal_station_list").style.display = "none";
+
+});
+
+$("#ledAll").on('click',function(e) {
+  e.preventDefault();
+
+  $("#station_list").show();
+  $("#error_station_list").hide();
+  document.getElementById("normal_station_list").style.display = "none";
+
+});
+
+$("#ledNormal").on('click',function(e) {
+  e.preventDefault();
+  
+  document.getElementById("normal_station_list").style.display = "block";
+  document.getElementById("error_station_list").style.display = "none";
+  $("#station_list").hide();
+
+});
+
+
+
+}
+
+
+
+
+
 
 
 
