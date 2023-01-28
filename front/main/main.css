@@ -594,7 +594,7 @@ tr:last-child td:last-child {
 
 
 
-/* 회원용/비회원용 헤더 설정 */
+/* 메인페이지 상단바 설정 */
 .dropdown {
   position: relative;
 }
@@ -607,12 +607,18 @@ tr:last-child td:last-child {
 }
 
 
-
-
-
 .dropdown-content button:hover {
   color: white;
   background-color: #606060;
+}
+
+/* 회원관리, 등록 버튼은 기본적으로 숨김처리하고 관리자일때만 보이게 설정 */
+#user-management {
+  visibility: hidden;
+}
+
+#user-enrollment {
+  visibility: hidden;
 }
 
 

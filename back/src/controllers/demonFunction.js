@@ -67,7 +67,7 @@ exports.getLastDustData = async function (){
   
                       //데이터를 가져와보면 flag라는 변수에 통신장애가 있는 결과들이 몇개 있어서 해당 부분 처리가 필요하다.
                       if(jsonData[i].coFlag === "통신장애" || jsonData[i].pm25Flag === "통신장애" || jsonData[i].pm10Flag === "통신장애" || jsonData[i].no2Flag === "통신장애" || jsonData[i].o3Flag === "통신장애" || jsonData[i].so2Flag === "통신장애"){
-                        const [results] = await indexDao.insertLogData(connection, s_id, "통신장애", -1, -1, -1, -1, -1, -1, newDate, body, jsonData[i].stationName);
+                        const [results] = await indexDao.insertLogData(connection, s_id, "통신이상", -1, -1, -1, -1, -1, -1, newDate, body, jsonData[i].stationName);
                       }else{
                         
   
@@ -147,7 +147,6 @@ exports.getLastDustData = async function (){
 
           //board 정보를 가져온다.
           const [boards] = await indexDao.selectBoards(connection);
-          
 
           for(let i = 0; i < boards.length; i++){
             
@@ -159,7 +158,7 @@ exports.getLastDustData = async function (){
             let panel_interval = boards[i].panel_interval;
   
 
-
+            
 
             //----------------초단기 실황 데이터 가져오기 시작---------------------------------------------
 
@@ -406,7 +405,7 @@ exports.getLastDustData = async function (){
 
 
 
-//한시간마다 분전함db select해서 latestCommunicationAt이랑 현재시간이랑 18시간 이상 차이나면 통신장애로 바꾸고 아니면 정상으로 변경
+//한시간마다 분전함db select해서 latestCommunicationAt이랑 현재시간이랑 18시간 이상 차이나면 통신이상으로 바꾸고 아니면 정상으로 변경
 exports.setBoardStatus = async function (){
 
   try{
@@ -426,8 +425,8 @@ exports.setBoardStatus = async function (){
         const diffMSec = currentDate.getTime() - latestCommunicationAt.getTime();
         const diffHour = diffMSec / (60 * 60 * 1000);
      
-        if(diffHour >= 18){ //통신장애로 판단
-          const [results] = await indexDao.updateBoardStatus(connection, board_id, "통신장애");
+        if(diffHour >= 18){ //통신이상으로 판단
+          const [results] = await indexDao.updateBoardStatus(connection, board_id, "통신이상");
         }
         else{ //정상으로 판단 (차이가 18시간 미만)
           const [results] = await indexDao.updateBoardStatus(connection, board_id, "정상");
