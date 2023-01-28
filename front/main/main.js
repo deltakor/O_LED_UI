@@ -279,7 +279,7 @@ async function setLedMarker() {
         confirmPorm();
 
     });
-    
+
     //패널db정보select
     const dataSet = await axios({
         method: "get",
@@ -308,18 +308,15 @@ async function setLedMarker() {
     tab2.innerHTML = LedLogView(logLedInfo);
 
     for (var i = 0; i < ledInfo.length; i++) {
-        // 마커를 생성합니다
-
-        //전체패널table append
+        // 마커를 생성합니다 전체패널table append
         $(ledList).append(
             "<tr id = led_row value =" + ledInfo[i].custom_id + "> <th>" + ledInfo[i].custom_id +
             "</th> <th>" + ledInfo[i].name + "</th></th> <th>" + changeSkyImg(ledInfo[i].SKY) +
             "</th></th> <th>" + statusImg(ledInfo[i].status) + "</th></th> <th>" +
             ledInfo[i].latestCommunicationAt + "</th>"
         );
-        
 
-       //통신이상패널table append
+        //통신이상패널table append
         if (ledInfo[i].status == "통신이상") {
             $(errorLedList).append(
                 "<tr id = led_row value =" + ledInfo[i].custom_id + "> <th>" + ledInfo[i].custom_id +
@@ -330,7 +327,7 @@ async function setLedMarker() {
             ledErrorNum++;
         }
 
-         //정상패널table append
+        //정상패널table append
         if (ledInfo[i].status == "정상") {
             $(normalLedList).append(
                 "<tr id = led_row value =" + ledInfo[i].custom_id + "> <th>" + ledInfo[i].custom_id +
@@ -350,7 +347,7 @@ async function setLedMarker() {
         var isMouseDown = false;
         label = "<span class = ledLabel; style='background-color: #46414E;color:white'>" +
                 ledInfo[i].name + "</span>";
-        
+
         //마커생성
         var marker = new Tmapv2.Marker({
             map: map, // 마커를 표시할 지도
@@ -363,9 +360,7 @@ async function setLedMarker() {
         });
 
         // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다 이벤트 리스너로는 클로저를 만들어 등록합니다 for문에서 클로저를
-        // 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-        
-        //패널 마커 왼쪽 클릭시 기본정보 view이벤트
+        // 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다 패널 마커 왼쪽 클릭시 기본정보 view이벤트
         marker.addListener("click", function (evt) {
             isMouseDown = false;
             const tab1 = document.querySelector("#tab-1")
@@ -395,11 +390,10 @@ async function setLedMarker() {
             }
         });
 
-    
     }
 
     // 패널리스트 클릭시 기본정보 view
-     $(document).ready(function () {
+    $(document).ready(function () {
 
         $('ul.tabs li').click(function () {
             var tab_id = $(this).attr('data-tab');
@@ -421,10 +415,9 @@ async function setLedMarker() {
 
 }
 
-
 //패널 통계에서 패널전체 클릭시 이벤트
 async function change() {
-    
+
     const dataSet = await axios({
         method: "get",
         url: "http://" + ip + ":23000/boards",
@@ -490,7 +483,6 @@ async function change() {
         contextMenu.style.top = e.pageY + 'px';
         contextMenu.style.left = e.pageX + 'px';
         contextMenu.style.visibility = "visible";
-        
 
         //우클릭 삭제
         trash.onclick = function (event) {
@@ -608,7 +600,7 @@ function sendLonlatValue(led_id, lat_data, lon_data) {
     });
 
 }
-//패널 삭제
+//패널db삭제
 function deleteLed(custom_id) {
 
     // [요청 url 선언]
@@ -652,8 +644,7 @@ function deleteLed(custom_id) {
 
 }
 
-// 최단거리
-
+// 최단거리구하는 함수
 function getDistance(lat1, lon1, lat2, lon2) {
     var distance;
     var radius = 6371; // 지구 반지름(km)
@@ -673,20 +664,14 @@ function getDistance(lat1, lon1, lat2, lon2) {
     return distance;
 }
 
+//새로고침 함수
 function reloadFunc() {
-
     location.reload();
-}
-
-function reloadFunc2() {
-    setTimeout(() => {
-        location.reload();
-    }, 100);
-
 }
 
 setInterval(reloadFunc, 1000 * 60 * 15)
 
+//분전함 수정함수
 async function showEditPopup(
     id,
     name,
@@ -763,6 +748,7 @@ window.oncontextmenu = function () {
     return false;
 };
 
+//패널등록함수
 function confirmPorm() {
 
     if (confirm("현재 위치에 패널을 등록하시겠습니까?") == true) {
@@ -775,7 +761,7 @@ function confirmPorm() {
     }
 
 }
-
+//패널 등록폼
 async function showPopup() {
 
     var _width = '650';
@@ -813,6 +799,7 @@ async function showPopup() {
 
 }
 
+//날씨이미지변환
 function changeSkyImg(num) {
     if (num == 1) {
         return " &nbsp<img src=../icon/sun.png>";
@@ -826,7 +813,7 @@ function changeSkyImg(num) {
         return " &nbsp<img src=../icon/snow.png>";
     }
 }
-
+//날씨텍스트변환
 function changeSkyText(num) {
     if (num == 1) {
         return "맑음";
@@ -840,7 +827,7 @@ function changeSkyText(num) {
         return "눈";
     }
 }
-
+//등급텍스트변환
 function changeGradeText(num) {
     if (num == 1) 
         return "좋음"
@@ -852,7 +839,7 @@ function changeGradeText(num) {
         return "매우나쁨"
 
 }
-
+//상태이미지변환
 function statusImg(status) {
     if (status == "정상") {
         return "&nbsp&nbsp<img src=../icon/greenLight.png>"
@@ -861,6 +848,7 @@ function statusImg(status) {
     }
 }
 
+//패널 기본정보 탭 테이블
 function getLedMarkerContent(data) {
     skyInfo = changeSkyText(data.SKY);
 
@@ -1019,6 +1007,7 @@ function getLedMarkerContent(data) {
     ``
 }
 
+//측정소기본정보 탭 테이블
 function markerView(data) {
 
     return `
@@ -1110,93 +1099,7 @@ function markerView(data) {
     ``
 }
 
-function stationLogView(data) {
-
-    for (var i = 0; i < data.length; i++) {
-
-        `   
-          <table>
-              <tbody>
-           <tr>
-                <td class = "category">측정소 id</td>
-                <td>${data.station_id}</td>
-            </tr>
-             <tr>
-                <td class = "category">측정소명</td>
-                <td>${data.stationName}</td>
-            </tr>
-
-            <tr>
-                <td class = "category">측정일시</td>
-                <td>${data.measureAt}</td>
-            </tr>
-
-          <tr>
-              <td class = "category">측정반영일시</td>
-              <td>${data.updateAt}</td>
-          </tr>
-
-            
-            <tr>
-                <td class = "category">상태</td>
-                <td>${data.status}</td>
-            </tr>
-
-
-            <tr>
-                <td class = "category">주소 </td>
-               <td>${data.addr}</td>
-            </tr>
-
-    
-            <tr>
-                <td class = "category">오존 농도</td>
-                <td>${data.o3Value}</td>
-            </tr>
-
-            <tr>
-                <td class= "category">오존 등급</td>
-                <td>${date.o3Grade}</td>
-            </tr>
-
-            <tr>
-                <td class = "category">미세먼지 농도</td>
-                <td>${data.pm10Value}</td>
-            </tr>
-
-            <tr>
-                <td class = "category">미세먼지 등급</td>
-                <td>${data.pm10Grade}</td>
-            </tr>
-            <tr>
-                <td class = "category">초미세먼지 농도</td>
-                <td>${data.pm25Value}</td>
-            </tr>
-
-            <tr>
-                <td class= "category">초미세먼지 등급</td>
-                <td>${data.pm25Grade}</td>
-            </tr>
-
-            
-            <tr>
-                <td class= "category">경도</td>
-                <td>${data.dmX}</td>
-            </tr>
-
-              <tr>
-                  <td class = "category">위도</td>
-                  <td>${data.dmY}</td>
-            </tr>
-            </tbody>
-         
-            </table>
-
-          `
-
-    }
-}
-
+//측정소로그 탭 테이블
 function stationLogView(data) {
 
     var tr = '';
@@ -1222,6 +1125,7 @@ function stationLogView(data) {
 
 }
 
+//패널 로그 탭 테이블
 function LedLogView(data) {
 
     var tr = '';
@@ -1243,6 +1147,7 @@ function LedLogView(data) {
 
 }
 
+//패널통계 새로고침
 async function led_refresh() {
     let led_error = 0;
     let led_normal
@@ -1267,6 +1172,7 @@ async function led_refresh() {
 
 }
 
+//측정소 통계 새로고침
 async function station_refresh() {
     let error = 0;
     const dataSet = await axios({
@@ -1291,6 +1197,7 @@ async function station_refresh() {
 
 }
 
+//측정소 통계 클릭 이벤트
 function stationStatusClick() {
 
     $("#station_error").on('click', function (e) {
@@ -1337,6 +1244,7 @@ function stationStatusClick() {
 
 }
 
+//패널 통계 클릭 이벤트
 function ledStatusClick() {
 
     $("#ledError").on('click', function (e) {
@@ -1383,9 +1291,8 @@ function ledStatusClick() {
 
 }
 
-function spin() {
-    $('panel_1').spinner({max: 10000, min: 1000, step: 100});
-}(function sendSwitchTime() {
+//led전환시간 클릭 이벤트
+(function sendSwitchTime() {
     let btn = document.querySelector("#panelBtn")
     btn.addEventListener("click", function () {
 
@@ -1485,6 +1392,7 @@ $(document).ready(function () {
 
 });
 
+//통신이상 패널통계 클릭이벤트
 async function errorChange() {
 
     const dataSet = await axios({
@@ -1613,7 +1521,7 @@ async function errorChange() {
     })
 
 }
-
+//정상 패널통계 클릭이벤트
 async function normalChange() {
 
     const dataSet = await axios({
