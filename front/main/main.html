@@ -1,364 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel = "stylesheet" href="main.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.min.css" />
-    <script src="../jquery-3.6.3.min.js"></script>
-    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
-   
-</head>
-<body >
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="main.css">
+        <link
+            rel="stylesheet"
+            href="http://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.min.css"/>
+        <script src="../jquery-3.6.3.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 
-    <div class="wrapper">
-        <div class="content">
-          <ul class="menu">
-            <li class="item_list">
-              <i class="uil uil-link-alt"></i>
-              <div id = "link">연결</div>
-            </li>
-            <li class="item_list">
-              <i class="uil uil-link-alt"></i>
-              <div id = "switchPanel">LED 전환시간</div>
-            </li>
-            <li class="item_list">
-              <i class="uil uil-edit"></i>
-              <div id = edit>수정</div>
-            </li>
-            <li class="item_list">
-              <i class="uil uil-trash-alt"></i>
-              <div id = trash>삭제</div>
-            </li>
-          </ul>
-          
+    </head>
+    <body >
+
+        <div class="wrapper">
+            <div class="content">
+                <ul class="menu">
+                    <li class="item_list">
+                        <i class="uil uil-link-alt"></i>
+                        <div id="link">연결</div>
+                    </li>
+                    <li class="item_list">
+                        <i class="uil uil-link-alt"></i>
+                        <div id="switchPanel">LED 전환시간</div>
+                    </li>
+                    <li class="item_list">
+                        <i class="uil uil-edit"></i>
+                        <div id="edit">수정</div>
+                    </li>
+                    <li class="item_list">
+                        <i class="uil uil-trash-alt"></i>
+                        <div id="trash">삭제</div>
+                    </li>
+                </ul>
+
+            </div>
         </div>
-      </div>
 
-      <div class = "switchPanel">
-          <div class="content" onclick="spin()">
-            <ul class="menu">
-              <li class="item">
-                <label class="spinner" for="spinner"> 패널1</label>
-                    <input type="text" id="panel_1" name="new_name" size="4" value="2" required numberonly>
-              </li>
-              <li class="item">
-                <label class="spinner" for="spinner"> 패널2 </label>
-                    <input type="text" id="panel_2" name="new_name" size="4"  value="2"required numberonly>
-              </li>
-              <li class="item">
-                <label class="spinner" for="spinner"> 패널3 </label>
-                <input type="text" id="panel_3" name="new_name" size="4" value="2" required numberonly>
-              </li>
-              <li class="item">
-                <label class="spinner" for="spinner"> 패널4  </label>
-                <input type="text" id="panel_4" name="new_name" size="4" value="2" required numberonly>
-              </li>
-            </ul>
-            
-              <input type="button" value="등록하기" id = "panelBtn">
-        
+        <div class="switchPanel">
+            <div class="content" onclick="spin()">
+                <ul class="menu">
+                    <li class="item">
+                        <label class="spinner" for="spinner">
+                            패널1</label>
+                        <input
+                            type="text"
+                            id="panel_1"
+                            name="new_name"
+                            size="4"
+                            value="2"
+                            required="required"
+                            numberonly="numberonly">
+                    </li>
+                    <li class="item">
+                        <label class="spinner" for="spinner">
+                            패널2
+                        </label>
+                        <input
+                            type="text"
+                            id="panel_2"
+                            name="new_name"
+                            size="4"
+                            value="2"
+                            required="required"
+                            numberonly="numberonly">
+                    </li>
+                    <li class="item">
+                        <label class="spinner" for="spinner">
+                            패널3
+                        </label>
+                        <input
+                            type="text"
+                            id="panel_3"
+                            name="new_name"
+                            size="4"
+                            value="2"
+                            required="required"
+                            numberonly="numberonly">
+                    </li>
+                    <li class="item">
+                        <label class="spinner" for="spinner">
+                            패널4
+                        </label>
+                        <input
+                            type="text"
+                            id="panel_4"
+                            name="new_name"
+                            size="4"
+                            value="2"
+                            required="required"
+                            numberonly="numberonly">
+                    </li>
+                </ul>
+                <div id="panelBtn" style="text-align: center">
+                    <input type="button" value="등록하기" id="panelBtn" style="display: inline-block;">
+                </div>
 
+            </div>
         </div>
-      </div>
 
+        <div>
+            <div class="main_top">
 
-    <div>
-          <div class = "main_top">
+                <img src="../icon/panel.png" style="vertical-align:middle;">
+                <span style="font-family: 'PuradakGentleGothicR';">분전함 패널 관리 시스템</span>
 
+                <!-- <button type="button" class="logout"
+                onclick="location.href='../index.html'" >로그아웃</button> -->
 
-            <img src="../icon/main_top.png" style="vertical-align:middle;" >
-            <span style="font-family: 'PuradakGentleGothicR';" >분전함 패널 관리 시스템</span>
-            
-            <!-- <button type="button" class="logout" onclick="location.href='../index.html'" >로그아웃</button>   -->
-            
-            <span class="signed_hidden">
-              <span class="dropdown">
-                안녕하세요 <span class="nickname"></span>님&nbsp;&nbsp;
-              </span>
-              <span class="dropdown-content">
-                <button id="user-management">회원 관리</button>
-                <button id="user-enrollment">회원 등록</button>
-                <button id="edit-myInfo">개인정보 수정</button>
-                <button id="sign-out">로그아웃</button>
-              </span>
-            </span>
+                <span class="signed_hidden">
+                    <span class="dropdown">
+                        안녕하세요
+                        <span class="nickname"></span>님&nbsp;&nbsp;
+                    </span>
+                    <span class="dropdown-content">
+                        <button id="user-management">회원 관리</button>
+                        <button id="user-enrollment">회원 등록</button>
+                        <button id="edit-myInfo">개인정보 수정</button>
+                        <button id="sign-out">로그아웃</button>
+                    </span>
+                </span>
 
+            </div>
+            <section>
+                <div class="ictInfo">
+                    <div class="ictInfo_left">
+                        <div class="led_total" onclick="ledStatusClick()">
+                            <div class="total_title">
+                                패널 통계
+                                <button type="button" class="led_refresh" onclick="led_refresh()"><img src="../icon/refresh.png"></button>
+                            </div>
+                            <div class="total_Body">
+                                <table class="total_table">
+                                    <tbody id="total_tbody">
+                                        <tr id="ledAll">
+                                            <th><img src="../icon/listAll.png">
+                                                패널 전체</th>
+                                            <th id="ledNum"></th>
+                                        </tr>
+                                        <tr id="ledOn">
+                                            <th><img src="../icon/lightOn.png">
+                                                점등</th>
+                                            <th>0</th>
+                                        </tr>
+                                        <tr id="ledOFF">
+                                            <th><img src="../icon/lightOff.png">
+                                                소등</th>
+                                            <th>5</th>
+                                        </tr>
+                                        <tr id="ledNormal">
+                                            <th><img src="../icon/greenLight.png">
+                                                정상
+                                            </th>
+                                            <th id="ledNormal_Num"></th>
+                                        </tr>
+                                        <tr id="ledError">
+                                            <th>
+                                                <img src="../icon/redLight.png">
+                                                통신이상
+                                            </th>
+                                            <th id="ledError_Num"></th>
+                                        </tr>
 
-          </div>
-        <section>
-            <div class="ictInfo">
-              <div class = "ictInfo_left">
-                <div class = "led_total" onclick="ledStatusClick()">
-                    <div class = "total_title">
-                      패널 통계
-                        <button type="button" class="led_refresh" onclick="led_refresh()"><img  src="../icon/refresh.png"></button>       
-                    </div>
-                    <div class = "total_Body">
-                      <table class = "total_table">
-                          <tbody id= "total_tbody">   
-                            <tr id = "ledAll">
-                              <th>패널 전체</th>
-                              <th id = "ledNum"></th>                   
-                            </tr>  
-                            <tr id = "ledOn">
-                              <th>점등</th>
-                              <th>0</th>
-                            </tr>   
-                            <tr id = "ledOFF">
-                              <th>소등</th>
-                              <th>5</th>
-                            </tr>       
-                            <tr id = "ledNormal">
-                              <th>정상</th>
-                              <th  id = ledNormal_Num></th>
-                            </tr>     
-                            <tr id = "ledError">
-                              <th>통신이상</th>
-                              <th  id = ledError_Num></th>
-                            </tr>     
-                      
-                          </tbody>
-                   </table>
-                    </div>
-                </div>
-                <div class = "station_total" onclick="stationStatusClick()">
-                      <div class = "total_title">
-                          측정소 통계
-                        <button type="button" class="station_refresh" onclick="station_refresh()"><img  src="../icon/refresh.png"></button>
-                    </div>
-                    <div class = "total_Body">
-                      <table class = "total_table">
-                          <tbody id= "total_tbody">         
-                            <tr id = "stationAll">
-                              <th>측정소 전체</th>            
-                              <th id ="stationNum"></th>  
-                            </tr>    
-                            <tr id = "station_normal">
-                              <th>정상</th>
-                              <th id = "normal"></th>
-                            </tr>       
-                            <tr id = station_error>
-                              <th>통신이상</th>
-                              <th id ="errorStationNum"></th>
-                            </tr>                          
-                          </tbody>
-                  </table>
-                    </div>
-                </div>
-              </div>
-                <div class="ictInfo_right"> 
-                    <div class ="right_top" style=" border: 1px solid black; overflow: auto; cursor:pointer"> 
-                      <br></br>
-                        <div class="search-container">
-                          <input type="search" id="search" placeholder="Search..." />
-                          <button class="search-click"><i class="fa fa-search"></i></button>
-                          <br></br>
-                           </div>
-                        
-                        <div id = "led_list">
-                        <table style="border-collapse: collapse;"id ="led_list_table">
-                            <thead id ="led_list_head" style="background-color: aliceblue;">
-                              <tr>
-                                <th>패널 ID</th>
-                                <th>패널명</th>
-                                <th>날씨상태</th>
-                                <th>통신상태</th>                 
-                                <th>통신시간</th>
-                              </tr> 
-                              </thead>
-
-                              <tbody id ="led_list_body" onclick="change()">                               
-                              </tbody>
-
-                        </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-
-                        <div id = "error_led_list"  style="display:none">
-                          <table style="border-collapse: collapse;"id ="led_list_table">
-                              <thead id ="led_list_head" style="background-color: aliceblue;">
-                                <tr>
-                                  <th>패널 ID</th>
-                                  <th>패널명</th>
-                                  <th>날씨상태</th>
-                                  <th>통신상태</th>                 
-                                  <th>통신시간</th>
-                                </tr> 
-                                </thead>
-  
-                                <tbody id ="error_led_list_body" onclick="errorChange()">                               
-                                </tbody>
-  
-                          </table>
-                          </div>
-
-
-
-                          <div id = "normal_led_list"  style="display:none">
-                            <table style="border-collapse: collapse;"id ="led_list_table">
-                                <thead id ="led_list_head" style="background-color: aliceblue;">
-                                  <tr>
-                                    <th>패널 ID</th>
-                                    <th>패널명</th>
-                                    <th>날씨상태</th>
-                                    <th>통신상태</th>                 
-                                    <th>통신시간</th>
-                                  </tr> 
-                                  </thead>
-    
-                                  <tbody id ="normal_led_list_body" onclick="normalChange()">                               
-                                  </tbody>
-    
-                            </table>
+                        <div class="station_total" onclick="stationStatusClick()">
+                            <div class="total_title">
+                                측정소 통계
+                                <button type="button" class="station_refresh" onclick="station_refresh()"><img src="../icon/refresh.png"></button>
+                            </div>
+                            <div class="total_Body">
+                                <table class="total_table">
+                                    <tbody id="total_tbody">
+                                        <tr id="stationAll">
+                                            <th><img src="../icon/listAll.png">
+                                                측정소 전체</th>
+                                            <th id="stationNum"></th>
+                                        </tr>
+                                        <tr id="station_normal">
+                                            <th>
+                                                <img src="../icon/greenLight.png">
+                                                정상
+                                            </th>
+                                            <th id="normal"></th>
+                                        </tr>
+                                        <tr id="station_error">
+                                            <th><img src="../icon/redLight.png">
+                                                통신이상
+                                            </th>
+                                            <th id="errorStationNum"></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ictInfo_right">
+                        <div
+                            class="right_top"
+                            style=" border: 1px solid black; overflow: auto; cursor:pointer">
+                            <br></br>
+                            <div class="search-container">
+                                <input type="search" id="search" placeholder="Search..."/>
+                                <button class="search-click">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                                <br></br>
                             </div>
 
+                            <div id="led_list">
+                                <table style="border-collapse: collapse;" id="led_list_table">
+                                    <thead id="led_list_head" style="background-color: aliceblue;">
+                                        <tr>
+                                            <th>패널 ID</th>
+                                            <th>패널명</th>
+                                            <th>날씨</th>
+                                            <th>통신</th>
+                                            <th>통신시간</th>
+                                        </tr>
+                                    </thead>
 
+                                    <tbody id="led_list_body" onclick="change()"></tbody>
 
+                                </table>
+                            </div>
 
-                    </div>
-                    <div class = "right_bottom" style=" border: 1px solid black; overflow: auto; cursor:pointer" >
-                      <div id = "station_list">
-                        <table style="border-collapse: collapse;"id ="station_list_table">
-                            <thead id ="station_list_head" style="background-color: aliceblue;">
-                              <tr>
-                                <th>측정소 이름</th>
-                                <th>상태</th>
-                              </tr> 
-                              </thead>
+                            <div id="error_led_list" style="display:none">
+                                <table style="border-collapse: collapse;" id="led_list_table">
+                                    <thead id="led_list_head" style="background-color: aliceblue;">
+                                        <tr>
+                                            <th>패널 ID</th>
+                                            <th>패널명</th>
+                                            <th>날씨</th>
+                                            <th>통신</th>
+                                            <th>통신시간</th>
+                                        </tr>
+                                    </thead>
 
-                              <tbody id ="station_list_body">                               
-                              </tbody>
+                                    <tbody id="error_led_list_body" onclick="errorChange()"></tbody>
 
-                        </table>
-                      </div>
+                                </table>
+                            </div>
 
+                            <div id="normal_led_list" style="display:none">
+                                <table style="border-collapse: collapse;" id="led_list_table">
+                                    <thead id="led_list_head" style="background-color: aliceblue;">
+                                        <tr>
+                                            <th>패널 ID</th>
+                                            <th>패널명</th>
+                                            <th>날씨</th>
+                                            <th>통신</th>
+                                            <th>통신시간</th>
+                                        </tr>
+                                    </thead>
 
-                      <div id = "error_station_list" style="display:none">
-                        <table style="border-collapse: collapse;"id ="station_list_table">
-                            <thead id ="station_list_head" style="background-color: aliceblue;">
-                              <tr>
-                                <th>측정소 이름</th>
-                                <th>상태</th>
-                              </tr> 
-                              </thead>
-  
-                              <tbody id ="error_station_list_body">                               
-                              </tbody>
-  
-                        </table>
+                                    <tbody id="normal_led_list_body" onclick="normalChange()"></tbody>
+
+                                </table>
+                            </div>
+
                         </div>
+                        <div
+                            class="right_bottom"
+                            style=" border: 1px solid black; overflow: auto; cursor:pointer">
+                            <div id="station_list">
+                                <table style="border-collapse: collapse;" id="station_list_table">
+                                    <thead id="station_list_head" style="background-color: aliceblue;">
+                                        <tr>
+                                            <th>측정소 이름</th>
+                                            <th>상태</th>
+                                        </tr>
+                                    </thead>
 
-                        <div id = "normal_station_list" style="display:none">
-                          <table style="border-collapse: collapse;"id ="station_list_table">
-                              <thead id ="station_list_head" style="background-color: aliceblue;">
-                                <tr>
-                                  <th>측정소 이름</th>
-                                  <th>상태</th>
-                                </tr> 
-                                </thead>
-    
-                                <tbody id ="normal_station_list_body">                               
-                                </tbody>
-    
-                          </table>
-                          </div>
-  
+                                    <tbody id="station_list_body"></tbody>
 
-                        
+                                </table>
+                            </div>
+
+                            <div id="error_station_list" style="display:none">
+                                <table style="border-collapse: collapse;" id="station_list_table">
+                                    <thead id="station_list_head" style="background-color: aliceblue;">
+                                        <tr>
+                                            <th>측정소 이름</th>
+                                            <th>상태</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="error_station_list_body"></tbody>
+
+                                </table>
+                            </div>
+
+                            <div id="normal_station_list" style="display:none">
+                                <table style="border-collapse: collapse;" id="station_list_table">
+                                    <thead id="station_list_head" style="background-color: aliceblue;">
+                                        <tr>
+                                            <th>측정소 이름</th>
+                                            <th>상태</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="normal_station_list_body"></tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>  
-                <div class="tmapView" id = "tmap"></div>
-            </div>
-            
-            <div class="markerInfo" id = "markerInfo">
-                <ul class="tabs">
-                    <li class="tab-link current" data-tab="tab-1" id = "testtest">기본 정보</li>
-                    <li class="tab-link" data-tab="tab-2">패널 로그 </li>
-
-                    <li class="tab-link" data-tab="tab-3">측정소로그</li>
-                    <li class="tab-link" data-tab="tab-4">통신 로그</li>
-                </ul>
-                
-                
-                
-                <div id ="tab-1" class = "tab-content"></div>
-                
-                <div id="tab-2" class="tab-content" style="overflow: auto;"> 
-                  <table>
-                        <thead id = "tab-3Head">
-                          <tr>
-                            <th>board_weather<br>_log_id</th>
-                            <th>custom_id</th>
-                            <th>weather<br>MeasureAt&nbsp;</th>
-                            <th>&nbsp;&nbsp;createAt&nbsp;&nbsp;</th>
-                            <th>T1H</th>
-                            <th>PTY</th>
-                            <th>RN1</th>
-                            <th>REH</th>
-                          </tr>
-                        </thead>
-                        <tbody id = "tab-2Body" >
-                    
-                        </tbody>
-                      </table>
-                      </div>
-          
-                <div id="tab-3" class="tab-content">
-                  <table>
-                    <thead id = "tab-3Head">
-                      <tr>
-                        <th>measuring<br>_log_id</th>
-                        <th>stationName</th>
-                        <th>&nbsp;&nbsp;measureAt&nbsp;&nbsp;</th>
-                        <th>&nbsp;&nbsp;createAt&nbsp;&nbsp;</th>
-                        <th>status</th>
-                        <th>o3Value</th>
-                        <th>o3Grade</th>
-                        <th>pm10Value</th>
-                        <th>pm10Grade</th>
-                        <th>pm25Value</th>
-                        <th>pm25Grade</th>
-                      </tr>
-                    </thead>
-                    <tbody id = "tab-3Body">
-                
-                    </tbody>
-                  </table>
+                <div>
+                    <div class="tmapView" id="tmap"></div>
                 </div>
-                <div id="tab-4" class="tab-content">
-   
+
+                <div class="markerInfo" id="markerInfo">
+                    <ul class="tabs">
+                        <li class="tab-link current" data-tab="tab-1" id="testtest">기본 정보</li>
+                        <li class="tab-link" data-tab="tab-2">패널 로그
+                        </li>
+
+                        <li class="tab-link" data-tab="tab-3">측정소로그</li>
+                        <li class="tab-link" data-tab="tab-4">통신 로그</li>
+                    </ul>
+
+                    <div id="tab-1" class="tab-content"></div>
+
+                    <div id="tab-2" class="tab-content" style="overflow: auto;">
+                        <table>
+                            <thead id="tab-3Head">
+                                <tr>
+                                    <th>board_weather<br>_log_id</th>
+                                    <th>custom_id</th>
+                                    <th>weather<br>MeasureAt&nbsp;</th>
+                                    <th>&nbsp;&nbsp;createAt&nbsp;&nbsp;</th>
+                                    <th>T1H</th>
+                                    <th>PTY</th>
+                                    <th>RN1</th>
+                                    <th>REH</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tab-2Body"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="tab-3" class="tab-content">
+                        <table>
+                            <thead id="tab-3Head">
+                                <tr>
+                                    <th>measuring<br>_log_id</th>
+                                    <th>stationName</th>
+                                    <th>&nbsp;&nbsp;measureAt&nbsp;&nbsp;</th>
+                                    <th>&nbsp;&nbsp;createAt&nbsp;&nbsp;</th>
+                                    <th>status</th>
+                                    <th>o3Value</th>
+                                    <th>o3Grade</th>
+                                    <th>pm10Value</th>
+                                    <th>pm10Grade</th>
+                                    <th>pm25Value</th>
+                                    <th>pm25Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tab-3Body"></tbody>
+                        </table>
+                    </div>
+                    <div id="tab-4" class="tab-content"></div>
                 </div>
-            </div>
-        </section>
-                
-    </div>
+            </section>
 
+        </div>
 
+        <script
+            type="text/javascript"
+            src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xx6be41fcc0896415190c56ef7eab981a0"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+            integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+        <script src="main.js"></script>
+        <script src="header.js"></script>
 
-
-
-
-
-
-
-    <script
-    type="text/javascript"
-    src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xx6be41fcc0896415190c56ef7eab981a0"
-  ></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
-  <script src ="main.js"></script>
-  <script src ="header.js"></script>
-
-
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js"></script>
-</body>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+        <script
+            src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/i18n/jquery-ui-i18n.min.js"></script>
+    </body>
 </html>
