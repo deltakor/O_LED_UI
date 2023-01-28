@@ -100,15 +100,15 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
   for (var i = 0; i < stationInfo.length; i++) {
     // 마커를 생성합니다
 
-    $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+    $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +statusImg(stationInfo[i].status) + "</th>" +"</tr>");
     
     if(stationInfo[i].status == "통신이상") {
-      $(errorStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+      $(errorStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +statusImg(stationInfo[i].status) + "</th>" +"</tr>");
       stationErrorNum++;
     }
 
     if(stationInfo[i].status == "정상") {
-      $(normalStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+      $(normalStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +statusImg(stationInfo[i].status) + "</th>" +"</tr>");
     }
     let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
    
@@ -314,19 +314,19 @@ for (var i = 0; i < ledInfo.length; i++) {
   
 
   $(ledList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
-  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +statusImg(ledInfo[i].status) + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
 
   if(ledInfo[i].status =="통신이상") 
   {
   $(errorLedList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
-  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +statusImg(ledInfo[i].status) + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
   ledErrorNum++; 
   }
 
   if(ledInfo[i].status =="정상") 
   {
   $(normalLedList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
-  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +statusImg(ledInfo[i].status) + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
   }
 
 
@@ -827,6 +827,15 @@ function changeSky(num) {
   }
   else if(num==5) {
     return "눈";
+  }
+}
+
+
+function statusImg(status) {
+  if(status=="정상") {
+    return "<img src=../icon/greenLight.png>"
+  } else {
+    return "<img src=../icon/redlight.png>";
   }
 }
 
