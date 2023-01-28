@@ -1,5 +1,7 @@
 const { pool } = require("../../config/database");
 
+
+//측정소 조회
 exports.selectStations = async function (connection) {
 
   const selectAllStationQuery = `SELECT * FROM measuring_station;`;
@@ -12,6 +14,7 @@ exports.selectStations = async function (connection) {
 }
 
 
+//측정소 추가
 exports.insertStation = async function (connection, dmX, dmY, addr, stationName) {
 
   var now = new Date();
@@ -25,6 +28,7 @@ exports.insertStation = async function (connection, dmX, dmY, addr, stationName)
 }
 
 
+//측정소 중복검사
 exports.isValidStationId = async function (connection, station_id) {
 
   const Query = `SELECT * FROM measuring_station WHERE station_id = ?;`;
@@ -40,6 +44,8 @@ exports.isValidStationId = async function (connection, station_id) {
 
 }
 
+
+//측정소 업데이트
 exports.updateStation = async function (connection, station_id, dmX, dmY, addr, stationName) {
 
   //입력된 값만 수정하는 쿼리
@@ -52,6 +58,7 @@ exports.updateStation = async function (connection, station_id, dmX, dmY, addr, 
 }
 
 
+//측정소 삭제
 exports.deleteStation = async function (connection, station_id) {
   const Query = `DELETE FROM measuring_station WHERE station_id = ?;`;
   const Params = [station_id];
@@ -63,6 +70,7 @@ exports.deleteStation = async function (connection, station_id) {
 
 
 
+//측정소 이름 가지고 id 조회 
 exports.getStationId = async function (connection, stationName) {
 
   const Query = `SELECT * FROM measuring_station WHERE stationName = ? limit 1;`;
@@ -76,12 +84,12 @@ exports.getStationId = async function (connection, stationName) {
 
 
 
-
+//에어코리아 정보 들고와서 측정소db 업데이트랑 측정소로그 추가
 exports.insertLogData = async function (connection, station_id, status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, measureAt, json, stationName) {
-
 
   var now = new Date();
 
+   //입력된 값만 수정하는 쿼리
   const updateQuery = `UPDATE measuring_station SET status = ?, o3Value = ?, o3Grade = ?, pm10Value = ?, pm10Grade = ?, pm25Value = ?, pm25Grade = ?, updateAt = ?, measureAt = ?, json = ? WHERE station_id = ?`;
   const updateParams = [status, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, now, measureAt, json, station_id];
 
@@ -95,7 +103,7 @@ exports.insertLogData = async function (connection, station_id, status, o3Value,
 }
 
 
-
+//측정소로그 조회
 exports.getAllMeasuringLog = async function (connection) {
 
   const Query = `SELECT * FROM measuring_log WHERE createAt BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();`; //최근 90일 데이터만 조회
@@ -109,7 +117,7 @@ exports.getAllMeasuringLog = async function (connection) {
 
 
 
-
+//분전함 조회
 exports.selectBoards = async function (connection) {
   const Query = `select distribution_board.*, dmX, dmY, addr, stationName, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, measureAt  from distribution_board left outer join  measuring_station on distribution_board.station_id = measuring_station.station_id`;
   const Params = [];
@@ -120,6 +128,7 @@ exports.selectBoards = async function (connection) {
 };
 
 
+//분전함로그 조회
 exports.getAllWeatherLog = async function (connection) {
 
   const Query = `SELECT * FROM board_weather_log WHERE createAt BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();`; //최근 90일까지 조회
@@ -132,11 +141,12 @@ exports.getAllWeatherLog = async function (connection) {
 }
 
 
-
+//기상청 데이터 가져와서 분전함db랑 업데이트랑 분전함 로그 추가
 exports.insertWeatherLogData = async function (connection, board_id, weatherMeasureAt, T1H, PTY, RN1, REH, WND, SKY, nowCastJson, forecastJson, custom_id, status, latestCommunicationAt, panel_interval) {
 
   var now = new Date();
 
+   //입력된 값만 수정하는 쿼리
   const updateQuery = `UPDATE distribution_board SET weatherMeasureAt = ?, updateAt = ?, T1H = ?, PTY = ?, RN1 = ?, REH = ?, WND = ?, SKY = ?, json = ?, forecast_json = ? WHERE board_id = ?`;
   const updateParams = [weatherMeasureAt, now, T1H, PTY, RN1, REH, WND, SKY, nowCastJson, forecastJson, board_id];
 
@@ -151,7 +161,7 @@ exports.insertWeatherLogData = async function (connection, board_id, weatherMeas
 
 }
 
-
+//분전함 custom_id(4글자) 중복검사
 exports.duplicateCustomIdCheck = async function (connection, custom_id) {
 
   const Query = `SELECT * FROM distribution_board WHERE custom_id = ?;`;
@@ -168,7 +178,7 @@ exports.duplicateCustomIdCheck = async function (connection, custom_id) {
 }
 
 
-
+//분전함 추가
 exports.insertBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, grid_x, grid_y, memo, installAt) {
 
   var now = new Date();
@@ -182,7 +192,7 @@ exports.insertBoard = async function (connection, custom_id, station_id, name, m
 }
 
 
-
+//분전함 custom_id(4글자) 중복검사
 exports.isValidCustomId = async function (connection, custom_id) {
 
   const Query = `SELECT * FROM distribution_board WHERE custom_id = ?;`;
@@ -198,7 +208,7 @@ exports.isValidCustomId = async function (connection, custom_id) {
 
 }
 
-
+//분전함 삭제
 exports.deleteBoard = async function (connection, custom_id) {
   const Query = `DELETE FROM distribution_board WHERE custom_id = ?;`;
   const Params = [custom_id];
@@ -209,11 +219,12 @@ exports.deleteBoard = async function (connection, custom_id) {
 }
 
 
-
+//분전함 업데이트
 exports.updateBoard = async function (connection, custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, x, y, memo, installAt) {
 
   var now = new Date();
 
+   //입력된 값만 수정하는 쿼리
   const Query = `UPDATE distribution_board SET updateAt = ?, station_id = ifnull(?, station_id), name = ifnull(?, name), modem_number = ifnull(?, modem_number), address = ifnull(?, address), administrative_dong = ifnull(?, administrative_dong), panel_interval = ifnull(?, panel_interval), lat = ifnull(?, lat), lon = ifnull(?, lon), grid_x = ifnull(?, grid_x), grid_y = ifnull(?, grid_y), memo = ifnull(?, memo), installAt = ifnull(?, installAt) WHERE custom_id = ?;`;
 
   const Params = [now, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, x, y, memo, installAt, custom_id];
@@ -249,6 +260,7 @@ exports.insertUsers = async function (connection, userID, password, nickname) {
 };
 
 
+//분전함 상태 업데이트
 exports.updateBoardStatus = async function (connection, board_id, status) {
 
   const Query = `UPDATE distribution_board SET status = ? WHERE board_id = ?;`;

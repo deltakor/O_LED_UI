@@ -1,18 +1,9 @@
-
-
-
-
-
 //데몬에서 작동되어야 할 함수들
-
-
-
 
 const indexDao = require("../dao/indexDao");
 const { pool } = require("../../config/database");
 const { logger } = require("../../config/winston");
 const secret = require("../../config/secret");
-
 
 exports.getLastDustData = async function () {
 
@@ -33,7 +24,6 @@ exports.getLastDustData = async function () {
       queryParams += '&' + encodeURIComponent('sidoName') + '=' + encodeURIComponent('부산'); /* */
       queryParams += '&' + encodeURIComponent('ver') + '=' + encodeURIComponent('1.0'); /* */
 
-
       request({
         url: url + queryParams,
         method: 'GET'
@@ -46,13 +36,14 @@ exports.getLastDustData = async function () {
           //stationName을 이용하여 id를 조회한다.     
           const sName = jsonData[i].stationName;
 
+          //station정보와 station과 연결된 측정소 정보를 함께 들고온다
           const [rows] = await indexDao.getStationId(connection, sName);
 
           if (rows.length >= 1) { //id가 존재할 때 실행
 
             const s_id = rows[0].station_id;
 
-            //공공데이터에서 가져온 날짜정보는 24:00로 표현되는데 24:00은  mysql에 저장이안됨 그래서 24:00을 다음날 00:00로 변환하는 작업 필요
+            //공공데이터에서 가져온 날짜정보는 정시를 24:00로 표현되는데 24:00은  mysql에 저장이안됨 그래서 24:00을 다음날 00:00로 변환하는 작업 필요
             let date = new Date(jsonData[i].dataTime);
             const year = date.getFullYear();
             const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -63,7 +54,6 @@ exports.getLastDustData = async function () {
             const seconds = ('0' + date.getSeconds()).slice(-2);
             const timeStr = hours + ':' + minutes + ':' + seconds;
             const newDate = dateStr + " " + timeStr
-
 
             //데이터를 가져와보면 flag라는 변수에 통신장애가 있는 결과들이 몇개 있어서 해당 부분 처리가 필요하다.
             if (jsonData[i].coFlag === "통신장애" || jsonData[i].pm25Flag === "통신장애" || jsonData[i].pm10Flag === "통신장애" || jsonData[i].no2Flag === "통신장애" || jsonData[i].o3Flag === "통신장애" || jsonData[i].so2Flag === "통신장애") {
@@ -131,9 +121,6 @@ exports.getLastDustData = async function () {
   }
 
 }
-
-
-
 
 
 exports.getWeatherData = async function () {
@@ -253,8 +240,9 @@ exports.getWeatherData = async function () {
           그래서 현재시간 - 1시간으로 조회를해서 현재시간(정시)의 예보값을 들고오도록 구현
 
           */
+
           var today = new Date();
-          today.setHours(today.getHours() - 1);
+          today.setHours(today.getHours() - 1); //현재시간 - 1시간
 
           var year = today.getFullYear();
           var month = ('0' + (today.getMonth() + 1)).slice(-2);
@@ -266,9 +254,6 @@ exports.getWeatherData = async function () {
           var minutes = ('0' + today.getMinutes()).slice(-2);
 
           var timeString = hours + minutes;
-
-
-
 
 
           var request = require('request');
@@ -292,7 +277,7 @@ exports.getWeatherData = async function () {
 
 
             var SKY; // 초단기예보에서 가져온 SKY값(from 초단기예보)
-            var newSKY; // DB에 넣을 SKY값 (
+            var newSKY; // DB에 넣을 SKY값 (문서 참조)
             var forecastJson = body;
 
             var today = new Date();
@@ -301,11 +286,9 @@ exports.getWeatherData = async function () {
 
             for (let k = 0; k < jsonData.length; k++) {
 
-
               if (jsonData[k].category === 'SKY' && jsonData[k].fcstTime == hours + "00") {
                 SKY = jsonData[k].fcstValue;
               }
-
 
             }
 
@@ -402,10 +385,7 @@ exports.getWeatherData = async function () {
 }
 
 
-
-
-
-//한시간마다 분전함db select해서 latestCommunicationAt이랑 현재시간이랑 18시간 이상 차이나면 통신이상으로 바꾸고 아니면 정상으로 변경
+//setInterval 이용해서  한시간마다 분전함db select해서 latestCommunicationAt이랑 현재시간이랑 18시간 이상 차이나면 통신이상으로 바꾸고 아니면 정상으로 변경
 exports.setBoardStatus = async function () {
 
   try {

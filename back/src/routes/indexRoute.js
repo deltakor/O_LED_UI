@@ -3,8 +3,6 @@ module.exports = function (app) {
   const jwtMiddleware = require("../../config/jwtMiddleware");
 
   // app.HTTP메서드(uri, 컨트롤러 콜백함수)
-  //route : 어떤 요청이 들어오면 어떤 반응을 할 것인지 정의하는 부분임
-
 
   //측정소 조회 
   app.get("/stations", index.readStations);

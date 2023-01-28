@@ -20,6 +20,9 @@ var YO = 136; // 기1준점 Y좌표(GRID)
 //
 // LCC DFS 좌표변환 ( code : "toXY"(위경도->좌표, v1:위도, v2:경도), "toLL"(좌표->위경도,v1:x, v2:y) )
 //
+
+
+//기상청은 위도 경도 대신 , 격자x,y 를 이용하여 조회하기 때문에 변환이 필요함
 function dfs_xy_conv(code, v1, v2) {
   var DEGRAD = Math.PI / 180.0;
   var RADDEG = 180.0 / Math.PI;
@@ -75,15 +78,12 @@ function dfs_xy_conv(code, v1, v2) {
   }
   return rs;
 }
-//-->
-
 
 
 //측정소 조회
 exports.readStations = async function (req, res) {
 
   const { stationName } = req.query;
-
 
   try {
     const connection = await pool.getConnection(async (conn) => conn);
@@ -202,6 +202,7 @@ exports.updateStation = async function (req, res) {
     const connection = await pool.getConnection(async (conn) => conn);
     try {
 
+      //존재하는 분전함인지 확인
       const isValidStationId = await indexDao.isValidStationId(connection, station_id);
 
       if (!isValidStationId) {
@@ -219,8 +220,6 @@ exports.updateStation = async function (req, res) {
         code: 200, // 요청 실패시 400번대 코드
         message: "측정소 수정(업데이트) 성공",
       });
-
-
 
 
     } catch (err) {
@@ -246,6 +245,8 @@ exports.deleteStation = async function (req, res) {
     const connection = await pool.getConnection(async (conn) => conn);
 
     try {
+
+      //존재하는 분전함인지 확인
       const isValidStationId = await indexDao.isValidStationId(connection, station_id);
 
       if (!isValidStationId) {
@@ -274,10 +275,6 @@ exports.deleteStation = async function (req, res) {
     return false;
   }
 };
-
-
-
-
 
 
 
@@ -338,7 +335,6 @@ exports.readBoards = async function (req, res) {
 
 
 
-
 //분전함 위치에 있는 날씨 로그 조회 (최대 90일까지)
 exports.readBoardWeatherLogs = async function (req, res) {
 
@@ -369,7 +365,6 @@ exports.readBoardWeatherLogs = async function (req, res) {
 
 
 //분전함 등록
-//json 인자 : custom_id, station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
 exports.createBoard = async function (req, res) {
 
   const { custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, memo, installAt } = req.body;
@@ -418,10 +413,6 @@ exports.createBoard = async function (req, res) {
 };
 
 
-
-
-
-
 //분전함 삭제 (custom_id를 받음)
 exports.deleteBoard = async function (req, res) {
 
@@ -464,7 +455,6 @@ exports.deleteBoard = async function (req, res) {
 
 //분전함 수정 (custom_id에 해당하는 컬럼 수정)
 //json으로 입력받은 인자만 수정함 (모든 인자 다 적을 필요 없음, 변경할 인자만 기입)
-//json 인자 : custom_id(필수), station_id, name, modem_number, address, administrative_dong, lat, lon, memo, installAt
 exports.updateBoard = async function (req, res) {
 
   const { custom_id, station_id, name, modem_number, address, administrative_dong, panel_interval, lat, lon, memo, installAt } = req.body;
@@ -577,7 +567,6 @@ exports.createJwt = async function (req, res) {
 
 
 
-
 // 회원가입
 exports.createUsers = async function (req, res) {
 
@@ -665,6 +654,7 @@ exports.readJwt = async function (req, res) {
 };
 
 
+//측정소 정보 업데이트 (db에 없는 측정소가 있을 시 추가한다)
 async function getStationData() {
 
 
@@ -674,7 +664,6 @@ async function getStationData() {
     try {
 
       console.log("updating stationData . . . ");
-
 
       var request = require('request');
 
