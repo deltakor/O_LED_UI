@@ -3,7 +3,7 @@
     let btn = document.querySelector("#btn")
     btn.addEventListener("click", function () {
         if (checkform() == true) {
-            console.log("hi")
+           
 
             var custom_id = document
                 .getElementById("new_id")

@@ -125,7 +125,7 @@ $('#selectLED_list').each(function () {
     var val = $(this).val(); //value
     var text = $(this).text(); //text
     let openselect = window.opener.stationInfo //부모창 select 박스
-    console.log(openselect)
+
 
     for (var i = 0; i < openselect.length; i++) {
 

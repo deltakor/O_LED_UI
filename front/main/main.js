@@ -353,7 +353,7 @@ async function setLedMarker() {
 
     }
 
-    console.log(ledInfo[1].name)
+  
     //탭 이동기능
 
     $(document).ready(function () {
@@ -396,7 +396,7 @@ async function change() {
         e.preventDefault();
         current_str_id = $(this).attr('value');
 
-        console.log(current_str_id)
+    
 
         for (var i = 0; i < ledInfo.length; i++) {
 
@@ -419,7 +419,7 @@ async function change() {
 
         current_str_id = $(this).attr('value');
 
-        console.log(current_str_id)
+     
 
         let defaltName,
             defaltModem_number,
@@ -546,8 +546,7 @@ function sendLonlatValue(led_id, lat_data, lon_data) {
         // [응답 확인 부분 - json 데이터를 받습니다]
         success: function (data) {
             alert("패널의 위치가 이동되었습니다!")
-            console.log(data)
-
+       
         },
 
         // [에러 확인 부분]
@@ -1343,7 +1342,6 @@ function ledStatusClick() {
 }
 
 function spin() {
-    console.log("hi")
     $('panel_1').spinner({max: 10000, min: 1000, step: 100});
 }(function sendSwitchTime() {
     let btn = document.querySelector("#panelBtn")
@@ -1366,7 +1364,7 @@ function spin() {
 
         let switchTimeStr = switchTime_p1 + "," + switchTime_p2 + "," +
                 switchTime_p3 + "," + switchTime_p4;
-        console.log(switchTimeStr)
+    
         // [요청 json 데이터 선언]
         var jsonData = { // Body에 첨부할 json 데이터
             "panel_interval": switchTimeStr,
@@ -1394,8 +1392,7 @@ function spin() {
             // [응답 확인 부분 - json 데이터를 받습니다]
             success: function (data) {
                 alert("패널 스위치 정보가 전송되었습니다!")
-                console.log(data)
-
+             
             },
 
             // [에러 확인 부분]
@@ -1483,7 +1480,7 @@ async function errorChange() {
 
         var str_id = $(this).attr('value');
 
-        console.log(str_id)
+   
         let defaltName,
             defaltModem_number,
             defaltAddr,
@@ -1613,7 +1610,6 @@ async function normalChange() {
 
         var str_id = $(this).attr('value');
 
-        console.log(str_id)
         let defaltName,
             defaltModem_number,
             defaltAddr,
