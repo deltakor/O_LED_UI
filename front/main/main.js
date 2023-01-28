@@ -1,6 +1,3 @@
-let label;
-let openWin;
-
 //IP 설정--------------------------------------------------------------
 const ip = "127.0.0.1";
 //const ip = "61.80.179.120";
@@ -77,6 +74,12 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     height: "100%", // 지도의 높이
     zoom: 16
 });
+
+//마커 라벨
+let label;
+//등록 폼 ,수정 폼
+let openWin;
+
 
 //측정소 마커생성및 클릭시 기본정보 로그정보 View이벤트 적용. 측정소 통계리스트에서 정상,비정상,전체 이동 이벤트 적용
 (async function setStations() {
