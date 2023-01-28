@@ -18,9 +18,32 @@ var stationInfo;
 var ledInfo;
 
 let current_location;
+
 let stationList = document.querySelector("#station_list_body");
 let errorStationList = document.querySelector("#error_station_list_body");
 let normalStationList = document.querySelector("#normal_station_list_body")
+
+
+let ledList = document.querySelector("#led_list_body");
+let errorLedList = document.querySelector("#error_led_list_body");
+let normalLedList = document.querySelector("#normal_led_list_body");
+
+
+
+let ledListTr = document.querySelector("#led_list_body tr");
+let errorLedListTr = document.querySelector("#error_led_list_body tr");
+let normalLedListTr = document.querySelector("#normal_led_list_body tr");
+
+
+let stationErrorNum = 0;
+let ledErrorNum = 0;
+let stationNormalNum = 0;
+let ledNormalNum = 0;
+
+
+
+
+
 let current_str_id;
 
 //오른쪽 마우스 클릭스 수정 삭제 가능.
@@ -71,7 +94,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
   $(stationNum).text(stationInfo.length)
 
 
-  let stationErrorNum = 0;
+
 
     
   for (var i = 0; i < stationInfo.length; i++) {
@@ -81,6 +104,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     
     if(stationInfo[i].status == "통신장애") {
       $(errorStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
+      stationErrorNum++;
     }
 
     if(stationInfo[i].status == "정상") {
@@ -99,9 +123,6 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
       label: label
     });
 
-    if(stationInfo[i].status == "통신장애") {
-        stationErrorNum++;
-    }
 
        marker.addListener("click", function(evt) {
         const tab1 =  document.querySelector("#tab-1")
@@ -113,10 +134,11 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
     
   }
-  let normalNum = stationInfo.length - stationErrorNum;
+
+   stationNormalNum = stationInfo.length - stationErrorNum;
 
   $(errorStationNum).text(stationErrorNum)
-  $(normal).text(normalNum)
+  $(normal).text(stationNormalNum)
 
  
 	$(function() {
@@ -283,7 +305,7 @@ const dataSet = await axios({
  tab2.innerHTML = LedLogView(logLedInfo);
 
 
- let ledList = document.querySelector("#led_list_body");
+
 
  
 
@@ -293,6 +315,19 @@ for (var i = 0; i < ledInfo.length; i++) {
 
   $(ledList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
   "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+
+  if(ledInfo[i].status =="통신장애") 
+  {
+  $(errorLedList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+  ledErrorNum++; 
+  }
+
+  if(ledInfo[i].status =="정상") 
+  {
+  $(normalLedList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
+  "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
+  }
 
 
   let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
@@ -383,11 +418,17 @@ $(document).ready(function(){
 
 });
 
+ ledNormalNum = ledInfo.length - ledErrorNum;
+
+$(ledNormal_Num).text(ledNormalNum)
+$(ledError_Num).text(ledErrorNum)
+
 }
 
 //수정시 기본값 나오게 하는 함수
 
 async function change() {
+   
 
   const dataSet = await axios({
     method: "get",
@@ -1162,6 +1203,7 @@ function LedLogView(data) {
 
 
 async function led_refresh(){
+  let error = 0;
     const dataSet = await axios({
       method: "get",
       url: "http://"+ip+":23000/boards",
@@ -1170,6 +1212,17 @@ async function led_refresh(){
     });
     ledInfo = dataSet.data.result;
     $(ledNum).text(ledInfo.length) 
+
+    for(var i = 0; i< ledInfo.length; i++) {
+      if(ledInfo[i].status =="통신장애") {
+          error++;
+      }
+    }
+    normal = ledInfo.length - error
+  
+    $(ledError_Num).text(error)
+    $(ledNormal_Num).text(normal)
+  
 }
 
 
@@ -1232,6 +1285,11 @@ $("#station_normal").on('click',function(e) {
 
 
 }
+
+
+
+
+
 
 
 function spin(){
