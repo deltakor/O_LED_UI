@@ -16,19 +16,19 @@
     <div class="wrapper">
         <div class="content">
           <ul class="menu">
-            <li class="item">
+            <li class="item_list">
               <i class="uil uil-link-alt"></i>
               <div id = "link">연결</div>
             </li>
-            <li class="item">
+            <li class="item_list">
               <i class="uil uil-link-alt"></i>
               <div id = "switchPanel">LED 전환시간</div>
             </li>
-            <li class="item">
+            <li class="item_list">
               <i class="uil uil-edit"></i>
               <div id = edit>수정</div>
             </li>
-            <li class="item">
+            <li class="item_list">
               <i class="uil uil-trash-alt"></i>
               <div id = trash>삭제</div>
             </li>
@@ -102,18 +102,22 @@
                             <tr id = "ledAll">
                               <th>패널 전체</th>
                               <th id = "ledNum"></th>                   
-                            </tr>            
-                            <tr>
+                            </tr>  
+                            <tr id = "ledNormal">
                               <th>점등</th>
                               <th></th>
-                            </tr>
-                            <tr>
+                            </tr>   
+                            <tr id = "ledNormal">
                               <th>소등</th>
                               <th></th>
+                            </tr>       
+                            <tr id = "ledNormal">
+                              <th>정상</th>
+                              <th  id = ledNormal_Num></th>
                             </tr>     
-                            <tr>
+                            <tr id = "ledError">
                               <th>통신이상</th>
-                              <th></th>
+                              <th  id = ledError_Num></th>
                             </tr>     
                       
                           </tbody>
@@ -152,7 +156,7 @@
                           <input type="search" id="search" placeholder="Search..." />
                           <button class="search-click"><i class="fa fa-search"></i></button>
                           <br></br>
-                        </div>
+                           </div>
                         
                         <div id = "led_list">
                         <table style="border-collapse: collapse;"id ="led_list_table">
@@ -172,9 +176,47 @@
                         </table>
                         </div>
 
-                        <!-- <select multiple id = "select3">
-                          
-                          </select>  -->
+                        <div id = "error_led_list"  style="display:none">
+                          <table style="border-collapse: collapse;"id ="led_list_table">
+                              <thead id ="led_list_head" style="background-color: aliceblue;">
+                                <tr>
+                                  <th>패널 ID</th>
+                                  <th>패널명</th>
+                                  <th>날씨상태</th>
+                                  <th>통신상태</th>                 
+                                  <th>통신시간</th>
+                                </tr> 
+                                </thead>
+  
+                                <tbody id ="error_led_list_body" onclick="change()">                               
+                                </tbody>
+  
+                          </table>
+                          </div>
+
+
+
+                          <div id = "normal_led_list"  style="display:none">
+                            <table style="border-collapse: collapse;"id ="led_list_table">
+                                <thead id ="led_list_head" style="background-color: aliceblue;">
+                                  <tr>
+                                    <th>패널 ID</th>
+                                    <th>패널명</th>
+                                    <th>날씨상태</th>
+                                    <th>통신상태</th>                 
+                                    <th>통신시간</th>
+                                  </tr> 
+                                  </thead>
+    
+                                  <tbody id ="normal_led_list_body" onclick="change()">                               
+                                  </tbody>
+    
+                            </table>
+                            </div>
+
+
+
+
                     </div>
                     <div class = "right_bottom" style=" border: 1px solid black; overflow: auto; cursor:pointer" >
                       <div id = "station_list">
