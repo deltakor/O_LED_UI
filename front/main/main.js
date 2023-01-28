@@ -137,9 +137,9 @@ let openWin;
 
         //측정소 마커 기본정보
         let markerContents = markerView(stationInfo[i]);
-        var title = stationInfo[i].stationName;
-        label = "<span style='background-color: #46414E;color:white'>" + title + "</spa" +
-                "n>";
+        var title = "미세먼지 상태 : " + changeGradeText(stationInfo[i].pm10Grade)
+        label = "<span style='background-color: #46414E;color:white'>" +
+                stationInfo[i].stationName + "</span>";
 
         //측정소 마커생성
         var marker = new Tmapv2.Marker({
@@ -246,13 +246,13 @@ let openWin;
 
     });
 
-    await setLedMarker();
+    await setPanel();
 
 })();
 
 // 패널 마커생성및 클릭시 기본정보 로그정보 View이벤트 적용. 우클릭시 context메뉴 보이는 이벤트 적용 패널 통계리스트에서
 // 정상,비정상,전체 이동 이벤트 적용
-async function setLedMarker() {
+async function setPanel() {
     //우클릭시 지도좌표
     let lonlat;
     //최소거리
@@ -345,7 +345,7 @@ async function setLedMarker() {
         let ledmarkerContents = getLedMarkerContent(ledInfo[i])
 
         let markerID = ledInfo[i].custom_id
-        var title = changeSkyText(ledInfo[i].SKY);
+        var title = "날씨 : " + changeSkyText(ledInfo[i].SKY);
         var isMouseDown = false;
         label = "<span class = ledLabel; style='background-color: #46414E;color:white'>" +
                 ledInfo[i].name + "</span>";
@@ -548,6 +548,266 @@ async function change() {
     })
 
 }
+
+//통신이상 패널통계 클릭이벤트
+async function errorChange() {
+
+    const dataSet = await axios({
+        method: "get",
+        url: "http://" + ip + ":23000/boards",
+        headers: {},
+        data: {}
+    });
+
+    ledInfo = dataSet.data.result;
+
+    $("#error_led_list_body tr").on('click', function (e) {
+
+        e.preventDefault();
+        current_str_id = $(this).attr('value');
+
+        for (var i = 0; i < ledInfo.length; i++) {
+
+            if (ledInfo[i].custom_id == current_str_id) {
+                var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+                map.setCenter(ll);
+                var markerContents = getLedMarkerContent(ledInfo[i]);
+                const tab1 = document.querySelector("#tab-1");
+                tab1.innerHTML = markerContents;
+
+                $('ul.tabs li#testtest').trigger("click");
+                break;
+            }
+        }
+
+    });
+
+    $("#error_led_list_body tr").on('contextmenu rightclick', function (e) {
+        switchPanel_div.style.visibility = "hidden";
+
+        var str_id = $(this).attr('value');
+
+        let defaltName,
+            defaltModem_number,
+            defaltAddr,
+            defaltDong,
+            defaltLat,
+            defaltLon,
+            defaltInstallAt,
+            defaltStation_id,
+            defaltStationName,
+            defaltMemo
+        for (var i = 0; i < ledInfo.length; i++) {
+
+            if (ledInfo[i].custom_id == str_id) {
+                defaltName = ledInfo[i].name;
+                defaltModem_number = ledInfo[i].modem_number;
+                defaltAddr = ledInfo[i].address;
+                defaltDong = ledInfo[i].administrative_dong;
+                defaltLat = ledInfo[i].lat;
+                defaltLon = ledInfo[i].lon;
+                defaltInstallAt = ledInfo[i].installAt;
+                defaltStation_id = ledInfo[i].station_id;
+                defaltStationName = ledInfo[i].stationName;
+                defaltMemo = ledInfo[i].memo;
+            }
+        }
+
+        contextMenu.style.top = e.pageY + 'px';
+        contextMenu.style.left = e.pageX + 'px';
+        contextMenu.style.visibility = "visible";
+
+        trash.onclick = function (event) {
+            if (confirm("패널을 삭제하시겠습니까?") == true) {
+                contextMenu.style.visibility = "hidden";
+                deleteLed(str_id);
+
+            } else {
+                contextMenu.style.visibility = "hidden";
+                return false;
+
+            }
+
+        };
+
+        edit.onclick = function (event) {
+
+            contextMenu.style.visibility = "hidden";
+
+            showEditPopup(
+                str_id,
+                defaltName,
+                defaltModem_number,
+                defaltAddr,
+                defaltDong,
+                defaltLat,
+                defaltLon,
+                defaltMemo,
+                defaltStation_id,
+                defaltStationName
+            );
+        }
+
+        link.onclick = function (event) {
+            if (confirm("연결 하시겠습니까?")) {
+
+                alert("연결 되었습니다.");
+            } else {
+                alert("취소 되었습니다.");
+            }
+
+            contextMenu.style.visibility = "hidden";
+        }
+
+        switchPanel.onclick = function (event) {
+            contextMenu.style.visibility = "hidden";
+
+            switchPanel_div.style.top = event.pageY + 'px';
+            switchPanel_div.style.left = event.pageX + 5 + 'px';
+
+            switchPanel_div.style.visibility = "visible";
+
+        }
+
+    })
+
+    $("#error_led_list_body tr").bind('click', function () {
+        contextMenu.style.visibility = "hidden";
+        switchPanel_div.style.visibility = "hidden";
+
+    })
+
+}
+//정상 패널통계 클릭이벤트
+async function normalChange() {
+
+    const dataSet = await axios({
+        method: "get",
+        url: "http://" + ip + ":23000/boards",
+        headers: {},
+        data: {}
+    });
+
+    ledInfo = dataSet.data.result;
+
+    $("#normal_led_list_body tr").on('click', function (e) {
+
+        e.preventDefault();
+        current_str_id = $(this).attr('value');
+
+        for (var i = 0; i < ledInfo.length; i++) {
+
+            if (ledInfo[i].custom_id == current_str_id) {
+                var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+                map.setCenter(ll);
+                var markerContents = getLedMarkerContent(ledInfo[i]);
+                const tab1 = document.querySelector("#tab-1");
+                tab1.innerHTML = markerContents;
+
+                $('ul.tabs li#testtest').trigger("click");
+                break;
+            }
+        }
+
+    });
+
+    $("#normal_led_list_body tr").on('contextmenu rightclick', function (e) {
+        switchPanel_div.style.visibility = "hidden";
+
+        var str_id = $(this).attr('value');
+
+        let defaltName,
+            defaltModem_number,
+            defaltAddr,
+            defaltDong,
+            defaltLat,
+            defaltLon,
+            defaltInstallAt,
+            defaltStation_id,
+            defaltStationName,
+            defaltMemo
+        for (var i = 0; i < ledInfo.length; i++) {
+
+            if (ledInfo[i].custom_id == str_id) {
+                defaltName = ledInfo[i].name;
+                defaltModem_number = ledInfo[i].modem_number;
+                defaltAddr = ledInfo[i].address;
+                defaltDong = ledInfo[i].administrative_dong;
+                defaltLat = ledInfo[i].lat;
+                defaltLon = ledInfo[i].lon;
+                defaltInstallAt = ledInfo[i].installAt;
+                defaltStation_id = ledInfo[i].station_id;
+                defaltStationName = ledInfo[i].stationName;
+                defaltMemo = ledInfo[i].memo;
+            }
+        }
+
+        contextMenu.style.top = e.pageY + 'px';
+        contextMenu.style.left = e.pageX + 'px';
+        contextMenu.style.visibility = "visible";
+
+        trash.onclick = function (event) {
+            if (confirm("패널을 삭제하시겠습니까?") == true) {
+                contextMenu.style.visibility = "hidden";
+                deleteLed(str_id);
+
+            } else {
+                contextMenu.style.visibility = "hidden";
+                return false;
+
+            }
+
+        };
+
+        edit.onclick = function (event) {
+
+            contextMenu.style.visibility = "hidden";
+
+            showEditPopup(
+                str_id,
+                defaltName,
+                defaltModem_number,
+                defaltAddr,
+                defaltDong,
+                defaltLat,
+                defaltLon,
+                defaltMemo,
+                defaltStation_id,
+                defaltStationName
+            );
+        }
+
+        link.onclick = function (event) {
+            if (confirm("연결 하시겠습니까?")) {
+
+                alert("연결 되었습니다.");
+            } else {
+                alert("취소 되었습니다.");
+            }
+
+            contextMenu.style.visibility = "hidden";
+        }
+
+        switchPanel.onclick = function (event) {
+            contextMenu.style.visibility = "hidden";
+
+            switchPanel_div.style.top = event.pageY + 'px';
+            switchPanel_div.style.left = event.pageX + 5 + 'px';
+
+            switchPanel_div.style.visibility = "visible";
+
+        }
+
+    })
+
+    $("#normal_led_list_body tr").bind('click', function () {
+        contextMenu.style.visibility = "hidden";
+        switchPanel_div.style.visibility = "hidden";
+
+    })
+
+}
+
 //마커 드래그 이동시 db위치 변경
 function sendLonlatValue(led_id, lat_data, lon_data) {
 
@@ -750,7 +1010,7 @@ window.oncontextmenu = function () {
     return false;
 };
 
-//패널등록함수
+//패널등록시 확인 함수
 function confirmPorm() {
 
     if (confirm("현재 위치에 패널을 등록하시겠습니까?") == true) {
@@ -894,19 +1154,13 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">기온</td>
-              <td>${data.T1H}도</td>
-          </tr>
-
-
-          <tr>
-              <td class = "category">강수형태</td>
-              <td>${data.PTY}</td>
+              <td>${data.T1H}°C</td>
           </tr>
 
 
           <tr>
               <td class = "category">1시간 강수량</td>
-              <td>${data.RN1}</td>
+              <td>${data.RN1}mm</td>
           </tr>
           
           <tr>
@@ -921,12 +1175,14 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">습도</td>
-              <td>${data.REH}</td>
+              <td>${data.REH}%</td>
           </tr>
 
           <tr>
               <td class = "category">오존 농도</td>
-              <td>${changeValueText(data.o3Value)}ppm</td>
+              <td>${changeValueText(
+        data.o3Value
+    )}ppm</td>
           </tr>
 
           <tr>
@@ -938,7 +1194,9 @@ function getLedMarkerContent(data) {
 
           <tr>
               <td class = "category">미세먼지 농도</td>
-              <td>${changeValueText(data.pm10Value)}㎍/㎥</td>
+              <td>${changeValueText(
+        data.pm10Value
+    )}㎍/㎥</td>
           </tr>
 
           <tr>
@@ -949,7 +1207,9 @@ function getLedMarkerContent(data) {
           </tr>
           <tr>
               <td class = "category">초미세먼지 농도</td>
-              <td>${changeValueText(data.pm25Value)}㎍/㎥</td>
+              <td>${changeValueText(
+        data.pm25Value
+    )}㎍/㎥</td>
           </tr>
 
           <tr>
@@ -1060,7 +1320,9 @@ function markerView(data) {
     
             <tr>
                 <td class = "category">오존 농도</td>
-                <td>${changeValueText(data.o3Value)}ppm</td>
+                <td>${changeValueText(
+        data.o3Value
+    )}ppm</td>
             </tr>
 
             <tr>
@@ -1072,7 +1334,9 @@ function markerView(data) {
 
             <tr>
                 <td class = "category">미세먼지 농도</td>
-                <td>${changeValueText(data.pm10Value)}㎍/㎥</td>
+                <td>${changeValueText(
+        data.pm10Value
+    )}㎍/㎥</td>
             </tr>
 
             <tr>
@@ -1083,7 +1347,9 @@ function markerView(data) {
             </tr>
             <tr>
                 <td class = "category">초미세먼지 농도</td>
-                <td>${changeValueText(data.pm25Value)}㎍/㎥</td>
+                <td>${changeValueText(
+        data.pm25Value
+    )}㎍/㎥</td>
             </tr>
 
             <tr>
@@ -1403,262 +1669,3 @@ $(document).ready(function () {
     });
 
 });
-
-//통신이상 패널통계 클릭이벤트
-async function errorChange() {
-
-    const dataSet = await axios({
-        method: "get",
-        url: "http://" + ip + ":23000/boards",
-        headers: {},
-        data: {}
-    });
-
-    ledInfo = dataSet.data.result;
-
-    $("#error_led_list_body tr").on('click', function (e) {
-
-        e.preventDefault();
-        current_str_id = $(this).attr('value');
-
-        for (var i = 0; i < ledInfo.length; i++) {
-
-            if (ledInfo[i].custom_id == current_str_id) {
-                var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
-                map.setCenter(ll);
-                var markerContents = getLedMarkerContent(ledInfo[i]);
-                const tab1 = document.querySelector("#tab-1");
-                tab1.innerHTML = markerContents;
-
-                $('ul.tabs li#testtest').trigger("click");
-                break;
-            }
-        }
-
-    });
-
-    $("#error_led_list_body tr").on('contextmenu rightclick', function (e) {
-        switchPanel_div.style.visibility = "hidden";
-
-        var str_id = $(this).attr('value');
-
-        let defaltName,
-            defaltModem_number,
-            defaltAddr,
-            defaltDong,
-            defaltLat,
-            defaltLon,
-            defaltInstallAt,
-            defaltStation_id,
-            defaltStationName,
-            defaltMemo
-        for (var i = 0; i < ledInfo.length; i++) {
-
-            if (ledInfo[i].custom_id == str_id) {
-                defaltName = ledInfo[i].name;
-                defaltModem_number = ledInfo[i].modem_number;
-                defaltAddr = ledInfo[i].address;
-                defaltDong = ledInfo[i].administrative_dong;
-                defaltLat = ledInfo[i].lat;
-                defaltLon = ledInfo[i].lon;
-                defaltInstallAt = ledInfo[i].installAt;
-                defaltStation_id = ledInfo[i].station_id;
-                defaltStationName = ledInfo[i].stationName;
-                defaltMemo = ledInfo[i].memo;
-            }
-        }
-
-        contextMenu.style.top = e.pageY + 'px';
-        contextMenu.style.left = e.pageX + 'px';
-        contextMenu.style.visibility = "visible";
-
-        trash.onclick = function (event) {
-            if (confirm("패널을 삭제하시겠습니까?") == true) {
-                contextMenu.style.visibility = "hidden";
-                deleteLed(str_id);
-
-            } else {
-                contextMenu.style.visibility = "hidden";
-                return false;
-
-            }
-
-        };
-
-        edit.onclick = function (event) {
-
-            contextMenu.style.visibility = "hidden";
-
-            showEditPopup(
-                str_id,
-                defaltName,
-                defaltModem_number,
-                defaltAddr,
-                defaltDong,
-                defaltLat,
-                defaltLon,
-                defaltMemo,
-                defaltStation_id,
-                defaltStationName
-            );
-        }
-
-        link.onclick = function (event) {
-            if (confirm("연결 하시겠습니까?")) {
-
-                alert("연결 되었습니다.");
-            } else {
-                alert("취소 되었습니다.");
-            }
-
-            contextMenu.style.visibility = "hidden";
-        }
-
-        switchPanel.onclick = function (event) {
-            contextMenu.style.visibility = "hidden";
-
-            switchPanel_div.style.top = event.pageY + 'px';
-            switchPanel_div.style.left = event.pageX + 5 + 'px';
-
-            switchPanel_div.style.visibility = "visible";
-
-        }
-
-    })
-
-    $("#error_led_list_body tr").bind('click', function () {
-        contextMenu.style.visibility = "hidden";
-        switchPanel_div.style.visibility = "hidden";
-
-    })
-
-}
-//정상 패널통계 클릭이벤트
-async function normalChange() {
-
-    const dataSet = await axios({
-        method: "get",
-        url: "http://" + ip + ":23000/boards",
-        headers: {},
-        data: {}
-    });
-
-    ledInfo = dataSet.data.result;
-
-    $("#normal_led_list_body tr").on('click', function (e) {
-
-        e.preventDefault();
-        current_str_id = $(this).attr('value');
-
-        for (var i = 0; i < ledInfo.length; i++) {
-
-            if (ledInfo[i].custom_id == current_str_id) {
-                var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
-                map.setCenter(ll);
-                var markerContents = getLedMarkerContent(ledInfo[i]);
-                const tab1 = document.querySelector("#tab-1");
-                tab1.innerHTML = markerContents;
-
-                $('ul.tabs li#testtest').trigger("click");
-                break;
-            }
-        }
-
-    });
-
-    $("#normal_led_list_body tr").on('contextmenu rightclick', function (e) {
-        switchPanel_div.style.visibility = "hidden";
-
-        var str_id = $(this).attr('value');
-
-        let defaltName,
-            defaltModem_number,
-            defaltAddr,
-            defaltDong,
-            defaltLat,
-            defaltLon,
-            defaltInstallAt,
-            defaltStation_id,
-            defaltStationName,
-            defaltMemo
-        for (var i = 0; i < ledInfo.length; i++) {
-
-            if (ledInfo[i].custom_id == str_id) {
-                defaltName = ledInfo[i].name;
-                defaltModem_number = ledInfo[i].modem_number;
-                defaltAddr = ledInfo[i].address;
-                defaltDong = ledInfo[i].administrative_dong;
-                defaltLat = ledInfo[i].lat;
-                defaltLon = ledInfo[i].lon;
-                defaltInstallAt = ledInfo[i].installAt;
-                defaltStation_id = ledInfo[i].station_id;
-                defaltStationName = ledInfo[i].stationName;
-                defaltMemo = ledInfo[i].memo;
-            }
-        }
-
-        contextMenu.style.top = e.pageY + 'px';
-        contextMenu.style.left = e.pageX + 'px';
-        contextMenu.style.visibility = "visible";
-
-        trash.onclick = function (event) {
-            if (confirm("패널을 삭제하시겠습니까?") == true) {
-                contextMenu.style.visibility = "hidden";
-                deleteLed(str_id);
-
-            } else {
-                contextMenu.style.visibility = "hidden";
-                return false;
-
-            }
-
-        };
-
-        edit.onclick = function (event) {
-
-            contextMenu.style.visibility = "hidden";
-
-            showEditPopup(
-                str_id,
-                defaltName,
-                defaltModem_number,
-                defaltAddr,
-                defaltDong,
-                defaltLat,
-                defaltLon,
-                defaltMemo,
-                defaltStation_id,
-                defaltStationName
-            );
-        }
-
-        link.onclick = function (event) {
-            if (confirm("연결 하시겠습니까?")) {
-
-                alert("연결 되었습니다.");
-            } else {
-                alert("취소 되었습니다.");
-            }
-
-            contextMenu.style.visibility = "hidden";
-        }
-
-        switchPanel.onclick = function (event) {
-            contextMenu.style.visibility = "hidden";
-
-            switchPanel_div.style.top = event.pageY + 'px';
-            switchPanel_div.style.left = event.pageX + 5 + 'px';
-
-            switchPanel_div.style.visibility = "visible";
-
-        }
-
-    })
-
-    $("#normal_led_list_body tr").bind('click', function () {
-        contextMenu.style.visibility = "hidden";
-        switchPanel_div.style.visibility = "hidden";
-
-    })
-
-}
