@@ -102,7 +102,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
     $(stationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
     
-    if(stationInfo[i].status == "통신장애") {
+    if(stationInfo[i].status == "통신이상") {
       $(errorStationList).append("<tr id = station_row value = " + stationInfo[i].station_id+ "> <th>" + stationInfo[i].stationName + "</th> <th>" +stationInfo[i].status + "</th>" +"</tr>");
       stationErrorNum++;
     }
@@ -316,7 +316,7 @@ for (var i = 0; i < ledInfo.length; i++) {
   $(ledList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
   "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
 
-  if(ledInfo[i].status =="통신장애") 
+  if(ledInfo[i].status =="통신이상") 
   {
   $(errorLedList).append("<tr id = led_row value =" + ledInfo[i].custom_id  + "> <th>" + ledInfo[i].custom_id + "</th> <th>" +ledInfo[i].name + "</th>" +
   "</th> <th>" + changeSky(ledInfo[i].SKY) + "</th>" +"</th> <th>" +ledInfo[i].status + "</th>"+ "</th> <th>" +ledInfo[i].latestCommunicationAt + "</th>");
@@ -337,9 +337,9 @@ for (var i = 0; i < ledInfo.length; i++) {
   let ledmarkerContents = getLedMarkerContent(ledInfo[i])
   
   let markerID = ledInfo[i].custom_id
-  var title = ledInfo[i].name;
+  var title = changeSky(ledInfo[i].SKY);
   var isMouseDown = false;
-  label="<span class = ledLabel; style='background-color: #46414E;color:white'>"+title+"</span>";
+  label="<span class = ledLabel; style='background-color: #46414E;color:white'>"+ledInfo[i].name+"</span>";
   var marker = new Tmapv2.Marker({
     map: map, // 마커를 표시할 지도
     position: coords, // 마커를 표시할 위치
@@ -1294,27 +1294,27 @@ function ledStatusClick() {
     e.preventDefault();
 
     
-    document.getElementById("error_station_list").style.display = "block";
-    $("#station_list").hide();
-    document.getElementById("normal_station_list").style.display = "none";
+    document.getElementById("error_led_list").style.display = "block";
+    $("#led_list").hide();
+    document.getElementById("normal_led_list").style.display = "none";
 
 });
 
 $("#ledAll").on('click',function(e) {
   e.preventDefault();
 
-  $("#station_list").show();
-  $("#error_station_list").hide();
-  document.getElementById("normal_station_list").style.display = "none";
+  $("#led_list").show();
+  $("#error_led_list").hide();
+  document.getElementById("normal_led_list").style.display = "none";
 
 });
 
 $("#ledNormal").on('click',function(e) {
   e.preventDefault();
   
-  document.getElementById("normal_station_list").style.display = "block";
-  document.getElementById("error_station_list").style.display = "none";
-  $("#station_list").hide();
+  document.getElementById("normal_led_list").style.display = "block";
+  document.getElementById("error_led_list").style.display = "none";
+  $("#led_list").hide();
 
 });
 
@@ -1415,3 +1415,265 @@ $(document).ready(function(){
   });
   
 });
+
+
+
+
+async function errorChange() {
+   
+
+  const dataSet = await axios({
+    method: "get",
+    url: "http://"+ip+":23000/boards",
+    headers: {},
+    data: {},
+  });
+  
+  
+   ledInfo = dataSet.data.result;
+   
+
+  $("#error_led_list_body tr").on('click',function(e) {
+        
+      e.preventDefault();
+      current_str_id = $(this).attr('value');
+  
+   
+      for (var i = 0; i < ledInfo.length; i++) {
+
+        if(ledInfo[i].custom_id == current_str_id){
+         var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+          map.setCenter(ll);
+          var markerContents = getLedMarkerContent(ledInfo[i]);
+          const tab1 =  document.querySelector("#tab-1");
+          tab1.innerHTML = markerContents;
+
+
+          $('ul.tabs li#testtest').trigger("click");
+          break;
+        }
+      }
+      
+
+
+  });
+
+  
+
+      
+
+  $("#error_led_list_body tr").on('contextmenu rightclick', function(e){
+    switchPanel_div.style.visibility = "hidden";
+  
+    var str_id = $(this).attr('value');
+
+    console.log(str_id)
+    let defaltName,defaltModem_number,defaltAddr,
+    defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
+    for (var i = 0; i < ledInfo.length; i++) {
+
+      if(ledInfo[i].custom_id == str_id){
+        defaltName = ledInfo[i].name;
+        defaltModem_number = ledInfo[i].modem_number;
+        defaltAddr = ledInfo[i].address;
+        defaltDong = ledInfo[i].administrative_dong;
+        defaltLat = ledInfo[i].lat;
+        defaltLon = ledInfo[i].lon;
+        defaltInstallAt = ledInfo[i].installAt;
+        defaltStation_id = ledInfo[i].station_id;
+        defaltStationName = ledInfo[i].stationName;
+        defaltMemo = ledInfo[i].memo;
+      }
+    }
+
+      
+    contextMenu.style.top = e.pageY + 'px';
+    contextMenu.style.left = e.pageX + 'px';
+    contextMenu.style.visibility = "visible";
+
+    trash.onclick = function (event) {
+      if (confirm("패널을 삭제하시겠습니까?") == true){    
+        contextMenu.style.visibility = "hidden";
+          deleteLed(str_id);
+
+    }else{ 
+      contextMenu.style.visibility = "hidden";
+        return false;
+   
+    }
+   
+    };
+
+    edit.onclick = function(event) {
+
+        contextMenu.style.visibility = "hidden";
+    
+        showEditPopup(str_id,defaltName,defaltModem_number,defaltAddr,
+          defaltDong,defaltLat,defaltLon,defaltMemo,defaltStation_id,defaltStationName);
+      }
+
+    link.onclick = function(event) {
+      if(confirm("연결 하시겠습니까?")){
+        
+        alert("연결 되었습니다.");
+        }else{
+            alert("취소 되었습니다.");
+        }
+
+        contextMenu.style.visibility = "hidden";
+    }
+
+    switchPanel.onclick = function(event) {
+      contextMenu.style.visibility = "hidden";
+
+        switchPanel_div.style.top = event.pageY + 'px';
+        switchPanel_div.style.left = event.pageX + 5  +'px';
+
+        switchPanel_div.style.visibility = "visible";
+        
+
+    }
+
+
+
+
+  })
+
+    $("#error_led_list_body tr").bind('click', function(){
+      contextMenu.style.visibility = "hidden";
+      switchPanel_div.style.visibility = "hidden";
+
+    })
+
+}
+
+
+
+async function normalChange() {
+   
+
+  const dataSet = await axios({
+    method: "get",
+    url: "http://"+ip+":23000/boards",
+    headers: {},
+    data: {},
+  });
+  
+  
+   ledInfo = dataSet.data.result;
+   
+
+  $("#normal_led_list_body tr").on('click',function(e) {
+        
+      e.preventDefault();
+      current_str_id = $(this).attr('value');
+  
+   
+      for (var i = 0; i < ledInfo.length; i++) {
+
+        if(ledInfo[i].custom_id == current_str_id){
+         var ll = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
+          map.setCenter(ll);
+          var markerContents = getLedMarkerContent(ledInfo[i]);
+          const tab1 =  document.querySelector("#tab-1");
+          tab1.innerHTML = markerContents;
+
+
+          $('ul.tabs li#testtest').trigger("click");
+          break;
+        }
+      }
+      
+
+
+  });
+
+  
+
+      
+
+  $("#normal_led_list_body tr").on('contextmenu rightclick', function(e){
+    switchPanel_div.style.visibility = "hidden";
+  
+    var str_id = $(this).attr('value');
+
+    console.log(str_id)
+    let defaltName,defaltModem_number,defaltAddr,
+    defaltDong,defaltLat,defaltLon,defaltInstallAt,defaltStation_id,defaltStationName,defaltMemo
+    for (var i = 0; i < ledInfo.length; i++) {
+
+      if(ledInfo[i].custom_id == str_id){
+        defaltName = ledInfo[i].name;
+        defaltModem_number = ledInfo[i].modem_number;
+        defaltAddr = ledInfo[i].address;
+        defaltDong = ledInfo[i].administrative_dong;
+        defaltLat = ledInfo[i].lat;
+        defaltLon = ledInfo[i].lon;
+        defaltInstallAt = ledInfo[i].installAt;
+        defaltStation_id = ledInfo[i].station_id;
+        defaltStationName = ledInfo[i].stationName;
+        defaltMemo = ledInfo[i].memo;
+      }
+    }
+
+      
+    contextMenu.style.top = e.pageY + 'px';
+    contextMenu.style.left = e.pageX + 'px';
+    contextMenu.style.visibility = "visible";
+
+    trash.onclick = function (event) {
+      if (confirm("패널을 삭제하시겠습니까?") == true){    
+        contextMenu.style.visibility = "hidden";
+          deleteLed(str_id);
+
+    }else{ 
+      contextMenu.style.visibility = "hidden";
+        return false;
+   
+    }
+   
+    };
+
+    edit.onclick = function(event) {
+
+        contextMenu.style.visibility = "hidden";
+    
+        showEditPopup(str_id,defaltName,defaltModem_number,defaltAddr,
+          defaltDong,defaltLat,defaltLon,defaltMemo,defaltStation_id,defaltStationName);
+      }
+
+    link.onclick = function(event) {
+      if(confirm("연결 하시겠습니까?")){
+        
+        alert("연결 되었습니다.");
+        }else{
+            alert("취소 되었습니다.");
+        }
+
+        contextMenu.style.visibility = "hidden";
+    }
+
+    switchPanel.onclick = function(event) {
+      contextMenu.style.visibility = "hidden";
+
+        switchPanel_div.style.top = event.pageY + 'px';
+        switchPanel_div.style.left = event.pageX + 5  +'px';
+
+        switchPanel_div.style.visibility = "visible";
+        
+
+    }
+
+
+
+
+  })
+
+    $("#normal_led_list_body tr").bind('click', function(){
+      contextMenu.style.visibility = "hidden";
+      switchPanel_div.style.visibility = "hidden";
+
+    })
+
+}
+

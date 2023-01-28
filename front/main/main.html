@@ -91,7 +91,7 @@
         <section>
             <div class="ictInfo">
               <div class = "ictInfo_left">
-                <div class = "led_total">
+                <div class = "led_total" onclick="ledStatusClick()">
                     <div class = "total_title">
                       패널 통계
                         <button type="button" class="led_refresh" onclick="led_refresh()"><img  src="../icon/refresh.png"></button>       
@@ -105,11 +105,11 @@
                             </tr>  
                             <tr id = "ledOn">
                               <th>점등</th>
-                              <th></th>
+                              <th>0</th>
                             </tr>   
                             <tr id = "ledOFF">
                               <th>소등</th>
-                              <th></th>
+                              <th>5</th>
                             </tr>       
                             <tr id = "ledNormal">
                               <th>정상</th>
@@ -188,7 +188,7 @@
                                 </tr> 
                                 </thead>
   
-                                <tbody id ="error_led_list_body" onclick="change()">                               
+                                <tbody id ="error_led_list_body" onclick="errorChange()">                               
                                 </tbody>
   
                           </table>
@@ -208,7 +208,7 @@
                                   </tr> 
                                   </thead>
     
-                                  <tbody id ="normal_led_list_body" onclick="change()">                               
+                                  <tbody id ="normal_led_list_body" onclick="normalChange()">                               
                                   </tbody>
     
                             </table>
