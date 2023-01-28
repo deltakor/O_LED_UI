@@ -137,7 +137,7 @@ let openWin;
 
         //측정소 마커 기본정보
         let markerContents = markerView(stationInfo[i]);
-        var title = "미세먼지 상태 : " + changeGradeText(stationInfo[i].pm10Grade)
+        var title = "미세먼지 : " + changeGradeText(stationInfo[i].pm10Grade)
         label = "<span style='background-color: #46414E;color:white'>" +
                 stationInfo[i].stationName + "</span>";
 
