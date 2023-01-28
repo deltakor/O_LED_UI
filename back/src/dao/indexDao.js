@@ -111,7 +111,7 @@ exports.getAllMeasuringLog = async function (connection){
 
 
 exports.selectBoards = async function (connection) {
-  const Query = `select * from distribution_board left outer join  measuring_station on distribution_board.station_id = measuring_station.station_id`;
+  const Query = `select distribution_board.* from distribution_board left outer join  measuring_station on distribution_board.station_id = measuring_station.station_id`;
   const Params = [];
 
   const rows = await connection.query(Query, Params);
@@ -142,6 +142,7 @@ exports.insertWeatherLogData = async function(connection, board_id, weatherMeasu
 
   const insertQuery = `INSERT INTO board_weather_log(custom_id, status, weatherMeasureAt, createAt, latestCommunicationAt, panel_interval, T1H, PTY, RN1, REH, SKY, WND, json, forecast_json) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
   const insertParams = [custom_id, status, weatherMeasureAt, now, latestCommunicationAt, panel_interval, T1H, PTY, RN1, REH, SKY, WND, nowCastJson, forecastJson];
+
 
   let rows1 = await connection.query(updateQuery, updateParams); 
   let rows2 = await connection.query(insertQuery, insertParams); 
