@@ -111,7 +111,7 @@ exports.getAllMeasuringLog = async function (connection){
 
 
 exports.selectBoards = async function (connection) {
-  const Query = `select distribution_board.* from distribution_board left outer join  measuring_station on distribution_board.station_id = measuring_station.station_id`;
+  const Query = `select distribution_board.*, dmX, dmY, addr, stationName, o3Value, o3Grade, pm10Value, pm10Grade, pm25Value, pm25Grade, measureAt  from distribution_board left outer join  measuring_station on distribution_board.station_id = measuring_station.station_id`;
   const Params = [];
 
   const rows = await connection.query(Query, Params);
