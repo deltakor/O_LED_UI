@@ -1,3 +1,4 @@
+//수정된 패널정보  db전송
 (function sendValue() {
 
     let btn = document.querySelector("#btn")
@@ -94,8 +95,7 @@
 
 })();
 
-// sendValue(); 입력폼 제어
-
+//수정폼 아이디 제어(4자리수 숫자 남은 앞공간 0)
 $(document).ready(function () {
 
     $("input:text[numberOnly]").on("keyup", function () {
@@ -126,7 +126,6 @@ $('#selectLED_list').each(function () {
     var text = $(this).text(); //text
     let openselect = window.opener.stationInfo //부모창 select 박스
 
-
     for (var i = 0; i < openselect.length; i++) {
 
         $(selectLED_list).append(
@@ -138,6 +137,7 @@ $('#selectLED_list').each(function () {
 
 });
 
+//수정폼 닫히면 부모 메인폼 새로고침
 function close_reload() {
     opener
         .parent
@@ -146,6 +146,7 @@ function close_reload() {
     window.close();
 }
 
+//폼 양식 제어
 function checkform() {
 
     if ($.trim($("#new_id").val()) == '') {

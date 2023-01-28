@@ -1,3 +1,4 @@
+//등록폼 디비전송
 (function sendValue() {
 
     let btn = document.querySelector("#btn")
@@ -105,8 +106,8 @@
 
 })();
 
-// sendValue(); 입력폼 제어
 
+//등록폼 아이디 제어(4자리,남는공간 앞에 0)
 $(document).ready(function () {
 
     $("input:text[numberOnly]").on("keyup", function () {
@@ -149,8 +150,7 @@ $('#selectLED_list').each(function () {
 
 });
 
-//    if(window.close()) {    window.opener.location.reload();    }
-
+//등록폼 닫힐시 부모 메인창 새로고침
 function close_reload() {
     opener
         .parent
@@ -159,6 +159,7 @@ function close_reload() {
     window.close();
 }
 
+//등록폼 양식 제어
 function checkform() {
 
     if ($.trim($("#new_id").val()) == '') {
