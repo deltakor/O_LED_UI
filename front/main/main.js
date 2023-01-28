@@ -1,5 +1,3 @@
-/* 지도 생성 */
-
 let label;
 let openWin;
 
@@ -8,37 +6,62 @@ const ip = "127.0.0.1";
 //const ip = "61.80.179.120";
 // --------------------------------------------------------------------
 
+//패널 생성시 해당 좌표
 let new_lat,
     new_lon;
+
+//가까운측정소id
 let nearStation_id;
-let skyInfo;
+
+//가까운측정소이름
 let nearStation_name;
 
+//하늘상태숫자
+let skyInfo;
+
+//측정소list
 var stationInfo;
+//패널list
 var ledInfo;
 
+//현재좌표
 let current_location;
 
+//전체측정소listView
 let stationList = document.querySelector("#station_list_body");
+
+//통신장애측정소listView
 let errorStationList = document.querySelector("#error_station_list_body");
+
+//정상측정소listViewBody
 let normalStationList = document.querySelector("#normal_station_list_body")
 
+//전체패널listViewBody
 let ledList = document.querySelector("#led_list_body");
+
+//통신장애패널listViewBody
 let errorLedList = document.querySelector("#error_led_list_body");
+
+//정상패널listViewBody
 let normalLedList = document.querySelector("#normal_led_list_body");
 
+//패널테이블tr
 let ledListTr = document.querySelector("#led_list_body tr");
 let errorLedListTr = document.querySelector("#error_led_list_body tr");
 let normalLedListTr = document.querySelector("#normal_led_list_body tr");
 
+//측정소 통신장애,정상개수
 let stationErrorNum = 0;
-let ledErrorNum = 0;
 let stationNormalNum = 0;
+
+//패널 통신장애,정상개수
+let ledErrorNum = 0;
 let ledNormalNum = 0;
 
+//현재선택패널id
 let current_str_id;
 
-//오른쪽 마우스 클릭스 수정 삭제 가능.
+//우클릭이벤트
 const contextMenu = document.querySelector(".wrapper");
 const trash = document.querySelector("#trash")
 const edit = document.querySelector("#edit")
@@ -47,6 +70,7 @@ const switchPanel = document.querySelector("#switchPanel")
 const switchPanel_div = document.querySelector(".switchPanel")
 const panelBtn = document.querySelector(".panelBtn")
 
+//지도생성
 var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     center: new Tmapv2.LatLng(35.2071463000, 129.0762170000),
     width: "100%", // 지도의 넓이
@@ -54,15 +78,17 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     zoom: 16
 });
 
+//측정소 마커생성및 클릭시 기본정보 로그정보 View이벤트 적용. 측정소 통계리스트에서 정상,비정상,전체 이동 이벤트 적용
 (async function setStations() {
 
+    //측정소db정보select
     const dataSet = await axios({
         method: "get",
         url: "http://" + ip + ":23000/stations",
         headers: {},
         data: {}
     });
-
+    //측정소로그db정보select
     const logDataSet = await axios({
         method: "get",
         url: "http://" + ip + ":23000/stationLogs",
@@ -72,6 +98,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
     logStationInfo = logDataSet.data.result;
 
+    //측정소로그탭
     const tab3 = document.querySelector("#tab-3Body");
     tab3.innerHTML = stationLogView(logStationInfo);
 
@@ -80,14 +107,14 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
     $(stationNum).text(stationInfo.length)
 
     for (var i = 0; i < stationInfo.length; i++) {
-        // 마커를 생성합니다
 
+        //전체측정소table append
         $(stationList).append(
             "<tr id = station_row value = " + stationInfo[i].station_id + "> <th>" +
             stationInfo[i].stationName + "</th> <th>" + statusImg(stationInfo[i].status) +
             "</th></tr>"
         );
-
+        //통신이상측정소table append
         if (stationInfo[i].status == "통신이상") {
             $(errorStationList).append(
                 "<tr id = station_row value = " + stationInfo[i].station_id + "> <th>" +
@@ -96,7 +123,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
             );
             stationErrorNum++;
         }
-
+        //정상측정소table append
         if (stationInfo[i].status == "정상") {
             $(normalStationList).append(
                 "<tr id = station_row value = " + stationInfo[i].station_id + "> <th>" +
@@ -106,10 +133,13 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         }
         let coords = new Tmapv2.LatLng(stationInfo[i].dmX, stationInfo[i].dmY);
 
+        //측정소 마커 기본정보
         let markerContents = markerView(stationInfo[i]);
         var title = stationInfo[i].stationName;
         label = "<span style='background-color: #46414E;color:white'>" + title + "</spa" +
                 "n>";
+
+        //측정소 마커생성
         var marker = new Tmapv2.Marker({
             map: map, // 마커를 표시할 지도
             position: coords, // 마커를 표시할 위치
@@ -126,12 +156,13 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         });
 
     }
-
+    //측정소 통계(정상,통신이상,전체)개수
     stationNormalNum = stationInfo.length - stationErrorNum;
 
     $(errorStationNum).text(stationErrorNum)
     $(normal).text(stationNormalNum)
 
+    //전체 측정소 listView클릭 이벤트
     $(function () {
 
         $("#station_list_body tr").on('click', function (e) {
@@ -158,7 +189,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         });
 
     });
-
+    //통신이상 측정소 listView클릭 이벤트
     $(function () {
 
         $("#error_station_list_body tr").on('click', function (e) {
@@ -185,7 +216,7 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
         });
 
     });
-
+    //정상 측정소 listView클릭 이벤트
     $(function () {
 
         $("#normal_station_list_body tr").on('click', function (e) {
@@ -217,12 +248,16 @@ var map = new Tmapv2.Map("tmap", { // 지도가 생성될 div
 
 })();
 
+// 패널 마커생성및 클릭시 기본정보 로그정보 View이벤트 적용. 우클릭시 context메뉴 보이는 이벤트 적용 패널 통계리스트에서
+// 정상,비정상,전체 이동 이벤트 적용
 async function setLedMarker() {
-
+    //우클릭시 지도좌표
     let lonlat;
+    //최소거리
     let min_distance = Infinity;
     let temp = null;
 
+    //지도 우클릭시 패널생성 (가장 가까운 측정소 default값 적용.)
     map.addListener("contextmenu", function (evt) {
         lonlat = evt.latLng;
         new_lat = lonlat.lat();
@@ -244,14 +279,8 @@ async function setLedMarker() {
         confirmPorm();
 
     });
-
-    const logDataSet = await axios({
-        method: "get",
-        url: "http://" + ip + ":23000/boardWeatherLogs",
-        headers: {},
-        data: {}
-    });
-
+    
+    //패널db정보select
     const dataSet = await axios({
         method: "get",
         url: "http://" + ip + ":23000/boards",
@@ -259,25 +288,38 @@ async function setLedMarker() {
         data: {}
     });
 
+    //패널로그db정보select
+    const logDataSet = await axios({
+        method: "get",
+        url: "http://" + ip + ":23000/boardWeatherLogs",
+        headers: {},
+        data: {}
+    });
+
     ledInfo = dataSet.data.result;
 
+    //전체패널통계 개수
     $(ledNum).text(ledInfo.length)
 
     logLedInfo = logDataSet.data.result;
 
+    //패널로그탭
     const tab2 = document.querySelector("#tab-2Body");
     tab2.innerHTML = LedLogView(logLedInfo);
 
     for (var i = 0; i < ledInfo.length; i++) {
         // 마커를 생성합니다
 
+        //전체패널table append
         $(ledList).append(
             "<tr id = led_row value =" + ledInfo[i].custom_id + "> <th>" + ledInfo[i].custom_id +
             "</th> <th>" + ledInfo[i].name + "</th></th> <th>" + changeSkyImg(ledInfo[i].SKY) +
             "</th></th> <th>" + statusImg(ledInfo[i].status) + "</th></th> <th>" +
             ledInfo[i].latestCommunicationAt + "</th>"
         );
+        
 
+       //통신이상패널table append
         if (ledInfo[i].status == "통신이상") {
             $(errorLedList).append(
                 "<tr id = led_row value =" + ledInfo[i].custom_id + "> <th>" + ledInfo[i].custom_id +
@@ -288,6 +330,7 @@ async function setLedMarker() {
             ledErrorNum++;
         }
 
+         //정상패널table append
         if (ledInfo[i].status == "정상") {
             $(normalLedList).append(
                 "<tr id = led_row value =" + ledInfo[i].custom_id + "> <th>" + ledInfo[i].custom_id +
@@ -297,8 +340,9 @@ async function setLedMarker() {
             );
         }
 
+        //마커좌표
         let coords = new Tmapv2.LatLng(ledInfo[i].lat, ledInfo[i].lon);
-
+        //마커기본정보
         let ledmarkerContents = getLedMarkerContent(ledInfo[i])
 
         let markerID = ledInfo[i].custom_id
@@ -306,6 +350,8 @@ async function setLedMarker() {
         var isMouseDown = false;
         label = "<span class = ledLabel; style='background-color: #46414E;color:white'>" +
                 ledInfo[i].name + "</span>";
+        
+        //마커생성
         var marker = new Tmapv2.Marker({
             map: map, // 마커를 표시할 지도
             position: coords, // 마커를 표시할 위치
@@ -318,20 +364,20 @@ async function setLedMarker() {
 
         // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다 이벤트 리스너로는 클로저를 만들어 등록합니다 for문에서 클로저를
         // 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-
-        marker.addListener("mouseenter", function (evt) {});
-
-        current_position = marker.getPosition();
-
+        
+        //패널 마커 왼쪽 클릭시 기본정보 view이벤트
         marker.addListener("click", function (evt) {
             isMouseDown = false;
             const tab1 = document.querySelector("#tab-1")
             tab1.innerHTML = ledmarkerContents
             $('ul.tabs li#testtest').trigger("click");
         });
+
+        //패널 마커 드래그 이벤트
         marker.addListener("drag", function (evt) {
             isMouseDown = true;
         });
+        //패널 마커 드래그드랍 이벤트
         marker.addListener("dragend", function (evt) {
             if (isMouseDown == true) {
                 let isConfilm = confirm("패널의 위치를 현재 위치로 이동시키시겠습니까?")
@@ -349,14 +395,11 @@ async function setLedMarker() {
             }
         });
 
-        //마커 드래그시 좌표값 넘겨주기..
-
+    
     }
 
-  
-    //탭 이동기능
-
-    $(document).ready(function () {
+    // 패널리스트 클릭시 기본정보 view
+     $(document).ready(function () {
 
         $('ul.tabs li').click(function () {
             var tab_id = $(this).attr('data-tab');
@@ -370,7 +413,7 @@ async function setLedMarker() {
         })
 
     });
-
+    //패널 통계(정상,통신이상,전체)개수
     ledNormalNum = ledInfo.length - ledErrorNum;
 
     $(ledNormal_Num).text(ledNormalNum)
@@ -378,10 +421,10 @@ async function setLedMarker() {
 
 }
 
-//수정시 기본값 나오게 하는 함수
 
+//패널 통계에서 패널전체 클릭시 이벤트
 async function change() {
-
+    
     const dataSet = await axios({
         method: "get",
         url: "http://" + ip + ":23000/boards",
@@ -391,12 +434,11 @@ async function change() {
 
     ledInfo = dataSet.data.result;
 
+    //패널리스트 클릭이벤트
     $("#led_list_body tr").on('click', function (e) {
 
         e.preventDefault();
         current_str_id = $(this).attr('value');
-
-    
 
         for (var i = 0; i < ledInfo.length; i++) {
 
@@ -413,13 +455,11 @@ async function change() {
         }
 
     });
-
+    //패널리스트 우클릭이벤트
     $("#led_list_body tr").on('contextmenu rightclick', function (e) {
         switchPanel_div.style.visibility = "hidden";
 
         current_str_id = $(this).attr('value');
-
-     
 
         let defaltName,
             defaltModem_number,
@@ -450,7 +490,9 @@ async function change() {
         contextMenu.style.top = e.pageY + 'px';
         contextMenu.style.left = e.pageX + 'px';
         contextMenu.style.visibility = "visible";
+        
 
+        //우클릭 삭제
         trash.onclick = function (event) {
             if (confirm("패널을 삭제하시겠습니까?") == true) {
                 contextMenu.style.visibility = "hidden";
@@ -463,7 +505,7 @@ async function change() {
             }
 
         };
-
+        //우클릭 수정
         edit.onclick = function (event) {
 
             contextMenu.style.visibility = "hidden";
@@ -481,7 +523,7 @@ async function change() {
                 defaltStationName
             );
         }
-
+        //우클릭 연결
         link.onclick = function (event) {
             if (confirm("연결 하시겠습니까?")) {
 
@@ -492,7 +534,7 @@ async function change() {
 
             contextMenu.style.visibility = "hidden";
         }
-
+        //우클릭 LED전환시간
         switchPanel.onclick = function (event) {
             contextMenu.style.visibility = "hidden";
 
@@ -512,7 +554,7 @@ async function change() {
     })
 
 }
-
+//마커 드래그 이동시 db위치 변경
 function sendLonlatValue(led_id, lat_data, lon_data) {
 
     // [요청 url 선언]
@@ -546,7 +588,7 @@ function sendLonlatValue(led_id, lat_data, lon_data) {
         // [응답 확인 부분 - json 데이터를 받습니다]
         success: function (data) {
             alert("패널의 위치가 이동되었습니다!")
-       
+
         },
 
         // [에러 확인 부분]
@@ -566,7 +608,7 @@ function sendLonlatValue(led_id, lat_data, lon_data) {
     });
 
 }
-
+//패널 삭제
 function deleteLed(custom_id) {
 
     // [요청 url 선언]
@@ -775,13 +817,13 @@ function changeSkyImg(num) {
     if (num == 1) {
         return " &nbsp<img src=../icon/sun.png>";
     } else if (num == 2) {
-        return "&nbsp <img src=../icon/cloud.png>";
+        return " &nbsp<img src=../icon/cloud.png>";
     } else if (num == 3) {
-        return "&nbsp <img src=../icon/badWeather.png>";
+        return " &nbsp<img src=../icon/badWeather.png>";
     } else if (num == 4) {
-        return "&nbsp <img src=../icon/rain.png>";
+        return " &nbsp<img src=../icon/rain.png>";
     } else if (num == 5) {
-        return "&nbsp<img src=../icon/snow.png>";
+        return " &nbsp<img src=../icon/snow.png>";
     }
 }
 
@@ -1364,7 +1406,7 @@ function spin() {
 
         let switchTimeStr = switchTime_p1 + "," + switchTime_p2 + "," +
                 switchTime_p3 + "," + switchTime_p4;
-    
+
         // [요청 json 데이터 선언]
         var jsonData = { // Body에 첨부할 json 데이터
             "panel_interval": switchTimeStr,
@@ -1392,7 +1434,7 @@ function spin() {
             // [응답 확인 부분 - json 데이터를 받습니다]
             success: function (data) {
                 alert("패널 스위치 정보가 전송되었습니다!")
-             
+
             },
 
             // [에러 확인 부분]
@@ -1480,7 +1522,6 @@ async function errorChange() {
 
         var str_id = $(this).attr('value');
 
-   
         let defaltName,
             defaltModem_number,
             defaltAddr,
