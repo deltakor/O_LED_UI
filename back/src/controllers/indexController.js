@@ -719,7 +719,10 @@ async function getStationData() {
 
 
 
-//<서버 가동 시 수행>
+
+
+
+//------------------<서버 가동 시 수행>-----------------------
 getStationData(); //서버 가동 시 측정소 정보 업데이트 수행
 
 demonFunction.getLastDustData(); //서버 가동시 1회 실행 (이미 해당시간 데이터가 있다면 주석 처리할 것)

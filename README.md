@@ -28,7 +28,7 @@ db이름 : d447 (없으면 생성)
 mysql계정 : oenterms / 5920890~3
 
 
-===========<우분투 서버 설치과정>====================================
+===========<우분투 서버 설치과정>===================================
 
 관리자 권한 획득 : sudo su
 
@@ -108,7 +108,7 @@ username : oenterms
 
 <리눅스 컴퓨터에 설치하기>
 
-프로젝트 폴더에 있는 sql문으로 db설정하기 (워크벤치 - Administration - Data Import/Restore)
+프로젝트 폴더에 있는 sql문으로 db설정하기 (워크벤치 - Administration - Data Import/Restore에서 db 불러오기)
 
 sudo apt install git
 
